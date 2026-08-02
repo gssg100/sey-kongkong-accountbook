@@ -413,10 +413,6 @@ main{padding:16px 16px 0}
   <input id="pin" type="password" inputmode="numeric" maxlength="8" placeholder="••••">
   <button id="gateBtn">열기</button>
   <div id="gateMsg"></div>
-  <div class="gas-url-setup" id="gasUrlBox" style="display:none">
-    <input id="gasUrlInput" type="text" placeholder="https://script.google.com/macros/s/.../exec">
-    <small>Vercel 외부 연동을 위해 구글 앱스 스크립트 웹앱 URL을 입력해줘 (최초 1회)</small>
-  </div>
 </div>
 
 <!-- 서비스 전체 레이아웃 -->
@@ -558,6 +554,9 @@ function jsonpCall(url, fn, args){
   });
 }
 
+// ===== 구글 웹앱 기본 연동 주소 (모든 기기/프라이빗 모드 100% 자동 연동) =====
+const DEFAULT_GAS_URL = 'https://script.google.com/macros/s/AKfycbwjFv7OSDc6T4vD0nUQA5E-W1QazAEU5dowQroEXard5DCMtP0FiMRlwtIjuEfDzo8phA/exec';
+
 function srv(fn){ return function(){
   const args = Array.prototype.slice.call(arguments);
   if (typeof google !== 'undefined' && google.script && google.script.run) {
@@ -566,14 +565,8 @@ function srv(fn){ return function(){
       runner[fn].apply(runner,args);
     });
   }
-  let webappUrl = localStorage.getItem('GAS_WEBAPP_URL');
-  if(!webappUrl){
-    document.getElementById('gasUrlBox').style.display='block';
-    const inputEl = document.getElementById('gasUrlInput');
-    webappUrl = inputEl ? inputEl.value.trim() : '';
-    if(webappUrl) localStorage.setItem('GAS_WEBAPP_URL', webappUrl);
-    else return Promise.reject(new Error('Vercel 외부 연동을 위해 구글 앱스 스크립트 웹앱 URL을 입력해줘.'));
-  }
+  let webappUrl = DEFAULT_GAS_URL || localStorage.getItem('GAS_WEBAPP_URL');
+  localStorage.setItem('GAS_WEBAPP_URL', webappUrl);
   return jsonpCall(webappUrl, fn, args);
 }; }
 
