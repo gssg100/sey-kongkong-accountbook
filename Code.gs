@@ -73,11 +73,53 @@ function ss() { return SpreadsheetApp.getActiveSpreadsheet(); }
 function props_() { return PropertiesService.getScriptProperties(); }
 
 // ===== 진입점: 웹앱 화면 서빙 =====
-function doGet() {
+function doGet(e) {
+  if (e && e.parameter && (e.parameter.fn || e.parameter.callback)) {
+    try {
+      const callback = e.parameter.callback;
+      const fn = e.parameter.fn;
+      let args = [];
+      if (e.parameter.args) {
+        try { args = JSON.parse(e.parameter.args); } catch(err) { args = []; }
+      }
+      if (typeof this[fn] !== 'function') throw new Error('존재하지 않는 함수야: ' + fn);
+      const result = this[fn].apply(this, args);
+      const payload = JSON.stringify({ ok: true, data: result });
+      if (callback) {
+        return ContentService.createTextOutput(callback + '(' + payload + ')')
+          .setMimeType(ContentService.MimeType.JAVASCRIPT);
+      }
+      return ContentService.createTextOutput(payload)
+        .setMimeType(ContentService.MimeType.JSON);
+    } catch (err) {
+      const errPayload = JSON.stringify({ ok: false, error: err.message || '처리 실패' });
+      if (e.parameter.callback) {
+        return ContentService.createTextOutput(e.parameter.callback + '(' + errPayload + ')')
+          .setMimeType(ContentService.MimeType.JAVASCRIPT);
+      }
+      return ContentService.createTextOutput(errPayload)
+        .setMimeType(ContentService.MimeType.JSON);
+    }
+  }
   return HtmlService.createHtmlOutputFromFile('Index')
     .setTitle('sey콩콩 가계부')
     .addMetaTag('viewport',
       'width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover');
+}
+
+function doPost(e) {
+  try {
+    const contents = JSON.parse(e.postData.contents);
+    const fn = contents.fn;
+    const args = contents.args || [];
+    if (typeof this[fn] !== 'function') throw new Error('존재하지 않는 함수야: ' + fn);
+    const result = this[fn].apply(this, args);
+    return ContentService.createTextOutput(JSON.stringify({ ok: true, data: result }))
+      .setMimeType(ContentService.MimeType.JSON);
+  } catch (err) {
+    return ContentService.createTextOutput(JSON.stringify({ ok: false, error: err.message || '처리 실패' }))
+      .setMimeType(ContentService.MimeType.JSON);
+  }
 }
 
 
