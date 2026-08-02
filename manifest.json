@@ -1,0 +1,18 @@
+{
+  "name": "sey콩콩 가계부",
+  "short_name": "sey콩콩 가계부",
+  "description": "지수와 하영이의 스마트 공동 가계부",
+  "start_url": "./",
+  "display": "standalone",
+  "background_color": "#191f28",
+  "theme_color": "#191f28",
+  "orientation": "portrait",
+  "icons": [
+    {
+      "src": "data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='24' fill='%23191f28'/><text x='50' y='65' font-size='55' text-anchor='middle'>🌿</text></svg>",
+      "sizes": "192x192 512x512",
+      "type": "image/svg+xml",
+      "purpose": "any maskable"
+    }
+  ]
+}
