@@ -37,14 +37,32 @@ const SHEET_CLOSE_MONTH = '📌월마감';
 const TZ = 'Asia/Seoul';
 
 const TX_META_HEADERS = ['입력자', '거래ID', '생성일시', '수정일시', '수정자', '삭제여부', '소비성격'];
-const SPENDING_MEANINGS = ['필수', '생활', '즐거움', '가족', '투자', '아쉬움', '미지정'];
+const SPENDING_MEANINGS = [
+  '필수', '생활', '즐거움', '가족', '투자', '아쉬움',
+  '필수소비', '계획소비', '충동소비', '감성소비', '투자성', '미지정'
+];
 const DEFAULT_SPENDING_MEANING = '미지정';
+const SESSION_VERSION = 2;
+const SESSION_SHORT_TTL_MS = 24 * 60 * 60 * 1000;
+const SESSION_LONG_TTL_MS = 180 * 24 * 60 * 60 * 1000;
+const BRIDGE_CHANNEL = 'sey-budget-bridge-v1';
+const BRIDGE_API_ALLOWLIST = [
+  'createSession', 'getBoot', 'getMonthData', 'getFastMonthData', 'getTransactions',
+  'addTransactionsFast', 'addTransaction', 'updateTransaction', 'deleteTransaction', 'restoreTransaction',
+  'getTrendData', 'getRecurrings', 'saveRecurring', 'deleteRecurring', 'runRecurringNow',
+  'getRecurringStatus', 'installRecurringTrigger', 'removeRecurringTrigger',
+  'getBudget', 'updateBudget', 'copyBudget', 'recommendBudget',
+  'getCloseMonthHistory', 'getMonthlyReview', 'saveMonthlyReview', 'getMonthlyReviewHistory',
+  'getCloseMonthPreview', 'getTodayTasks', 'getCashflowForecast', 'getHomeInsight', 'closeMonth',
+  'getTemplates', 'saveTemplate', 'deleteTemplate', 'updateAssetCategory', 'saveAssetSnapshot',
+  'getAssetSnapshots', 'createBackup', 'runAiAnalysis', 'bulkUpdateCategory'
+];
 const BUDGET_HEADERS = ['월', '대분류', '예산', '메모', '생성일시', '수정일시', '수정자', '추천기준'];
 const TEMPLATE_HEADERS = ['템플릿명', '구분', '대분류', '내역', '기본금액', '고정/변동', '메모', '사용여부'];
 const ASSET_SNAPSHOT_HEADERS = ['기록일시', '대상월', '계좌잔액', '보물창고', '주식투자', '부동산보증금', '저축', '대출잔액', '총자산', '메모'];
 const ACTION_LOG_HEADERS = ['일시', '작업', '사용자', '내용'];
 const BUDGET_LOG_HEADERS = ['일시', '사용자', '작업', '대상월', '대분류', '이전예산', '새예산', '메모'];
-const RECURRING_HEADERS = ['정기ID', '정기명', '구분', '대분류', '내역', '금액', '고정/변동', '메모', '입력자', '결제일', '사용여부', '마지막실행월'];
+const RECURRING_HEADERS = ['정기ID', '정기명', '구분', '대분류', '내역', '금액', '고정/변동', '메모', '입력자', '결제일', '사용여부', '마지막실행월', '종료월'];
 const CLOSE_MONTH_HEADERS = ['마감월', '마감일시', '마감자', '총수입', '총지출', '저축투자', '대출상환', '남은돈', '저축률', '고정비', '변동비', '총자산', '이상지출수', 'AI요약', '메모', '백업URL', '좋았던소비', '아쉬웠던소비', '다음달약속', '지수의견', '하콩의견', '같이확인할것'];
 const AI_HEADERS = ['분석일시', '대상월', 'AI분석', '분석스냅샷'];
 const FAST_INPUT_INSTALL_VERSION = '2026-07-04-v1';
@@ -72,54 +90,49 @@ const BACKUP_SHEET_NAMES = [
 function ss() { return SpreadsheetApp.getActiveSpreadsheet(); }
 function props_() { return PropertiesService.getScriptProperties(); }
 
-// ===== 진입점: 웹앱 화면 서빙 =====
+// ===== 진입점: 웹앱 화면 및 정적 PWA용 제한 브리지 서빙 =====
 function doGet(e) {
-  if (e && e.parameter && (e.parameter.fn || e.parameter.callback)) {
-    try {
-      const callback = e.parameter.callback;
-      const fn = e.parameter.fn;
-      let args = [];
-      if (e.parameter.args) {
-        try { args = JSON.parse(e.parameter.args); } catch(err) { args = []; }
-      }
-      if (typeof this[fn] !== 'function') throw new Error('존재하지 않는 함수야: ' + fn);
-      const result = this[fn].apply(this, args);
-      const payload = JSON.stringify({ ok: true, data: result });
-      if (callback) {
-        return ContentService.createTextOutput(callback + '(' + payload + ')')
-          .setMimeType(ContentService.MimeType.JAVASCRIPT);
-      }
-      return ContentService.createTextOutput(payload)
-        .setMimeType(ContentService.MimeType.JSON);
-    } catch (err) {
-      const errPayload = JSON.stringify({ ok: false, error: err.message || '처리 실패' });
-      if (e.parameter.callback) {
-        return ContentService.createTextOutput(e.parameter.callback + '(' + errPayload + ')')
-          .setMimeType(ContentService.MimeType.JAVASCRIPT);
-      }
-      return ContentService.createTextOutput(errPayload)
-        .setMimeType(ContentService.MimeType.JSON);
-    }
+  if (e && e.parameter && e.parameter.bridge === '1') {
+    return bridgeHtmlOutput_();
   }
-  return HtmlService.createHtmlOutputFromFile('Index')
+  return HtmlService.createTemplateFromFile('Index')
+    .evaluate()
     .setTitle('sey콩콩 가계부')
     .addMetaTag('viewport',
-      'width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, viewport-fit=cover');
+      'width=device-width, initial-scale=1, viewport-fit=cover');
+}
+
+function include_(filename) {
+  return HtmlService.createHtmlOutputFromFile(filename).getContent();
+}
+
+function bridgeHtmlOutput_() {
+  const allowlist = JSON.stringify(BRIDGE_API_ALLOWLIST);
+  const channel = JSON.stringify(BRIDGE_CHANNEL);
+  const html = '<!doctype html><html><head><meta charset="utf-8"></head><body><script>' +
+    '(function(){' +
+      'var CHANNEL=' + channel + ';var ALLOWED=' + allowlist + ';' +
+      'function reply(target,origin,payload){try{target.postMessage(payload,origin);}catch(e){}}' +
+      'window.addEventListener("message",function(event){' +
+        'var m=event.data||{};if(m.channel!==CHANNEL||m.type!=="request"||!m.id)return;' +
+        'if(ALLOWED.indexOf(m.fn)<0){reply(event.source,event.origin,{channel:CHANNEL,type:"result",id:m.id,ok:false,error:"허용되지 않은 API야."});return;}' +
+        'var args=Array.isArray(m.args)?m.args:[];' +
+        'var runner=google.script.run.withSuccessHandler(function(data){reply(event.source,event.origin,{channel:CHANNEL,type:"result",id:m.id,ok:true,data:data});})' +
+          '.withFailureHandler(function(err){reply(event.source,event.origin,{channel:CHANNEL,type:"result",id:m.id,ok:false,error:(err&&err.message)||String(err||"처리 실패")});});' +
+        'runner[m.fn].apply(runner,args);' +
+      '});' +
+      'window.parent.postMessage({channel:CHANNEL,type:"ready"},"*");' +
+    '})();<\/script></body></html>';
+  return HtmlService.createHtmlOutput(html)
+    .setTitle('sey콩콩 데이터 브리지')
+    .setXFrameOptionsMode(HtmlService.XFrameOptionsMode.ALLOWALL);
 }
 
 function doPost(e) {
-  try {
-    const contents = JSON.parse(e.postData.contents);
-    const fn = contents.fn;
-    const args = contents.args || [];
-    if (typeof this[fn] !== 'function') throw new Error('존재하지 않는 함수야: ' + fn);
-    const result = this[fn].apply(this, args);
-    return ContentService.createTextOutput(JSON.stringify({ ok: true, data: result }))
-      .setMimeType(ContentService.MimeType.JSON);
-  } catch (err) {
-    return ContentService.createTextOutput(JSON.stringify({ ok: false, error: err.message || '처리 실패' }))
-      .setMimeType(ContentService.MimeType.JSON);
-  }
+  return ContentService.createTextOutput(JSON.stringify({
+    ok: false,
+    error: '직접 POST 호출은 지원하지 않아. 앱 브리지를 사용해줘.'
+  })).setMimeType(ContentService.MimeType.JSON);
 }
 
 
@@ -224,7 +237,7 @@ function checkPin_(pin) {
   if (!real || String(real).trim() === '' || String(real) === '0000') return false;
   return String(pin) === String(real);
 }
-function guard_(pin) {
+function verifyPinWithRateLimit_(pin) {
   const real = props_().getProperty('APP_PIN');
   if (!real || String(real).trim() === '' || String(real) === '0000') {
     throw new Error('APP_PIN이 설정되지 않았거나 기본값이야. Apps Script 스크립트 속성에서 안전한 PIN을 먼저 설정해줘.');
@@ -235,7 +248,7 @@ function guard_(pin) {
   }
   if (String(pin) === String(real)) {
     cache.remove('PIN_FAIL_COUNT');
-    return;
+    return true;
   }
   const count = Number(cache.get('PIN_FAIL_COUNT') || 0) + 1;
   if (count >= 5) {
@@ -245,6 +258,80 @@ function guard_(pin) {
   }
   cache.put('PIN_FAIL_COUNT', String(count), 300);
   throw new Error('PIN이 안 맞아. 다시 확인해줘. (' + count + '/5)');
+}
+
+function sessionSecret_() {
+  let secret = props_().getProperty('SESSION_SECRET');
+  if (!secret) {
+    secret = Utilities.getUuid() + Utilities.getUuid() + Utilities.getUuid();
+    props_().setProperty('SESSION_SECRET', secret);
+  }
+  return secret;
+}
+
+function base64WebSafeText_(text) {
+  return Utilities.base64EncodeWebSafe(String(text), Utilities.Charset.UTF_8).replace(/=+$/g, '');
+}
+
+function signSessionPayload_(payloadPart) {
+  const bytes = Utilities.computeHmacSha256Signature(payloadPart, sessionSecret_());
+  return Utilities.base64EncodeWebSafe(bytes).replace(/=+$/g, '');
+}
+
+function parseSession_(token) {
+  const parts = String(token || '').split('.');
+  if (parts.length !== 2 || signSessionPayload_(parts[0]) !== parts[1]) {
+    throw new Error('로그인 세션이 올바르지 않아. 다시 로그인해줘.');
+  }
+  let payload;
+  try {
+    payload = JSON.parse(Utilities.newBlob(Utilities.base64DecodeWebSafe(parts[0])).getDataAsString());
+  } catch (e) {
+    throw new Error('로그인 세션을 읽지 못했어. 다시 로그인해줘.');
+  }
+  if (!payload || payload.v !== SESSION_VERSION || Number(payload.exp || 0) <= Date.now()) {
+    throw new Error('로그인 세션이 만료됐어. 다시 로그인해줘.');
+  }
+  return payload;
+}
+
+function createSession(pin, user, remember) {
+  verifyPinWithRateLimit_(pin);
+  const normalizedUser = normalizeUser_(user || '하콩') || '하콩';
+  const now = Date.now();
+  const expiresAt = now + (remember === false ? SESSION_SHORT_TTL_MS : SESSION_LONG_TTL_MS);
+  const payload = {
+    v: SESSION_VERSION,
+    user: normalizedUser,
+    iat: now,
+    exp: expiresAt,
+    nonce: Utilities.getUuid()
+  };
+  const payloadPart = base64WebSafeText_(JSON.stringify(payload));
+  return {
+    ok: true,
+    token: payloadPart + '.' + signSessionPayload_(payloadPart),
+    user: normalizedUser,
+    expiresAt: expiresAt,
+    ym: currentYm_()
+  };
+}
+
+function guard_(credential) {
+  const value = String(credential || '');
+  if (value.indexOf('.') > 0) return parseSession_(value);
+  verifyPinWithRateLimit_(value);
+  return { v: 0, user: '', exp: Date.now() + SESSION_SHORT_TTL_MS };
+}
+
+function getDataRevision_() {
+  return Number(props_().getProperty('DATA_REVISION') || 1);
+}
+
+function bumpDataRevision_() {
+  const next = Math.max(Date.now(), getDataRevision_() + 1);
+  props_().setProperty('DATA_REVISION', String(next));
+  return next;
 }
 
 // ===== 작은 유틸 =====
@@ -365,6 +452,21 @@ function safeRowNumber_(row) {
   if (!isFinite(r) || Math.floor(r) !== r) throw new Error('행 번호가 올바르지 않아.');
   if (r <= 1) throw new Error('헤더 행은 수정/삭제할 수 없어.');
   return r;
+}
+
+function resolveTxRow_(ref, info) {
+  info = info || txMap_(true);
+  const raw = String(ref == null ? '' : ref).trim();
+  if (!raw) throw new Error('거래 식별자가 없어.');
+  if (/^\d+$/.test(raw)) return safeRowNumber_(Number(raw));
+  if (info.map.txId == null) throw new Error('거래ID 컬럼을 찾지 못했어.');
+  const last = info.sh.getLastRow();
+  if (last < 2) throw new Error('거래내역이 비어 있어.');
+  const ids = info.sh.getRange(2, info.map.txId + 1, last - 1, 1).getDisplayValues();
+  for (let i = 0; i < ids.length; i++) {
+    if (String(ids[i][0] || '').trim() === raw) return i + 2;
+  }
+  throw new Error('해당 거래를 찾지 못했어. 다른 기기에서 변경됐다면 동기화 후 다시 시도해줘.');
 }
 
 function normalizeUser_(user) {
@@ -537,6 +639,7 @@ function appendActionLog_(action, user, content) {
   try {
     const sh = getOrCreateSheet_(SHEET_ACTION_LOG, ACTION_LOG_HEADERS);
     sh.appendRow([new Date(), String(action || ''), String(user || '웹앱'), String(content || '')]);
+    bumpDataRevision_();
   } catch (e) {
     // 작업로그 문제가 본 기능을 막지 않도록 조용히 넘김
   }
@@ -813,6 +916,7 @@ function recurringMap_() {
     else if (h === '결제일') map.day = i;
     else if (h === '사용여부') map.enabled = i;
     else if (h === '마지막실행월') map.lastRunYm = i;
+    else if (h === '종료월') map.endYm = i;
   });
   return { sh: sh, map: map };
 }
@@ -831,7 +935,8 @@ function recurringObject_(rowValues, rowNo, map) {
     user: String(rowValues[map.user] || ''),
     day: Number(rowValues[map.day] || 1),
     enabled: boolText_(rowValues[map.enabled], true),
-    lastRunYm: String(rowValues[map.lastRunYm] || '')
+    lastRunYm: String(rowValues[map.lastRunYm] || ''),
+    endYm: String(rowValues[map.endYm] || '')
   };
 }
 
@@ -857,6 +962,7 @@ function normalizeRecurring_(recurring) {
   const user = normalizeUser_(recurring.user);
   const enabled = boolText_(recurring.enabled != null ? recurring.enabled : recurring.use, true);
   const lastRunYm = String(recurring.lastRunYm || recurring.lastRun || '').trim();
+  const endYm = String(recurring.endYm || '').trim();
   if (id && id.indexOf('RC-') !== 0) throw new Error('정기ID 형식을 확인해줘.');
   if (!name) throw new Error('정기명을 입력해줘.');
   if (!type) throw new Error('구분을 입력해줘.');
@@ -864,6 +970,7 @@ function normalizeRecurring_(recurring) {
   if (!(amount > 0)) throw new Error('금액은 0보다 큰 숫자로 입력해줘.');
   if (!isFinite(day) || Math.floor(day) !== day || day < 1 || day > 31) throw new Error('결제일은 1~31 사이 정수로 입력해줘.');
   if (lastRunYm && !ymToDate_(lastRunYm)) throw new Error('마지막실행월 형식을 확인해줘. 예: 2026-06');
+  if (endYm && !ymToDate_(endYm)) throw new Error('종료월 형식을 확인해줘. 예: 2026-12');
   return {
     id: id,
     name: name,
@@ -876,7 +983,8 @@ function normalizeRecurring_(recurring) {
     user: user,
     day: day,
     enabled: enabled,
-    lastRunYm: lastRunYm
+    lastRunYm: lastRunYm,
+    endYm: endYm
   };
 }
 
@@ -893,7 +1001,8 @@ function recurringRow_(recurring) {
     recurring.user,
     recurring.day,
     recurring.enabled,
-    recurring.lastRunYm || ''
+    recurring.lastRunYm,
+    recurring.endYm
   ];
 }
 
@@ -1004,6 +1113,12 @@ function runRecurringForMonth_(ym, options) {
       const rowNo = i + 2;
       const recurring = recurringObject_(r, rowNo, map);
       if (!recurring.id || !recurring.enabled) return;
+      
+      if (recurring.endYm && compareYm_(ym, recurring.endYm) > 0) {
+        // 이미 종료월이 지났다면 비활성화
+        sh.getRange(rowNo, map.enabled + 1).setValue('FALSE');
+        return;
+      }
       const dueDay = adjustedDay_(ym, recurring.day);
       if (onlyDay != null && dueDay !== onlyDay) {
         result.notDue++;
@@ -2212,6 +2327,18 @@ function recentFromSnapshot_(snapshot, n) {
   return out;
 }
 
+function monthTransactionsFromSnapshot_(ym, snapshot, limit) {
+  const rows = [];
+  const map = snapshot.map;
+  snapshot.values.forEach((r, i) => {
+    if (isDeleted_(r, map)) return;
+    if (ymOf_(r[map.date]) !== ym) return;
+    rows.push(txObject_(r, i + 2, map));
+  });
+  rows.sort((a, b) => b.row - a.row);
+  return rows.slice(0, Math.max(1, Number(limit || 1000)));
+}
+
 function countUnassignedFromSnapshot_(ym, snapshot) {
   const map = snapshot.map;
   if (map.user == null) return 0;
@@ -2238,6 +2365,9 @@ function getFastMonthData(pin, ym) {
     summary: summary,
     budget: budget,
     recent: recentFromSnapshot_(snapshot, 20),
+    transactions: monthTransactionsFromSnapshot_(ym, snapshot, 1000),
+    revision: getDataRevision_(),
+    serverTime: Date.now(),
     insight: buildHomeInsight_(ym, {
       summary: summary,
       budget: budget,
@@ -2248,36 +2378,43 @@ function getFastMonthData(pin, ym) {
 }
 
 function buildTxResponse_(ym) {
-  const summary = getMonthSummary_(ym);
+  const snapshot = readTxSnapshot_();
+  const summary = monthSummaryFromSnapshot_(ym, snapshot);
   const budget = getBudgetProgress_(ym, summary);
-  const monthTx = getTransactionsCore_({ ym: ym, mode: 'month', limit: 1000 });
+  const transactions = monthTransactionsFromSnapshot_(ym, snapshot, 1000);
   return {
     ok: true,
     ym: ym,
     summary: summary,
     budget: budget,
-    recent: getRecent_(20),
-    transactions: monthTx.rows,
-    count: monthTx.count,
-    insight: buildHomeInsight_(ym, { summary: summary, budget: budget })
+    recent: recentFromSnapshot_(snapshot, 20),
+    transactions: transactions,
+    count: transactions.length,
+    revision: getDataRevision_(),
+    serverTime: Date.now()
   };
 }
 
 // ===== 최초 부팅: 화면 그릴 데이터 한 방에 =====
 function getBoot(pin) {
-  guard_(pin);
-  txMap_(true);
+  const session = guard_(pin);
   const ym = currentYm_();
-  const summary = getMonthSummary_(ym);
+  const snapshot = readTxSnapshot_();
+  const summary = monthSummaryFromSnapshot_(ym, snapshot);
   const budget = getBudgetProgress_(ym, summary);
   const recurrings = getRecurringsCore_();
+  const transactions = monthTransactionsFromSnapshot_(ym, snapshot, 1000);
   return {
     ym: ym,
+    sessionUser: session.user || '',
+    revision: getDataRevision_(),
+    cacheVersion: 2,
+    serverTime: Date.now(),
     config: getConfig_(),
     summary: summary,
     budget: budget,
-    recent: getRecent_(20),
-    transactions: getTransactionsCore_({ mode: 'recent', limit: 20 }).rows,
+    recent: recentFromSnapshot_(snapshot, 20),
+    transactions: transactions,
     assets: getAssets_(),
     templates: getTemplatesCore_(),
     recurrings: recurrings,
@@ -2286,28 +2423,56 @@ function getBoot(pin) {
     aiReady: !!props_().getProperty('GROQ_API_KEY'),
     aiHistory: getAiHistory_(8),
     closeHistory: getCloseMonthHistoryCore_(6),
-    insight: buildHomeInsight_(ym, { summary: summary, budget: budget, recurrings: recurrings })
+    descDict: getDescDict_()
   };
 }
 
 // ===== 월 이동 시 데이터 갱신 =====
 function getMonthData(pin, ym) {
   guard_(pin);
-  ym = ym || currentYm_();
-  const summary = getMonthSummary_(ym);
+  ym = validYm_(ym || currentYm_());
+  const snapshot = readTxSnapshot_();
+  const summary = monthSummaryFromSnapshot_(ym, snapshot);
   const budget = getBudgetProgress_(ym, summary);
-  const recurrings = getRecurringsCore_();
-  const monthTx = getTransactionsCore_({ ym: ym, mode: 'month', limit: 1000 });
+  const transactions = monthTransactionsFromSnapshot_(ym, snapshot, 1000);
   return {
     ym: ym,
     summary: summary,
     budget: budget,
-    recent: getRecent_(20),
-    transactions: monthTx.rows,
-    count: monthTx.count,
+    recent: recentFromSnapshot_(snapshot, 20),
+    transactions: transactions,
+    count: transactions.length,
     closeHistory: getCloseMonthHistoryCore_(6),
-    insight: buildHomeInsight_(ym, { summary: summary, budget: budget, recurrings: recurrings })
+    revision: getDataRevision_(),
+    serverTime: Date.now()
   };
+}
+
+// ===== 과거 입력 내역 기반 자동 분류 사전 생성 =====
+function getDescDict_() {
+  const { sh, map } = txMap_(false);
+  const last = sh.getLastRow();
+  if (last < 2 || map.desc == null) return {};
+  
+  // 성능을 위해 최근 2000행만 스캔
+  const startRow = Math.max(2, last - 2000);
+  const numRows = last - startRow + 1;
+  const vals = sh.getRange(startRow, 1, numRows, sh.getLastColumn()).getValues();
+  
+  const dict = {};
+  // 과거 -> 최신 순으로 덮어씌워 가장 최신의 분류를 학습하도록 함
+  vals.forEach(r => {
+    if (isDeleted_(r, map)) return;
+    const desc = String(r[map.desc] || '').trim();
+    if (!desc) return;
+    const type = String(r[map.type] || '').trim();
+    const cat = String(r[map.cat] || '').trim();
+    const fixed = String(r[map.fixed] || '변동').trim();
+    if (type && cat) {
+      dict[desc] = { type: type, cat: cat, fixed: fixed };
+    }
+  });
+  return dict;
 }
 
 // ===== 설정탭 -> 드롭다운 데이터 =====
@@ -2321,6 +2486,7 @@ function getConfig_() {
     const type = String(vals[i][0]).trim();
     const cat = String(vals[i][1]).trim();
     if (!type || !cat) continue;
+    if (type === '수입' && cat === '수입') continue;
     if (!byType[type]) { byType[type] = []; order.push(type); }
     if (byType[type].indexOf(cat) === -1) byType[type].push(cat);
   }
@@ -2592,6 +2758,7 @@ function addTransactionsFast(pin, items) {
   if (response.inserted > 0) {
     appendActionLog_('빠른 거래 입력', '웹앱', response.inserted + '건 저장 / 중복 ' + response.duplicates + '건');
   }
+  response.revision = getDataRevision_();
   return response;
 }
 
@@ -2607,19 +2774,21 @@ function addTransaction(pin, data) {
   } finally {
     lock.releaseLock();
   }
+  bumpDataRevision_();
   return buildTxResponse_(added.ym);
 }
 
 // ===== 거래 수정 =====
 function updateTransaction(pin, row, data, ym) {
   guard_(pin);
-  const r = safeRowNumber_(row);
   const clean = normalizeTxData_(data);
   const lock = LockService.getScriptLock();
   lock.waitLock(10000);
   let targetYm = ym || ymOf_(clean.date) || currentYm_();
   try {
-    const { sh, map, lastCol } = txMap_(true);
+    const info = txMap_(true);
+    const { sh, map, lastCol } = info;
+    const r = resolveTxRow_(row, info);
     assertTxCore_(map);
     const lastRow = sh.getLastRow();
     if (r > lastRow) throw new Error('수정할 행이 실제 데이터 범위 밖이야.');
@@ -2645,18 +2814,20 @@ function updateTransaction(pin, row, data, ym) {
   } finally {
     lock.releaseLock();
   }
+  bumpDataRevision_();
   return buildTxResponse_(targetYm);
 }
 
 // ===== 거래 삭제: 실제 행 삭제 대신 휴지통 처리 =====
 function deleteTransaction(pin, row, ym) {
   guard_(pin);
-  const r = safeRowNumber_(row);
   const lock = LockService.getScriptLock();
   lock.waitLock(10000);
   let targetYm = ym || currentYm_();
   try {
-    const { sh, map, lastCol } = txMap_(true);
+    const info = txMap_(true);
+    const { sh, map, lastCol } = info;
+    const r = resolveTxRow_(row, info);
     assertTxCore_(map);
     const lastRow = sh.getLastRow();
     if (r > lastRow) throw new Error('삭제할 행이 실제 데이터 범위 밖이야.');
@@ -2675,17 +2846,19 @@ function deleteTransaction(pin, row, ym) {
   } finally {
     lock.releaseLock();
   }
+  bumpDataRevision_();
   return buildTxResponse_(targetYm);
 }
 
 // ===== 삭제 거래 복구 =====
 function restoreTransaction(pin, row, ym) {
   guard_(pin);
-  const r = safeRowNumber_(row);
   const lock = LockService.getScriptLock();
   lock.waitLock(10000);
   try {
-    const { sh, map, lastCol } = txMap_(true);
+    const info = txMap_(true);
+    const { sh, map, lastCol } = info;
+    const r = resolveTxRow_(row, info);
     assertTxCore_(map);
     const lastRow = sh.getLastRow();
     if (r > lastRow) throw new Error('복구할 행이 실제 데이터 범위 밖이야.');
@@ -2699,6 +2872,7 @@ function restoreTransaction(pin, row, ym) {
     sh.getRange(r, 1, 1, lastCol).setValues([values]);
 
     const targetYm = ym || ymOf_(tx.date) || currentYm_();
+    bumpDataRevision_();
     return buildTxResponse_(targetYm);
   } finally {
     lock.releaseLock();
@@ -2719,34 +2893,68 @@ function getAssets_() {
     { key: 'saving', label: '저축',          match: '저축' }
   ];
   const items = {};
-  defs.forEach(d => {
-    for (let i = 0; i < vals.length; i++) {
-      if (String(vals[i][0]).indexOf(d.match) > -1) {
-        items[d.key] = { row: i + 1, label: d.label, value: numParse_(vals[i][1]) };
-        break;
+  defs.forEach(d => { items[d.key] = { label: d.label, value: 0, subItems: [] }; });
+  
+  for (let i = 0; i < vals.length; i++) {
+    let catKey = String(vals[i][0]).trim();
+    let itemName = String(vals[i][1] || '').trim();
+    let amt = numParse_(vals[i][2]);
+    
+    // Backward compatibility: If Column C is empty/undefined, it's the old format (Col A = label, Col B = amt)
+    if (amt === 0 && (vals[i][2] === undefined || vals[i][2] === '')) {
+      amt = numParse_(vals[i][1]);
+      itemName = '기본 항목';
+      const foundDef = defs.find(d => catKey.indexOf(d.match) > -1);
+      if (foundDef) catKey = foundDef.key;
+    }
+    
+    if (items[catKey]) {
+      if (amt !== 0 || itemName) {
+        items[catKey].subItems.push({ name: itemName, amount: amt });
+        items[catKey].value += amt;
       }
     }
-    if (!items[d.key]) items[d.key] = { row: 0, label: d.label, value: 0 };
-  });
-  const total = items.cash.value + items.safe.value + items.stock.value
+  }
+
+  let total = items.cash.value + items.safe.value + items.stock.value
     + items.estate.value + items.saving.value - items.debt.value;
+    
   return { items: items, total: total };
 }
 
 // ===== 자산 노란칸 업데이트 =====
-function updateAssets(pin, data) {
+function updateAssetCategory(pin, key, subItems) {
   guard_(pin);
   const lock = LockService.getScriptLock();
   lock.waitLock(15000);
   try {
     const sh = ss().getSheetByName(SHEET_ASSET);
     const cur = getAssets_();
+    
+    if (cur.items[key]) {
+      cur.items[key].subItems = subItems || [];
+    }
+    
+    // Rewrite the entire sheet
+    sh.clearContents();
+    const newData = [];
     ['cash', 'safe', 'stock', 'estate', 'debt', 'saving'].forEach(k => {
-      if (data[k] == null || data[k] === '') return;
       const info = cur.items[k];
-      if (info && info.row > 0) sh.getRange(info.row, 2).setValue(numParse_(data[k]));
+      if (info && info.subItems && info.subItems.length > 0) {
+        info.subItems.forEach(sub => {
+          newData.push([k, sub.name, sub.amount]);
+        });
+      } else if (info && info.value > 0) { // Fallback for old unmigrated data without subItems
+        newData.push([k, info.label, info.value]);
+      }
     });
-    return { ok: true, assets: getAssets_() };
+    
+    if (newData.length > 0) {
+      sh.getRange(1, 1, newData.length, 3).setValues(newData);
+    }
+    
+    bumpDataRevision_();
+    return { ok: true, assets: getAssets_(), revision: getDataRevision_() };
   } finally {
     lock.releaseLock();
   }
@@ -3013,4 +3221,56 @@ function buildSnapshot_(s, budget, prev, writers, anomalies) {
 function saveAi_(ym, coaching, snapshot) {
   const sh = getOrCreateSheet_(SHEET_AI, AI_HEADERS, []);
   sh.appendRow([new Date(), ym, coaching, snapshot]);
+}
+
+function bulkUpdateCategory(pin, payload) {
+  guard_(pin);
+  payload = payload || {};
+  const ids = payload.ids || [];
+  const newCat = payload.newCat;
+  const ym = payload.ym;
+  
+  if (!ids.length || !newCat) throw new Error('잘못된 요청입니다.');
+  
+  const lock = LockService.getScriptLock();
+  lock.waitLock(10000);
+  try {
+    const { sh, headers, map, lastCol } = txMap_(true);
+    const last = sh.getLastRow();
+    if (last < 2) throw new Error('데이터가 없습니다.');
+    
+    const rows = sh.getRange(2, 1, last - 1, lastCol).getValues();
+    const updates = [];
+    const changedDescs = new Set();
+    
+    ids.forEach(idStr => {
+      const rowNo = resolveTxRow_(idStr, { sh: sh, map: map, lastCol: lastCol });
+      const rIdx = rowNo - 2;
+      
+      if (rIdx >= 0 && rIdx < rows.length) {
+        const row = rows[rIdx];
+        const desc = String(row[map.desc] || '').trim();
+        
+        row[map.cat] = newCat;
+        row[map.updatedAt] = new Date();
+        row[map.updatedBy] = '하영(일괄변경)';
+        
+        updates.push({ rowNo: rowNo, data: row });
+        
+        if (desc) {
+          changedDescs.add(desc);
+        }
+      }
+    });
+    
+    updates.forEach(u => {
+      sh.getRange(u.rowNo, 1, 1, lastCol).setValues([u.data]);
+    });
+    
+    appendActionLog_('일괄변경', '하영', ids.length + '건을 ' + newCat + '로 변경 완료');
+    
+  } finally {
+    lock.releaseLock();
+  }
+  return getMonthData(pin, ym || currentYm_());
 }
