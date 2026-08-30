@@ -47,7 +47,7 @@ const SESSION_SHORT_TTL_MS = 24 * 60 * 60 * 1000;
 const SESSION_LONG_TTL_MS = 180 * 24 * 60 * 60 * 1000;
 const BRIDGE_CHANNEL = 'sey-budget-bridge-v1';
 const BRIDGE_API_ALLOWLIST = [
-  'createSession', 'getBoot', 'getMonthData', 'getFastMonthData', 'getTransactions',
+  'createSession', 'createSessionAndGetBoot', 'getBoot', 'getMonthData', 'getFastMonthData', 'getTransactions',
   'addTransactionsFast', 'addTransaction', 'updateTransaction', 'deleteTransaction', 'restoreTransaction',
   'getTrendData', 'getRecurrings', 'saveRecurring', 'deleteRecurring', 'runRecurringNow',
   'getRecurringStatus', 'installRecurringTrigger', 'removeRecurringTrigger',
@@ -314,6 +314,15 @@ function createSession(pin, user, remember) {
     user: normalizedUser,
     expiresAt: expiresAt,
     ym: currentYm_()
+  };
+}
+
+// 새 기기 첫 로그인에서 세션 생성과 초기 장부 로딩을 한 번의 호출로 처리한다.
+function createSessionAndGetBoot(pin, user, remember) {
+  const session = createSession(pin, user, remember);
+  return {
+    session: session,
+    boot: buildBootData_(parseSession_(session.token))
   };
 }
 
@@ -2395,9 +2404,7 @@ function buildTxResponse_(ym) {
   };
 }
 
-// ===== 최초 부팅: 화면 그릴 데이터 한 방에 =====
-function getBoot(pin) {
-  const session = guard_(pin);
+function buildBootData_(session) {
   const ym = currentYm_();
   const snapshot = readTxSnapshot_();
   const summary = monthSummaryFromSnapshot_(ym, snapshot);
@@ -2423,8 +2430,13 @@ function getBoot(pin) {
     aiReady: !!props_().getProperty('GROQ_API_KEY'),
     aiHistory: getAiHistory_(8),
     closeHistory: getCloseMonthHistoryCore_(6),
-    descDict: getDescDict_()
+    descDict: getDescDictFromSnapshot_(snapshot)
   };
+}
+
+// ===== 최초 부팅: 화면 그릴 데이터 한 방에 =====
+function getBoot(pin) {
+  return buildBootData_(guard_(pin));
 }
 
 // ===== 월 이동 시 데이터 갱신 =====
@@ -2449,16 +2461,10 @@ function getMonthData(pin, ym) {
 }
 
 // ===== 과거 입력 내역 기반 자동 분류 사전 생성 =====
-function getDescDict_() {
-  const { sh, map } = txMap_(false);
-  const last = sh.getLastRow();
-  if (last < 2 || map.desc == null) return {};
-  
-  // 성능을 위해 최근 2000행만 스캔
-  const startRow = Math.max(2, last - 2000);
-  const numRows = last - startRow + 1;
-  const vals = sh.getRange(startRow, 1, numRows, sh.getLastColumn()).getValues();
-  
+function getDescDictFromSnapshot_(snapshot) {
+  if (!snapshot || !snapshot.map || snapshot.map.desc == null) return {};
+  const map = snapshot.map;
+  const vals = (snapshot.values || []).slice(-2000);
   const dict = {};
   // 과거 -> 최신 순으로 덮어씌워 가장 최신의 분류를 학습하도록 함
   vals.forEach(r => {
@@ -2473,6 +2479,10 @@ function getDescDict_() {
     }
   });
   return dict;
+}
+
+function getDescDict_() {
+  return getDescDictFromSnapshot_(readTxSnapshot_());
 }
 
 // ===== 설정탭 -> 드롭다운 데이터 =====

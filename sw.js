@@ -1,5 +1,6 @@
-const CACHE_NAME = 'sey-budget-shell-v3-20260827';
+const CACHE_NAME = 'sey-budget-shell-v4-20260830';
 const APP_SHELL = ['/', '/index.html', '/manifest.json', '/icons/icon-192.png', '/icons/icon-512.png'];
+const NAVIGATION_ENTRY = '/index.html';
 
 self.addEventListener('install', (event) => {
   event.waitUntil(caches.open(CACHE_NAME).then((cache) => cache.addAll(APP_SHELL)));
@@ -20,14 +21,12 @@ self.addEventListener('fetch', (event) => {
   const url = new URL(event.request.url);
   if (url.origin !== self.location.origin) return;
   if (event.request.mode === 'navigate') {
-    event.respondWith(
-      fetch(event.request)
-        .then((response) => {
-          caches.open(CACHE_NAME).then((cache) => cache.put('/index.html', response.clone()));
-          return response;
-        })
-        .catch(() => caches.match('/index.html')),
-    );
+    const networkResponse = fetch(event.request).then((response) => {
+      if (response.ok) caches.open(CACHE_NAME).then((cache) => cache.put(NAVIGATION_ENTRY, response.clone()));
+      return response;
+    });
+    event.waitUntil(networkResponse.then(() => undefined).catch(() => undefined));
+    event.respondWith(caches.match(NAVIGATION_ENTRY).then((cached) => cached || networkResponse));
     return;
   }
   event.respondWith(

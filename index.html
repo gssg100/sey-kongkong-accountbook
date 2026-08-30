@@ -3,15 +3,14 @@
 <head>
 <base target="_top">
 <meta charset="utf-8">
-<meta name="app-version" content="2026-08-27-pwa-v3">
+<meta name="app-version" content="2026-08-30-clean-v4">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="description" content="지수와 하콩이의 빠르고 편한 공동 가계부">
 <meta name="theme-color" content="#f5f5f7">
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <meta name="apple-mobile-web-app-title" content="sey콩콩 가계부">
 
-<link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/variable/pretendard-variable.min.css">
 <title>sey콩콩 가계부</title>
 
 <!-- 🎨 1. CSS 디자인 시스템 모듈 -->
@@ -40,7 +39,7 @@
   --shadow:0 10px 30px rgba(0,0,0,0.03);
   --r:24px; --r-sm:14px;
   --tabh:64px; --safe-b:env(safe-area-inset-bottom,0px);
-  font-family:-apple-system,BlinkMacSystemFont,"SF Pro Display","SF Pro Text","Pretendard Variable",system-ui,sans-serif;
+  font-family:-apple-system,BlinkMacSystemFont,"SF Pro Display","SF Pro Text","Segoe UI","Malgun Gothic",system-ui,sans-serif;
 }
 body.dark-mode{
   --ink:#f5f5f7;
@@ -104,22 +103,22 @@ body.dark-mode .auto-login-label{background:rgba(255,255,255,0.06);color:#a1a1a6
 header.top{position:sticky;top:0;z-index:30;
   background:rgba(255,255,255,0.85);backdrop-filter:blur(20px);-webkit-backdrop-filter:blur(20px);
   color:var(--ink);border-bottom:1px solid rgba(0,0,0,0.06);
-  padding:12px 18px;border-radius:0 0 24px 24px;transition:background .25s}
+  padding:8px 14px;border-radius:0 0 18px 18px;transition:background .25s}
 body.dark-mode header.top{background:rgba(28,28,30,0.85);border-bottom-color:rgba(255,255,255,0.08)}
 
-.top-inner{max-width:1120px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap}
-.header-left{display:flex;align-items:center;gap:12px}
-.header-right{display:flex;align-items:center;gap:12px}
+.top-inner{max-width:1120px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;gap:8px;flex-wrap:nowrap}
+.header-left{display:none;align-items:center;gap:12px}
+.header-right{width:100%;display:flex;align-items:center;justify-content:space-between;gap:8px}
 .brand .name{font-size:16px;font-weight:800;letter-spacing:-.02em;display:flex;align-items:center;gap:7px}
 .brand .name .dot{width:8px;height:8px;border-radius:50%;background:var(--forest)}
-.who{font-size:12px;color:var(--muted);font-weight:700}
+.who{display:none;font-size:12px;color:var(--muted);font-weight:700}
 .monthnav{display:flex;align-items:center;gap:8px}
-.monthnav button{width:32px;height:32px;border-radius:50%;background:var(--line-soft);
+.monthnav button{width:44px;height:44px;border-radius:50%;background:var(--line-soft);
   font-size:15px;color:var(--ink);display:flex;align-items:center;justify-content:center;transition:background .15s}
 .monthnav button:active{background:var(--line)}
 .monthnav .mlabel{font-size:17px;font-weight:800;letter-spacing:-.02em;min-width:92px;text-align:center;
   font-variant-numeric:tabular-nums}
-.theme-btn{font-size:16px;background:var(--line-soft);padding:5px 9px;border-radius:10px;color:var(--ink);cursor:pointer;display:flex;align-items:center;justify-content:center}
+.theme-btn{min-width:44px;min-height:44px;font-size:16px;background:var(--line-soft);padding:0 10px;border-radius:12px;color:var(--ink);cursor:pointer;display:flex;align-items:center;justify-content:center}
 .desktop-nav{display:none}
 
 main{padding:18px 16px 0}
@@ -158,13 +157,11 @@ main{padding:18px 16px 0}
 .dday-chip{flex:0 0 auto;padding:10px 15px;border-radius:14px;background:var(--card);box-shadow:var(--shadow);border:1px solid var(--line-soft);font-size:13px;font-weight:800;display:flex;align-items:center;gap:8px}
 .dday-chip .badge{padding:3px 8px;border-radius:999px;background:var(--gold-soft);color:#705312;font-size:11px;font-weight:900}
 .dday-chip.imminent .badge{background:#fbe9e6;color:var(--expense)}
-.praise-btn{padding:5px 10px;border-radius:999px;background:var(--line-soft);font-size:11.5px;font-weight:800;color:var(--muted);transition:transform .15s}
-.praise-btn:active{transform:scale(.92)}
-.praise-btn.praised{background:#ffeef0;color:#ff2d55}
-.del-tx-btn{font-size:14px;padding:6px;border-radius:10px;color:var(--muted);transition:transform .12s,background .12s;margin-left:4px;border:none;background:none;cursor:pointer}
+.text-action{min-height:36px;padding:6px 10px;border-radius:10px;background:var(--line-soft);font-size:12px;font-weight:800;color:var(--forest)}
+.del-tx-btn{min-width:36px;min-height:36px;font-size:14px;padding:6px;border-radius:10px;color:var(--muted);transition:transform .12s,background .12s;margin-left:2px;border:none;background:none;cursor:pointer}
 .del-tx-btn:hover{background:#fbe9e6;color:var(--expense)}
 .del-tx-btn:active{transform:scale(.88)}
-.edit-tx-btn{font-size:14px;padding:6px;border-radius:10px;color:var(--muted);transition:transform .12s,background .12s;margin-left:2px;border:none;background:none;cursor:pointer}
+.edit-tx-btn{min-width:36px;min-height:36px;font-size:14px;padding:6px;border-radius:10px;color:var(--muted);transition:transform .12s,background .12s;margin-left:0;border:none;background:none;cursor:pointer}
 .edit-tx-btn:hover{background:#e8f0fe;color:var(--forest)}
 .edit-tx-btn:active{transform:scale(.88)}
 .cat-scroll-bar{display:flex;gap:6px;overflow-x:auto;padding-bottom:10px;margin-bottom:12px;-webkit-overflow-scrolling:touch}
@@ -180,6 +177,25 @@ main{padding:18px 16px 0}
 .user-switcher-strip{display:flex;gap:6px;background:var(--line-soft);padding:4px;border-radius:16px;margin-bottom:16px}
 .user-switch-chip{flex:1;padding:9px 0;border-radius:12px;font-size:13px;font-weight:800;color:var(--muted);text-align:center;transition:.15s;border:none;background:none;cursor:pointer}
 .user-switch-chip.on{background:var(--card);color:var(--ink);box-shadow:0 4px 12px rgba(0,0,0,.05)}
+.filter-caption{margin:0 4px 7px;color:var(--muted);font-size:11.5px;font-weight:800}
+
+.summary-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:12px}
+.summary-grid .mini{padding:12px 6px;box-shadow:none}
+.summary-grid .mini .v{font-size:clamp(12px,3.8vw,16px);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.home-section-head{display:flex;align-items:center;justify-content:space-between;margin:22px 4px 10px}
+.home-section-head .sec-title{margin:0}
+.insight-panel{margin-top:16px;background:var(--card);border:1px solid var(--line-soft);border-radius:20px;box-shadow:var(--shadow);overflow:hidden}
+.insight-panel>summary{min-height:54px;padding:0 18px;display:flex;align-items:center;justify-content:space-between;gap:12px;cursor:pointer;font-weight:900;list-style:none}
+.insight-panel>summary::-webkit-details-marker{display:none}
+.insight-panel>summary::after{content:'+';font-size:22px;line-height:1;color:var(--muted);font-weight:500}
+.insight-panel[open]>summary::after{content:'−'}
+.insight-panel[open]>summary{border-bottom:1px solid var(--line-soft)}
+.insight-body{padding:16px}
+.insight-stack{display:flex;flex-direction:column;gap:10px}
+.insight-note{padding:12px 14px;border-radius:14px;background:var(--bg);font-size:12.5px;font-weight:750;color:var(--ink)}
+.insight-block{margin-top:18px}
+.insight-block:first-child{margin-top:0}
+.insight-title{font-size:12px;font-weight:900;color:var(--muted);margin:0 2px 9px}
 
 .compare-badge{margin-top:12px;padding:9px 14px;border-radius:12px;font-size:12.5px;font-weight:800;display:flex;align-items:center;gap:6px}
 .compare-badge.safe{background:rgba(52,199,89,.2);color:#34c759}
@@ -222,7 +238,7 @@ main{padding:18px 16px 0}
 .bar .fill{height:100%;border-radius:8px;background:linear-gradient(90deg,var(--forest),#58a6ff)}
 
 /* 거래 리스트 */
-.tx{display:flex;align-items:center;gap:13px;padding:14px 4px;border-bottom:1px solid var(--line-soft);cursor:pointer}
+.tx{display:flex;align-items:center;gap:10px;padding:12px 2px;border-bottom:1px solid var(--line-soft)}
 .tx:last-child{border-bottom:none}
 .date-group-header{display:flex;align-items:center;justify-content:space-between;padding:18px 4px 8px;margin-top:10px;border-bottom:1.5px solid var(--line-soft)}
 .date-group-header:first-child{margin-top:0}
@@ -245,7 +261,7 @@ main{padding:18px 16px 0}
 /*  Apple Wallet Card Stack */
 .wallet-card-stack{display:flex;flex-direction:column;gap:12px;margin-top:14px}
 .wallet-card{background:var(--card);border-radius:24px;padding:22px;box-shadow:var(--shadow);
-  border:1px solid var(--line-soft);transition:transform .2s cubic-bezier(.34,1.56,.64,1);position:relative;overflow:hidden}
+  border:1px solid var(--line-soft);transition:transform .2s cubic-bezier(.34,1.56,.64,1);position:relative;overflow:hidden;width:100%;text-align:left}
 .wallet-card:active{transform:scale(.98)}
 .wallet-card .wallet-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px}
 .wallet-card .wallet-icon{width:44px;height:44px;border-radius:15px;display:flex;align-items:center;justify-content:center;font-size:22px;background:var(--line-soft)}
@@ -277,7 +293,7 @@ body.dark-mode .tabbar{background:rgba(28,28,30,0.85);border-top-color:rgba(255,
 .sheet .grip{width:42px;height:5px;border-radius:3px;background:var(--line);margin:12px auto 4px}
 .sheet .shead{display:flex;align-items:center;justify-content:space-between;padding:8px 24px 14px}
 .sheet .shead h2{font-size:19px;font-weight:900}
-.sheet .shead .x{font-size:22px;color:var(--muted);width:36px;height:36px;display:flex;align-items:center;justify-content:center}
+.sheet .shead .x{font-size:22px;color:var(--muted);width:44px;height:44px;display:flex;align-items:center;justify-content:center}
 .sheet .sbody{overflow-y:auto;padding:0 24px 20px}
 .field{margin-bottom:18px}
 .field>label{display:block;font-size:13px;font-weight:800;color:var(--muted);margin-bottom:8px}
@@ -296,6 +312,15 @@ body.dark-mode .tabbar{background:rgba(28,28,30,0.85);border-top-color:rgba(255,
 .quick-amt-chips button{flex:1;padding:9px 0;border-radius:12px;background:var(--line-soft);font-size:12.5px;font-weight:800;color:var(--ink);transition:transform .1s}
 .quick-amt-chips button:active{transform:scale(.95)}
 .quick-amt-chips button.reset{background:#fbe9e6;color:var(--expense);flex:0 0 42px}
+.compact-chips{margin-top:8px}
+.compact-chips:first-of-type{margin-top:0}
+.extra-fields{margin:2px 0 0;border-top:1px solid var(--line-soft);border-bottom:1px solid var(--line-soft)}
+.extra-fields>summary{min-height:52px;display:flex;align-items:center;justify-content:space-between;gap:10px;cursor:pointer;list-style:none;font-size:14px;font-weight:900;color:var(--ink)}
+.extra-fields>summary::-webkit-details-marker{display:none}
+.extra-fields>summary span{font-size:11.5px;font-weight:700;color:var(--muted)}
+.extra-fields>summary::after{content:'+';font-size:20px;color:var(--muted);font-weight:500}
+.extra-fields[open]>summary::after{content:'−'}
+.extra-fields-body{padding-top:8px}
 
 .more-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:14px;margin-bottom:24px}
 .more-item{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:12px;
@@ -306,6 +331,9 @@ body.dark-mode .tabbar{background:rgba(28,28,30,0.85);border-top-color:rgba(255,
 
 @media (min-width:768px){
   header.top{padding:18px 28px}
+  .header-left{display:flex}
+  .header-right{width:auto;justify-content:flex-end}
+  .who{display:block}
   .brand .name{font-size:19px}
   .desktop-nav{display:flex;align-items:center;gap:10px}
   .desktop-nav .tab{padding:9px 16px;border-radius:12px;font-size:13.5px;font-weight:700;color:var(--muted);display:flex;align-items:center;gap:6px;cursor:pointer;transition:.15s}
@@ -361,7 +389,7 @@ body.dark-mode #toast{background:rgba(58,58,60,0.92)}
 .sheet-actions{display:flex;gap:10px;padding:16px 0 4px;margin-top:8px}
 .sheet-actions .cancel-btn{flex:1;padding:14px;border-radius:14px;background:var(--line-soft);color:var(--ink);font-size:15px;font-weight:800;border:none;cursor:pointer}
 .sheet-actions .continue-btn{flex:1;padding:14px;border-radius:14px;background:var(--line-soft);color:var(--forest);font-size:15px;font-weight:800;border:none;cursor:pointer}
-.sheet-actions .submit{flex:1.5;padding:14px;border-radius:14px;background:var(--forest);color:#fff;font-size:15px;font-weight:900;border:none;cursor:pointer;
+.sheet-actions .submit{flex:1.35;padding:14px;border-radius:14px;background:var(--forest);color:#fff;font-size:15px;font-weight:900;border:none;cursor:pointer;
   box-shadow:0 6px 16px rgba(0,113,227,0.25);transition:transform .15s cubic-bezier(.34,1.56,.64,1)}
 .sheet-actions .submit:active{transform:scale(.96)}
 .sheet-actions button:disabled{opacity:.55;cursor:wait;transform:none}
@@ -379,6 +407,16 @@ body.dark-mode #toast{background:rgba(58,58,60,0.92)}
 
 /* Mood hint */
 .mood-hint{margin-top:6px;font-size:12px;color:var(--muted);font-weight:700}
+
+@media (max-width:420px){
+  main{padding-left:12px;padding-right:12px}
+  .balance{padding:22px}
+  .balance .big{font-size:clamp(32px,10vw,40px)}
+  .row2{grid-template-columns:1fr}
+  .sheet .sbody{padding-left:18px;padding-right:18px}
+  .tx .ico{width:38px;height:38px;border-radius:12px;font-size:18px}
+  .tx .amt{font-size:14px}
+}
 
 /*  Category Color Coding for Transaction Icons */
 .ico-food{background:linear-gradient(135deg,var(--cat-food),var(--cat-food2)) !important}
@@ -430,6 +468,7 @@ body.dark-mode #toast{background:rgba(58,58,60,0.92)}
   <link rel="apple-touch-icon" href="/icons/icon-192.png">
 </head>
 <body>
+<script>try{if(localStorage.getItem('sey_theme')==='dark')document.body.classList.add('dark-mode')}catch(e){}</script>
 
 <!-- PIN 게이트 -->
 <div id="gate" role="dialog" aria-modal="true" aria-labelledby="gateTitle">
@@ -472,9 +511,9 @@ body.dark-mode #toast{background:rgba(58,58,60,0.92)}
 
       <div class="header-right">
         <div class="monthnav">
-          <button id="prevM">&lt;</button>
+          <button id="prevM" aria-label="이전 달">&lt;</button>
           <div class="mlabel" id="mLabel">2026-08</div>
-          <button id="nextM">&gt;</button>
+          <button id="nextM" aria-label="다음 달">&gt;</button>
         </div>
         <button id="syncBtn" class="theme-btn" title="동기화" aria-label="최신 장부 동기화">🔄</button>
         <button id="themeBtn" class="theme-btn" title="다크 모드" aria-label="화면 테마 전환">🌙</button>
@@ -512,9 +551,6 @@ body.dark-mode #toast{background:rgba(58,58,60,0.92)}
   </div>
   <div class="sbody">
     <div class="field" id="templateField"><label>자주 쓰는 거래</label><div class="template-strip" id="templateChips"></div></div>
-    <div class="field"><label>구분</label><div class="chips" id="typeChips"></div></div>
-    <div class="field"><label>대분류</label><div class="chips" id="catChips"></div></div>
-    <div class="field"><label>소비성격</label><div class="chips" id="moodChips"></div><div class="mood-hint" id="moodHint"></div></div>
     <div class="field">
       <label>금액</label>
       <div class="amount-wrap"><span class="won">₩</span><input id="fAmount" type="text" inputmode="numeric" placeholder="0"></div>
@@ -527,18 +563,24 @@ body.dark-mode #toast{background:rgba(58,58,60,0.92)}
       </div>
     </div>
     <div class="field"><label>내역</label><input class="in-text" id="fDesc" type="text" placeholder="예: 점심, 커피, 마트"><div class="recommend-box" id="recommendBox"></div></div>
-    <div class="row2">
-      <div class="field"><label>입력자</label><div class="chips" id="userChips"></div></div>
-      <div class="field"><label>고정/변동</label><div class="chips" id="fixChips"></div></div>
-    </div>
-    <div class="row2">
-      <div class="field"><label>날짜</label><input class="in-text" id="fDate" type="date"></div>
-      <div class="field"><label>메모 (선택)</label><input class="in-text" id="fMemo" type="text" placeholder="-"></div>
-    </div>
+    <div class="field"><label>분류</label><div class="chips compact-chips" id="typeChips"></div><div class="chips compact-chips" id="catChips"></div></div>
+    <details class="extra-fields" id="extraFields">
+      <summary>추가 옵션 <span>날짜 · 입력자 · 메모</span></summary>
+      <div class="extra-fields-body">
+        <div class="field"><label>소비성격</label><div class="chips" id="moodChips"></div><div class="mood-hint" id="moodHint"></div></div>
+        <div class="row2">
+          <div class="field"><label>입력자</label><div class="chips" id="userChips"></div></div>
+          <div class="field"><label>고정/변동</label><div class="chips" id="fixChips"></div></div>
+        </div>
+        <div class="row2">
+          <div class="field"><label>날짜</label><input class="in-text" id="fDate" type="date"></div>
+          <div class="field"><label>메모 (선택)</label><input class="in-text" id="fMemo" type="text" placeholder="-"></div>
+        </div>
+      </div>
+    </details>
     <div class="sheet-actions tx-sheet-actions" id="txSheetActions">
-      <button class="cancel-btn" id="cancelBtn">취소</button>
-      <button class="continue-btn" id="continueBtn">추가 후 계속</button>
-      <button class="submit" id="submitBtn">추가 후 닫기</button>
+      <button class="continue-btn" id="continueBtn">저장 후 계속</button>
+      <button class="submit" id="submitBtn">저장</button>
     </div>
   </div>
 </div>
@@ -614,7 +656,7 @@ body.dark-mode #toast{background:rgba(58,58,60,0.92)}
   <div class="grip"></div>
   <div class="shead">
     <h2 id="bulkCatSheetTitle">일괄 카테고리 변경</h2>
-    <button class="x" id="bulkCatSheetX">✕</button>
+    <button class="x" id="bulkCatSheetX" aria-label="일괄 변경 창 닫기">✕</button>
   </div>
   <div class="sbody">
     <div class="f-grp">
@@ -631,7 +673,7 @@ body.dark-mode #toast{background:rgba(58,58,60,0.92)}
   <div class="grip"></div>
   <div class="shead">
     <h2 id="assetEditSheetTitle">자산 수정</h2>
-    <button class="x" id="assetEditSheetX">✕</button>
+    <button class="x" id="assetEditSheetX" aria-label="자산 수정 창 닫기">✕</button>
   </div>
   <div class="sbody">
     <div class="f-grp">
@@ -655,7 +697,7 @@ body.dark-mode #toast{background:rgba(58,58,60,0.92)}
   <div class="grip"></div>
   <div class="shead">
     <h2 id="budgetSheetTitle">🎯 예산 관리</h2>
-    <button class="x" id="budgetSheetX">✕</button>
+    <button class="x" id="budgetSheetX" aria-label="예산 관리 창 닫기">✕</button>
   </div>
   <div class="sbody">
     <div style="display:flex; gap:8px; margin-bottom:14px;">
@@ -680,11 +722,11 @@ body.dark-mode #toast{background:rgba(58,58,60,0.92)}
 <script>
 /* ============ 앱 글로벌 상태 (Store) ============ */
 const DEFAULT_GAS_URL = 'https://script.google.com/macros/s/AKfycbwjFv7OSDc6T4vD0nUQA5E-W1QazAEU5dowQroEXard5DCMtP0FiMRlwtIjuEfDzo8phA/exec';
-const APP_CACHE_VERSION = 2;
+const APP_CACHE_VERSION = 3;
 const BRIDGE_CHANNEL = 'sey-budget-bridge-v1';
 const AUTH_STORAGE_KEY = 'sey_session_auth_v2';
-const BOOT_CACHE_KEY = 'sey_boot_cache_v2';
-const MONTH_CACHE_PREFIX = 'sey_month_cache_v2_';
+const BOOT_CACHE_KEY = 'sey_boot_cache_v3';
+const MONTH_CACHE_PREFIX = 'sey_month_cache_v3_';
 const PENDING_QUEUE_KEY = 'sey_pending_tx_v2';
 const CACHE_MAX_AGE = 7 * 24 * 60 * 60 * 1000;
 
@@ -788,7 +830,11 @@ function api(fn){
   const args = Array.prototype.slice.call(arguments,1);
   if (!STATE.authToken) return Promise.reject(new Error('로그인이 필요해.'));
   args.unshift(STATE.authToken);
-  return srv(fn).apply(null,args);
+  return srv(fn).apply(null,args).catch(err => {
+    const text = (err && err.message) || '';
+    if (/세션|로그인이 필요/.test(text) && typeof showLoginGate === 'function') showLoginGate(text);
+    throw err;
+  });
 }
 
 function saveSession(session, remember){
@@ -901,6 +947,7 @@ function toast(msg, err){
 function renderHome(){
   const el=document.getElementById('v-home');
   if(!el) return;
+  const keepInsightsOpen = !!(el.querySelector('#homeInsights') && el.querySelector('#homeInsights').open);
   if(!STATE.summary) {
     el.innerHTML = `
       <div class="skeleton skeleton-balance"></div>
@@ -915,6 +962,12 @@ function renderHome(){
   }
   const s=STATE.summary;
   const minus = s.left<0;
+  const selectedYm = STATE.ym || todayStr().slice(0,7);
+  const todayYm = todayStr().slice(0,7);
+  const isCurrentMonth = selectedYm === todayYm;
+  const isPastMonth = selectedYm < todayYm;
+  const ymParts = selectedYm.split('-');
+  const monthLabel = `${Number(ymParts[0])}년 ${Number(ymParts[1])}월`;
   const cats = s.cats || [];
   const maxCat = cats.length? cats[0].amt : 1;
   const topCats = cats.slice(0,3);
@@ -930,14 +983,14 @@ function renderHome(){
 
   const monthRows = STATE.transactions || [];
   let recent5Src = monthRows.slice(0,5);
-  // 유저 필터 적용
+  // 입력자 필터는 거래 목록에만 적용하고 공동 잔액은 항상 전체 합계를 유지한다.
   if (STATE.userFilter) {
     recent5Src = monthRows.filter(t => t.user === STATE.userFilter).slice(0,5);
   }
   let recent5 = recent5Src.map(txRow).join('') ||
     `<div class="empty"><span class="e">📭</span>아직 입력된 거래가 없어</div>`;
 
-  // 하루 권장 사용량 및 지출 페이스 신호등 계산
+  // 예측값은 오늘이 포함된 현재 월에서만 계산한다.
   const now = new Date();
   const currentDay = now.getDate();
   const lastDay = new Date(now.getFullYear(), now.getMonth() + 1, 0).getDate();
@@ -954,7 +1007,7 @@ function renderHome(){
     speedColor = '🟡'; speedText = '지출 페이스가 약간 가속되고 있어요'; speedClass = 'warning';
   }
 
-  // 고정비 D-Day 카운트다운 계산
+  // 고정비 D-Day는 현재 월에만 의미가 있다.
   const recurrings = STATE.recurrings || [];
   const upcomingRec = recurrings.filter(r => r.enabled !== false && Number(r.day || 0) >= currentDay)
     .sort((a,b) => Number(a.day) - Number(b.day));
@@ -977,28 +1030,29 @@ function renderHome(){
       else if (t.user === '하콩') hayoungSpent += Number(t.amount || 0);
     }
   });
-  const totalCoupleSpent = Math.max(1, jisooSpent + hayoungSpent);
-  const jisooPct = Math.round((jisooSpent / totalCoupleSpent) * 100);
-  const hayoungPct = 100 - jisooPct;
+  const totalCoupleSpent = jisooSpent + hayoungSpent;
+  const jisooPct = totalCoupleSpent ? Math.round((jisooSpent / totalCoupleSpent) * 100) : 0;
+  const hayoungPct = totalCoupleSpent ? 100 - jisooPct : 0;
 
-  // 지난달 대비 소비 비교 계산
+  // 현재까지의 금액을 지난달 전체와 비교한다는 점을 문구에 정확히 표시한다.
   let compareBadgeHtml = '';
   const lastClose = (STATE.closeHistory && STATE.closeHistory.length) ? STATE.closeHistory[0] : null;
-  if (lastClose && lastClose.expense > 0) {
+  if (isCurrentMonth && lastClose && lastClose.expense > 0) {
     const diff = s.expense - lastClose.expense;
     if (diff < 0) {
-      compareBadgeHtml = `<div class="compare-badge safe">👏 지난달 동기 대비 <strong>${fmt(Math.abs(diff))}</strong> 절약 중!</div>`;
+      compareBadgeHtml = `<div class="compare-badge safe">지난달 총지출까지 <strong>${fmt(Math.abs(diff))}</strong> 남았어요</div>`;
     } else if (diff > 0) {
-      compareBadgeHtml = `<div class="compare-badge warn">📊 지난달 동기 대비 <strong>${fmt(diff)}</strong> 더 소비 중</div>`;
+      compareBadgeHtml = `<div class="compare-badge warn">지난달 총지출보다 <strong>${fmt(diff)}</strong> 많아요</div>`;
     }
   }
 
   const currentFilter = STATE.userFilter || '';
   const switcherHtml = `
+    <div class="filter-caption">거래 입력자 보기</div>
     <div class="user-switcher-strip">
-      <button class="user-switch-chip ${!currentFilter?'on':''}" onclick="setUserFilter('')">👫 전체 부부</button>
-      <button class="user-switch-chip ${currentFilter==='지수'?'on':''}" onclick="setUserFilter('지수')">🧔 지수 전용</button>
-      <button class="user-switch-chip ${currentFilter==='하콩'?'on':''}" onclick="setUserFilter('하콩')">👧 하콩 전용</button>
+      <button class="user-switch-chip ${!currentFilter?'on':''}" onclick="setUserFilter('')">전체</button>
+      <button class="user-switch-chip ${currentFilter==='지수'?'on':''}" onclick="setUserFilter('지수')">지수</button>
+      <button class="user-switch-chip ${currentFilter==='하콩'?'on':''}" onclick="setUserFilter('하콩')">하콩</button>
     </div>
   `;
 
@@ -1007,6 +1061,18 @@ function renderHome(){
   const forecastMonthExpense = Math.round(avgDailySpent * lastDay);
   const forecastLeft = (s.income || 0) - forecastMonthExpense;
   const isForecastMinus = forecastLeft < 0;
+
+  const currentInsightHtml = isCurrentMonth ? `
+    <div class="insight-stack">
+      <div class="insight-note">오늘부터 하루 <strong>${fmt(dailyAllowance)}</strong>까지 사용 가능</div>
+      <div class="speed-light ${speedClass}">${speedColor} <span>${speedText}</span></div>
+      <div class="forecast-card insight-note">
+        <div class="forecast-head"><span>월말 예상 잔액</span><span class="amt ${isForecastMinus?'minus':''}">${fmt(forecastLeft)}</span></div>
+        <div class="forecast-desc">현재 속도라면 총지출은 약 <strong>${fmt(forecastMonthExpense)}</strong>으로 예상돼요</div>
+      </div>
+      ${compareBadgeHtml}
+    </div>
+  ` : `<div class="insight-note">${isPastMonth ? '완료된 달은 예측 대신 확정 결산 금액을 표시해요.' : '미래 월은 거래가 쌓이면 결산 정보가 표시돼요.'}</div>`;
 
   // 카테고리 예산 경고 게이지 바 계산
   const budgetCats = (STATE.budget && STATE.budget.rows) ? STATE.budget.rows : [];
@@ -1032,46 +1098,48 @@ function renderHome(){
   el.innerHTML = `
     ${switcherHtml}
     <div class="balance">
-      <div class="lab">${currentFilter ? currentFilter + '의 ' : '이번 달 '}남은 돈</div>
+      <div class="lab">${isCurrentMonth ? '이번 달 남은 돈' : isPastMonth ? monthLabel + ' 결산 잔액' : monthLabel + ' 계획 잔액'}</div>
       <div class="big ${minus?'minus':''}">${fmt(s.left)}</div>
       <div class="rate">저축률 ${s.savingRate}%${minus?' · 현금흐름 마이너스':''}</div>
-      <div class="daily-allowance">💡 오늘부터 하루에 <strong>${fmt(dailyAllowance)}</strong>씩 쓸 수 있어요</div>
-      <div class="speed-light ${speedClass}">${speedColor} <span>${speedText}</span></div>
-      ${compareBadgeHtml}
     </div>
-    <div class="card forecast-card">
-      <div class="forecast-head">
-        <span>🔮 이번 달 말 예상 잔액</span>
-        <span class="amt ${isForecastMinus?'minus':''}">${fmt(forecastLeft)}</span>
-      </div>
-      <div class="forecast-desc">
-        💡 현재 지출 속도(하루 평균 ${fmt(avgDailySpent)}) 유지 시 이번 달 총지출 <strong>${fmt(forecastMonthExpense)}</strong> 예상
-      </div>
-    </div>
-    <div class="sec-title" style="margin-top:18px; display:flex; justify-content:space-between; align-items:center;">
-      <span>다가오는 고정비 D-Day</span>
-      <button class="praise-btn" onclick="switchView('recurring')" style="margin:0;">⚙️ 관리하기</button>
-    </div>
-    <div class="dday-strip">${ddayChipsHtml}</div>
-    <div class="mini3">
+    <div class="summary-grid">
       <div class="mini"><div class="l">수입</div><div class="v in">${fmt(s.income)}</div></div>
       <div class="mini"><div class="l">지출</div><div class="v out">${fmt(s.expense)}</div></div>
+      <div class="mini"><div class="l">저축·투자</div><div class="v sv">${fmt(s.save || 0)}</div></div>
     </div>
-    <div class="card couple-card">
-      <div class="couple-head">
-        <span>지수 ${fmt(jisooSpent)} (${jisooPct}%)</span>
-        <span>하콩 ${fmt(hayoungSpent)} (${hayoungPct}%)</span>
-      </div>
-      <div class="couple-track">
-        <div class="couple-fill-j" style="width:${jisooPct}%"></div>
-        <div class="couple-fill-h" style="width:${hayoungPct}%"></div>
-      </div>
+
+    <div class="home-section-head">
+      <div class="sec-title">${currentFilter ? currentFilter + '의 최근 거래' : '최근 거래'}</div>
+      <button class="text-action" onclick="switchView('list')">전체 내역</button>
     </div>
-    ${budgetGaugesHtml ? `<div class="sec-title">카테고리 예산 경고 현황</div><div class="card">${budgetGaugesHtml}</div>` : ''}
-    <div class="sec-title">이번 달 지출 TOP 3</div>
-    <div class="card"><div class="bars">${bars}</div></div>
-    <div class="sec-title">최근 거래</div>
     <div class="card">${recent5}</div>
+
+    <details class="insight-panel" id="homeInsights" ${keepInsightsOpen?'open':''}>
+      <summary>${isCurrentMonth ? '이번 달 분석 보기' : monthLabel + ' 상세 보기'}</summary>
+      <div class="insight-body">
+        <div class="insight-block">${currentInsightHtml}</div>
+        ${isCurrentMonth ? `<div class="insight-block">
+          <div class="insight-title">다가오는 고정비</div>
+          <div class="dday-strip">${ddayChipsHtml}</div>
+          <button class="text-action" onclick="switchView('recurring')" style="margin-top:10px">정기거래 관리</button>
+        </div>` : ''}
+        <div class="insight-block">
+          <div class="insight-title">입력자별 지출</div>
+          <div class="couple-card">
+            <div class="couple-head">
+              <span>지수 ${fmt(jisooSpent)} (${jisooPct}%)</span>
+              <span>하콩 ${fmt(hayoungSpent)} (${hayoungPct}%)</span>
+            </div>
+            <div class="couple-track">
+              <div class="couple-fill-j" style="width:${jisooPct}%"></div>
+              <div class="couple-fill-h" style="width:${hayoungPct}%"></div>
+            </div>
+          </div>
+        </div>
+        ${budgetGaugesHtml ? `<div class="insight-block"><div class="insight-title">카테고리 예산</div>${budgetGaugesHtml}</div>` : ''}
+        <div class="insight-block"><div class="insight-title">지출 TOP 3</div><div class="bars">${bars}</div></div>
+      </div>
+    </details>
   `;
 }
 
@@ -1079,7 +1147,7 @@ function setUserFilter(user){
   STATE.userFilter = user;
   renderHome();
   renderList();
-  toast(user ? `👤 ${user} 전용 가계부로 전환!` : '👫 전체 부부 가계부로 전환!');
+  toast(user ? `${user}가 입력한 거래만 표시해요` : '전체 거래를 표시해요');
 }
 
 function renderMore(){
@@ -1091,7 +1159,7 @@ function renderMore(){
       <button class="more-item" onclick="switchView('review')"><span class="more-icon">📋</span>월정리 · 회고</button>
       <button class="more-item" onclick="openBudgetModal()"><span class="more-icon">🎯</span>예산 관리</button>
       <button class="more-item" onclick="switchView('recurring')"><span class="more-icon">🔁</span>정기거래</button>
-      <button class="more-item" onclick="switchView('ai')"><span class="more-icon">🤖</span>AI 분석</button>
+      ${STATE.aiReady ? '<button class="more-item" onclick="switchView(\'ai\')"><span class="more-icon">🤖</span>AI 분석</button>' : ''}
     </div>
     
     <div class="sec-title" style="margin-top:24px">계정 및 보안</div>
@@ -1192,7 +1260,6 @@ function catColorClass(cat){
 function txRow(t){
   const sign = t.type==='수입' ? '+' : '-';
   const cls = t.type==='수입' ? 'in' : 'out';
-  const praised = localStorage.getItem('praise_' + t.row);
   const icoColor = catColorClass(t.cat);
   const safeDesc = esc(t.desc||t.cat||'거래').replace(/'/g, "\\'");
   const safeRow = String(t.row || '').replace(/['\\]/g, '');
@@ -1211,7 +1278,7 @@ function txRow(t){
       </div>`;
     }
   } else {
-    actionHtml = `${isTemp ? pendingBadge : `<button type="button" class="praise-btn ${praised?'praised':''}" onclick="event.stopPropagation(); togglePraise('${safeRow}', this)">💖 ${praised?'칭찬됨':'칭찬'}</button>`}
+    actionHtml = `${pendingBadge}
     <div class="amt ${cls}">${sign}${comma(t.amount)}</div>
     ${editBtn}${delBtn}`;
   }
@@ -1226,20 +1293,6 @@ function txRow(t){
     </div>
     ${STATE.bulkMode ? '' : actionHtml}
   </div>`;
-}
-
-function togglePraise(row, btn){
-  const key = 'praise_' + row;
-  if (localStorage.getItem(key)) {
-    localStorage.removeItem(key);
-    btn.classList.remove('praised');
-    btn.textContent = '💖 칭찬';
-  } else {
-    localStorage.setItem(key, '1');
-    btn.classList.add('praised');
-    btn.textContent = '💖 칭찬됨';
-    toast('💖 부부 칭찬 피드백을 보냈어! 👏');
-  }
 }
 
 function txGroupedRows(list){
@@ -1278,17 +1331,23 @@ function renderList(){
   const el=document.getElementById('v-list');
   if(!el) return;
   let txs = STATE.transactions || [];
+  if (STATE.userFilter) {
+    txs = txs.filter(t => t.user === STATE.userFilter);
+  }
   if (STATE.list.category) {
     txs = txs.filter(t => t.cat === STATE.list.category);
   }
   const totalCount = txs.length;
   const pageSize = Number(STATE.list.pageSize || 40);
   const visibleRows = txs.slice(0, pageSize);
-  const cats = ['전체', '식비', '교통/차량', '주거/통신', '쇼핑/문화', '경조/이벤트', '용돈'];
+  const configuredCats = ((STATE.config && STATE.config.byType && STATE.config.byType['지출']) || []);
+  const fallbackCats = ['식비', '교통/차량', '주거/통신', '쇼핑/문화', '경조/이벤트', '건강/의료', '용돈', '기타'];
+  const cats = ['전체'].concat(configuredCats.length ? configuredCats : fallbackCats);
   const filterChipsHtml = cats.map(c => {
     const isSelected = (!STATE.list.category && c === '전체') || (STATE.list.category === c);
     const catVal = c === '전체' ? '' : c;
-    return `<button type="button" class="cat-scroll-chip ${isSelected?'on':''}" onclick="filterByCat('${catVal}')">${c==='전체'?'전체':emo(c)+' '+c}</button>`;
+    const safeCatVal = String(catVal).replace(/['\\]/g, '');
+    return `<button type="button" class="cat-scroll-chip ${isSelected?'on':''}" onclick="filterByCat('${safeCatVal}')">${c==='전체'?'전체':emo(c)+' '+esc(c)}</button>`;
   }).join('');
 
   const rows = visibleRows.length ? txGroupedRows(visibleRows) : `<div class="empty"><span class="e">📭</span>조건에 맞는 거래가 없어</div>`;
@@ -1298,7 +1357,7 @@ function renderList(){
 
   const listHeadHtml = `
     <div class="list-head" style="display:flex;align-items:center;justify-content:space-between;margin:20px 4px 12px">
-      <div class="sec-title" style="margin:0; display:flex; align-items:center; gap:8px;">거래 내역 
+      <div class="sec-title" style="margin:0; display:flex; align-items:center; gap:8px;">${STATE.userFilter ? STATE.userFilter + ' 거래' : '거래 내역'}
         <button class="user-switch-chip ${STATE.bulkMode?'on':''}" style="font-size:11px; padding:4px 8px; margin:0;" onclick="toggleBulkMode()">☑️ 일괄 편집</button>
       </div>
       <div class="list-count" style="font-size:13px;font-weight:800;color:var(--muted);background:var(--line-soft);padding:3px 10px;border-radius:999px">${totalCount}건</div>
@@ -1357,7 +1416,7 @@ function renderAsset(){
       }
     }
 
-    return `<div class="wallet-card" onclick="openAssetEditModal('${d.key}', '${d.label}', ${curVal})" style="cursor:pointer; position:relative; overflow:hidden;">
+    return `<button type="button" class="wallet-card" onclick="openAssetEditModal('${d.key}', '${d.label}')" aria-label="${d.label} 금액 수정">
       <div class="wallet-head">
         <div class="wallet-icon">${d.icon}</div>
         <div style="font-size:13px;font-weight:800;color:var(--muted)">${d.label}</div>
@@ -1365,7 +1424,7 @@ function renderAsset(){
       <div class="wallet-val" style="${d.debt?'color:var(--expense)':''}">${fmt(curVal)}</div>
       ${diffHtml}
       <div style="position:absolute; right:12px; top:12px; font-size:10px; color:var(--muted); opacity:0.5;">✏️</div>
-    </div>`;
+    </button>`;
   }).join('');
 
   const curTotal = a.total || 0;
@@ -1580,6 +1639,16 @@ function renderBudgetItems(items){
 <script>
 /* ============ 비즈니스 로직 & 이벤트 바인딩 (App) ============ */
 
+let LAST_DIALOG_TRIGGER = null;
+function rememberDialogTrigger(){
+  if (document.activeElement && document.activeElement !== document.body) LAST_DIALOG_TRIGGER = document.activeElement;
+}
+function restoreDialogTrigger(){
+  const target = LAST_DIALOG_TRIGGER;
+  LAST_DIALOG_TRIGGER = null;
+  if (target && document.contains(target) && typeof target.focus === 'function') setTimeout(() => target.focus(), 0);
+}
+
 function openGate(){
   // v1에서 평문 PIN과 전체 상태를 저장하던 키는 첫 실행 즉시 폐기한다.
   localStorage.removeItem('sey_pin_auth');
@@ -1600,9 +1669,8 @@ function openGate(){
     STATE.form.user = STATE.sessionUser;
     if (cachedData) {
       applyBootData(cachedData);
-      showMainApp();
-      renderAll();
       mergePendingTransactions();
+      showMainApp();
       renderAll();
       renderSyncStatus('저장된 화면 표시 · 최신 데이터 확인 중', 'syncing');
       refreshBootData(true);
@@ -1629,13 +1697,14 @@ function openGate(){
     const userEl = document.querySelector('input[name="gateUser"]:checked');
     const user = userEl ? userEl.value : '하콩';
     const remember = autoLoginChk ? autoLoginChk.checked : true;
-    srv('createSession')(val, user, remember).then(session => {
+    srv('createSessionAndGetBoot')(val, user, remember).then(result => {
+      const session = result.session;
       STATE.authToken = session.token;
       STATE.sessionUser = session.user || user;
       STATE.form.user = STATE.sessionUser;
       saveSession(session, remember);
-      return api('getBoot');
-    }).then(data=>{
+      return result.boot;
+    }).then(data => {
       applyBootData(data);
       saveBootCache(data);
       showMainApp();
@@ -1662,9 +1731,26 @@ function showMainApp(){
   if (app) app.classList.add('on');
 }
 
+function showLoginGate(message){
+  clearSession();
+  const app = document.getElementById('app');
+  const gate = document.getElementById('gate');
+  const btn = document.getElementById('gateBtn');
+  const pin = document.getElementById('pin');
+  const msg = document.getElementById('gateMsg');
+  if (app) app.classList.remove('on');
+  if (gate) gate.style.display = 'flex';
+  if (btn) { btn.disabled = false; btn.textContent = '열기'; }
+  if (pin) { pin.value = ''; setTimeout(() => pin.focus(), 0); }
+  if (msg) msg.textContent = message || '로그인이 만료됐어. PIN을 다시 입력해줘.';
+}
+
 function handleSessionError(err, msgEl, btn){
   const text = (err && err.message) || '연결 오류가 발생했어.';
-  if (/세션|로그인이 필요/.test(text)) clearSession();
+  if (/세션|로그인이 필요/.test(text)) {
+    showLoginGate(text);
+    return;
+  }
   if (msgEl) msgEl.textContent = text;
   if (btn) { btn.disabled = false; btn.textContent = '열기'; }
   if (!loadBootCache()) toast(text, true);
@@ -1837,7 +1923,10 @@ function refreshBootData(silent){
     return data;
   }).catch(err => {
     const text = (err && err.message) || '동기화 실패';
-    if (/세션|로그인이 필요/.test(text)) clearSession();
+    if (/세션|로그인이 필요/.test(text)) {
+      showLoginGate(text);
+      return;
+    }
     renderSyncStatus('오프라인 화면 · 변경사항은 기기에 보관', 'pending');
     if (!silent) toast(text, true);
   }).finally(() => {
@@ -1866,9 +1955,21 @@ function refreshVisibleMonth(silent){
   });
 }
 
+function renderView(v){
+  if (v === 'home') renderHome();
+  else if (v === 'list') renderList();
+  else if (v === 'asset') renderAsset();
+  else if (v === 'more') renderMore();
+  else if (v === 'recurring') renderRecurring();
+  else if (v === 'ai') renderAi();
+  else if (v === 'review') renderReview();
+}
+
 function renderAll(){
-  document.getElementById('mLabel').textContent=STATE.ym;
-  renderHome(); renderMore(); renderList(); renderAsset();
+  const monthLabel = document.getElementById('mLabel');
+  if (monthLabel) monthLabel.textContent = STATE.ym;
+  const active = document.querySelector('.view.on');
+  renderView(active ? active.id.replace('v-', '') : 'home');
 }
 
 function switchView(v){
@@ -1877,10 +1978,7 @@ function switchView(v){
   document.querySelectorAll('.tab[data-view]').forEach(t=>t.classList.toggle('active', t.dataset.view===tabView));
   ['home','list','recurring','asset','ai','review','more'].forEach(name=>
     document.getElementById('v-'+name).classList.toggle('on', name===v));
-  if(v==='more') renderMore();
-  if(v==='recurring') renderRecurring();
-  if(v==='ai') renderAi();
-  if(v==='review') renderReview();
+  renderView(v);
   window.scrollTo(0,0);
 }
 
@@ -1894,11 +1992,14 @@ function closeActiveSheet(){
 
 function openQuickEntryModal(){
   if(!STATE.authToken){ toast('로그인이 필요해'); return; }
+  rememberDialogTrigger();
   document.getElementById('overlay').classList.add('on');
   document.getElementById('sheet').classList.add('on');
   
   const titleEl = document.getElementById('sheetTitle');
   if(titleEl) titleEl.textContent = STATE.editing ? '거래 수정' : '빠른 입력';
+  const extraFields = document.getElementById('extraFields');
+  if (extraFields) extraFields.open = !!STATE.editing;
 
   if (!STATE.editing) {
     document.getElementById('fAmount').value = '';
@@ -2060,11 +2161,14 @@ function closeQuickEntryModal(){
   if(descInp) descInp.value = '';
   if(memoInp) memoInp.value = '';
   if(dateInp) dateInp.value = '';
+  const extraFields = document.getElementById('extraFields');
+  if(extraFields) extraFields.open = false;
   const titleEl = document.getElementById('sheetTitle');
   if(titleEl) titleEl.textContent = '빠른 입력';
   // 수정 모드에서 숨긴 버튼 복원
   const continueBtn = document.getElementById('continueBtn');
   if(continueBtn) continueBtn.style.display = '';
+  restoreDialogTrigger();
 }
 
 function addQuickAmount(val){
@@ -2338,6 +2442,7 @@ function editTx(row){
   STATE.form.mood  = tx.spendingMood || '';
 
   // 모달 열기 (날짜/금액/내역/메모 프리필)
+  rememberDialogTrigger();
   document.getElementById('overlay').classList.add('on');
   document.getElementById('sheet').classList.add('on');
 
@@ -2355,6 +2460,8 @@ function editTx(row){
 
   const memoInp = document.getElementById('fMemo');
   if(memoInp) memoInp.value = tx.memo || '';
+  const extraFields = document.getElementById('extraFields');
+  if(extraFields) extraFields.open = true;
 
   // 계속/닫기 버튼 숨기고 수정 완료 버튼만 표시
   const continueBtn = document.getElementById('continueBtn');
@@ -2483,6 +2590,7 @@ function changeMonth(delta){
     }
 
     function openRecurringModal() {
+      rememberDialogTrigger();
       document.getElementById('overlay').classList.add('on');
       document.getElementById('recSheet').classList.add('on');
       document.getElementById('recSheetTitle').textContent = STATE.editingRecurring ? '고정거래 수정' : '새 고정거래 추가';
@@ -2508,6 +2616,7 @@ function changeMonth(delta){
       document.getElementById('overlay').classList.remove('on');
       document.getElementById('recSheet').classList.remove('on');
       STATE.editingRecurring = null;
+      restoreDialogTrigger();
     }
 
     function renderRecurringFormChips() {
@@ -2629,6 +2738,7 @@ function changeMonth(delta){
     STATE.assetEditTemp = [];
     
     function openAssetEditModal(key, label) {
+      rememberDialogTrigger();
       STATE.assetEditKey = key;
       const items = (STATE.assets.items[key] || {}).subItems || [];
       STATE.assetEditTemp = JSON.parse(JSON.stringify(items));
@@ -2698,6 +2808,7 @@ function changeMonth(delta){
     function closeAssetEditModal() {
       document.getElementById('overlay').classList.remove('on');
       document.getElementById('assetEditSheet').classList.remove('on');
+      restoreDialogTrigger();
     }
 
     function submitAssetEdit() {
@@ -2723,6 +2834,7 @@ function changeMonth(delta){
 
     function openBulkCatModal() {
       if (!STATE.bulkSelection || STATE.bulkSelection.size === 0) return toast('선택된 항목이 없습니다.');
+      rememberDialogTrigger();
       document.getElementById('overlay').classList.add('on');
       document.getElementById('bulkCatSheet').classList.add('on');
       
@@ -2751,6 +2863,7 @@ function changeMonth(delta){
     function closeBulkCatModal() {
       document.getElementById('overlay').classList.remove('on');
       document.getElementById('bulkCatSheet').classList.remove('on');
+      restoreDialogTrigger();
     }
 
     function submitBulkCat() {
@@ -2836,6 +2949,7 @@ function changeMonth(delta){
 
     // ===== 🎯 예산 관리 제어 로직 =====
     function openBudgetModal() {
+      rememberDialogTrigger();
       document.getElementById('overlay').classList.add('on');
       document.getElementById('budgetSheet').classList.add('on');
       
@@ -2846,6 +2960,7 @@ function changeMonth(delta){
     function closeBudgetModal() {
       document.getElementById('overlay').classList.remove('on');
       document.getElementById('budgetSheet').classList.remove('on');
+      restoreDialogTrigger();
     }
 
     window.handleBudgetInput = function(inp) {
