@@ -2610,6 +2610,9 @@ function finalizeSettlementMonth(pin, options) {
   const user = String(opt.user || '웹앱').trim() || '웹앱';
   const before = getSettlementData(pin, ym);
   if (before.isClosed) return { ok: true, alreadyClosed: true, settlement: before };
+  // 월말값을 저장했다면 마감 스냅샷 직전에 자산현황에도 반영한다.
+  // 별도 버튼을 누르는 것을 놓쳐도 월말 자산 스냅샷이 오래된 값을 담지 않게 한다.
+  const investmentSync = before.investments.length ? syncInvestmentToAssets(pin, ym, user) : null;
   const closeResult = closeMonth(pin, {
     ym: ym,
     user: user,
@@ -2630,7 +2633,7 @@ function finalizeSettlementMonth(pin, options) {
     memo: String(opt.memo || '').trim()
   });
   appendActionLog_('월정산 마감', user, ym + ' 정산 마감');
-  return { ok: true, closeResult: closeResult, settlement: getSettlementData(pin, ym) };
+  return { ok: true, closeResult: closeResult, investmentSync: investmentSync, settlement: getSettlementData(pin, ym) };
 }
 
 function reopenSettlementMonth(pin, ym, user) {

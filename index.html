@@ -2478,8 +2478,8 @@ function importSettlementPaste(){
       const p = date.split(/[./-]/); date = String(STATE.ym).slice(0,4)+'-'+pad(p[0])+'-'+pad(p[1]);
     }
     const number = Number(String(amount).replace(/[^0-9.-]/g,''));
-    if (!/^\d{4}-\d{2}-\d{2}$/.test(date) || !desc || !(number > 0)) { skipped++; return; }
-    draft.rows.push(settlementRowSeed({ date, source, desc, amount:number }));
+    if (!/^\d{4}-\d{2}-\d{2}$/.test(date) || !desc || !(Math.abs(number) > 0)) { skipped++; return; }
+    draft.rows.push(settlementRowSeed({ date, source, desc, amount:Math.abs(number) }));
     added++;
   });
   if (box) box.value = '';
@@ -2628,9 +2628,10 @@ function finalizeSettlement(){
   const recon = mergedReconciliations(STATE.settlement || {}, draft);
   const warnings = recon.filter(row => row.status !== '일치').length;
   const investmentRows = mergedInvestments(STATE.settlement || {}, draft);
+  const investmentNote = investmentRows.length ? '\n저장된 투자 월말값은 자산현황에도 함께 반영돼.' : '';
   const message = warnings || !investmentRows.length
-    ? '대사 미일치 '+warnings+'개, 투자 월말값 '+investmentRows.length+'개야. 그래도 마감할까?'
-    : STATE.ym+' 정산을 마감할까? 마감 후 수정은 기록으로 남아.';
+    ? '대사 미일치 '+warnings+'개, 투자 월말값 '+investmentRows.length+'개야. 그래도 마감할까?'+investmentNote
+    : STATE.ym+' 정산을 마감할까? 마감 후 수정은 기록으로 남아.'+investmentNote;
   if (!confirm(message)) return;
   renderSyncStatus(STATE.ym+' 정산 마감 중', 'syncing');
   api('finalizeSettlementMonth', { ym:STATE.ym, user:STATE.sessionUser || '하콩', saveAssetSnapshot:true }).then(() => {
