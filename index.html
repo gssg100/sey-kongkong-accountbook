@@ -3,7 +3,7 @@
 <head>
 <base target="_top">
 <meta charset="utf-8">
-<meta name="app-version" content="2026-08-30-clean-v4">
+<meta name="app-version" content="2026-08-31-settlement-v5">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="description" content="지수와 하콩이의 빠르고 편한 공동 가계부">
 <meta name="theme-color" content="#f5f5f7">
@@ -461,6 +461,20 @@ body.dark-mode #toast{background:rgba(58,58,60,0.92)}
 .more-item:active{transform:scale(.96);background:var(--line-soft)}
 .more-icon{font-size:30px}
 
+/* 월초 일괄정산 작업대 */
+.settlement-hero{padding:26px;border:1px solid color-mix(in srgb,var(--forest) 24%,var(--line));border-radius:24px;background:linear-gradient(135deg,color-mix(in srgb,var(--forest) 12%,var(--card)),var(--card));box-shadow:var(--shadow);margin-bottom:16px}
+.settlement-closed-note{display:flex;align-items:center;justify-content:space-between;gap:14px;margin-bottom:14px;padding:12px 14px;border:1px solid var(--line);border-radius:14px;background:var(--card);box-shadow:var(--shadow)}.settlement-closed-note strong,.settlement-closed-note span{display:block}.settlement-closed-note strong{font-size:13px}.settlement-closed-note span{margin-top:3px;color:var(--muted);font-size:11px;font-weight:650}.settlement-closed-note button{flex:0 0 auto;border:1px solid var(--line);border-radius:10px;background:var(--bg);color:var(--ink);font-size:12px;font-weight:850;padding:8px 10px;cursor:pointer}
+.settlement-eyebrow{font-size:12px;font-weight:900;color:var(--forest);letter-spacing:.02em}
+.settlement-title-line{display:flex;align-items:center;gap:10px;margin-top:5px}.settlement-title-line h1{font-size:28px;letter-spacing:-.045em;margin:0}.settlement-status{display:inline-flex;align-items:center;min-height:24px;padding:0 9px;border-radius:999px;background:color-mix(in srgb,var(--forest) 15%,transparent);color:var(--forest);font-size:12px;font-weight:900}.settlement-status.closed{color:var(--muted);background:var(--line-soft)}
+.settlement-hero p,.settlement-help,.settlement-close-card p{margin:8px 0 0;color:var(--muted);font-size:13px;line-height:1.6;font-weight:650}.settlement-metrics{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:18px}.settlement-metrics>div{padding:11px;border-radius:14px;background:color-mix(in srgb,var(--card) 82%,transparent);border:1px solid var(--line-soft)}.settlement-metrics span{display:block;color:var(--muted);font-size:11px;font-weight:750}.settlement-metrics strong{display:block;margin-top:3px;font-size:16px;letter-spacing:-.02em}
+.settlement-card{margin-bottom:16px;padding:20px;border-radius:20px;background:var(--card);border:1px solid var(--line-soft);box-shadow:var(--shadow)}.settlement-section-head{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:14px}.settlement-section-head>div:first-child{display:flex;align-items:center;gap:9px}.settlement-section-head h2{margin:0;font-size:17px;letter-spacing:-.035em}.settlement-step{display:inline-flex;align-items:center;justify-content:center;width:23px;height:23px;border-radius:50%;background:var(--forest);color:#fff;font-size:12px;font-weight:900}.settlement-section-head button,.settlement-actions button,.settlement-paste button{min-height:34px;padding:7px 10px;border:1px solid var(--line);border-radius:10px;background:var(--bg);color:var(--ink);font-size:12px;font-weight:850;cursor:pointer}.settlement-section-head button:disabled,.settlement-actions button:disabled{opacity:.42;cursor:not-allowed}
+.settlement-actions{display:flex;gap:6px;flex-wrap:wrap;justify-content:flex-end}.settlement-actions.bottom{margin-top:12px}.settlement-paste{margin:0 0 12px;padding:12px;border:1px dashed var(--line);border-radius:14px;background:var(--bg)}.settlement-paste summary{cursor:pointer;font-size:13px;font-weight:850}.settlement-paste p{margin:8px 0;color:var(--muted);font-size:12px;line-height:1.5}.settlement-paste textarea{display:block;width:100%;min-height:72px;margin:8px 0;padding:10px;border:1px solid var(--line);border-radius:10px;resize:vertical;background:var(--card);color:var(--ink);font:12px/1.45 ui-monospace,SFMono-Regular,Consolas,monospace}
+.settlement-draft-list{display:grid;gap:10px}.settlement-tx-row{padding:12px;border:1px solid var(--line-soft);border-radius:14px;background:var(--bg)}.settlement-row-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:9px;font-size:12px;color:var(--muted)}.settlement-remove{border:0;background:transparent;color:var(--muted);font-size:11px;font-weight:800;cursor:pointer}.settlement-remove:hover{color:var(--expense)}.settlement-grid{display:grid;gap:8px}.settlement-grid-main{grid-template-columns:1fr 1.25fr .8fr 1fr 1.5fr 1fr .75fr}.settlement-grid label,.recon-row label,.investment-row label{display:grid;gap:4px;min-width:0;color:var(--muted);font-size:10.5px;font-weight:800}.settlement-grid input,.settlement-grid select,.recon-row input,.investment-row input{width:100%;min-width:0;height:35px;padding:0 9px;border:1px solid var(--line);border-radius:9px;background:var(--card);color:var(--ink);font:inherit;font-size:12px;outline:none}.settlement-grid input:focus,.settlement-grid select:focus,.recon-row input:focus,.investment-row input:focus{border-color:var(--forest);box-shadow:0 0 0 3px color-mix(in srgb,var(--forest) 12%,transparent)}.settlement-desc{min-width:110px}.settlement-empty,.settlement-empty-inline{padding:22px 14px;border:1px dashed var(--line);border-radius:14px;color:var(--muted);font-size:13px;text-align:center}.settlement-empty strong,.settlement-empty span{display:block}.settlement-empty span{margin-top:5px;font-size:12px}.settlement-empty-inline{padding:13px;text-align:left}.settlement-savebar{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-top:12px;padding-top:12px;border-top:1px solid var(--line-soft);color:var(--muted);font-size:12px;font-weight:700}.settlement-savebar .primary,.settlement-close-card .primary{border:0;border-radius:12px;background:var(--forest);color:#fff;font-weight:900;cursor:pointer;padding:11px 14px}.settlement-savebar .primary:disabled{opacity:.45;cursor:not-allowed}
+.settlement-source-list{display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:8px;margin-bottom:12px}.settlement-source{display:grid;grid-template-columns:1fr auto;gap:2px;padding:10px;border:1px solid var(--line-soft);border-radius:12px;background:var(--bg)}.settlement-source span{font-size:12px;font-weight:800}.settlement-source strong{font-size:14px}.settlement-source small{font-size:10px;color:var(--muted)}.recon-list,.investment-list{display:grid;gap:8px}.recon-row{display:grid;grid-template-columns:minmax(90px,1fr) minmax(125px,1fr) 110px;align-items:end;gap:10px;padding:10px;border:1px solid var(--line-soft);border-radius:12px}.recon-row>div:first-child{display:grid;gap:4px}.recon-row strong{font-size:13px}.recon-row small{font-size:11px;color:var(--muted)}.recon-diff{min-height:35px;display:flex;align-items:center;justify-content:flex-end;color:var(--muted);font-size:12px;font-weight:850}.recon-diff.ok{color:var(--forest)}.recon-diff.warn{color:#b15c00}.investment-row{display:grid;grid-template-columns:minmax(100px,1.2fr) repeat(3,minmax(86px,1fr)) minmax(92px,.9fr) auto;align-items:end;gap:8px;padding:10px;border:1px solid var(--line-soft);border-radius:12px}.investment-row>input{align-self:end}.valuation{height:35px;display:flex;align-items:center;justify-content:flex-end;color:var(--forest);font-size:12px}.valuation.minus,.investment-total .minus{color:var(--expense)}.investment-total{display:flex;justify-content:space-between;gap:10px;margin-top:10px;padding-top:10px;border-top:1px solid var(--line-soft);font-size:12px;color:var(--muted)}.investment-total strong{color:var(--forest)}.settlement-close-card{border-color:color-mix(in srgb,var(--forest) 24%,var(--line))}.settlement-close-card .primary.close{margin-top:14px;width:100%;min-height:46px}
+.source-tag{margin-left:4px;background:color-mix(in srgb,var(--forest) 11%,var(--line-soft));color:var(--forest)}
+
+@media (max-width:760px){.settlement-hero{padding:20px;border-radius:20px}.settlement-closed-note{align-items:flex-start;flex-direction:column}.settlement-metrics{grid-template-columns:1fr}.settlement-section-head{align-items:flex-start}.settlement-section-head>div:first-child{align-items:flex-start}.settlement-actions{justify-content:flex-start}.settlement-grid-main{grid-template-columns:repeat(2,minmax(0,1fr))}.settlement-grid-main .settlement-desc{grid-column:span 2}.settlement-savebar{align-items:stretch;flex-direction:column}.settlement-savebar .primary{width:100%}.recon-row{grid-template-columns:1fr 1fr}.recon-diff{grid-column:span 2;justify-content:flex-start;height:auto;min-height:20px}.investment-row{grid-template-columns:repeat(2,minmax(0,1fr))}.investment-row>input{grid-column:span 2}.investment-row .valuation{justify-content:flex-start}.settlement-close-card{padding:18px}}
+
 </style>
 
   <link rel="manifest" href="/manifest.json">
@@ -722,22 +736,24 @@ body.dark-mode #toast{background:rgba(58,58,60,0.92)}
 <script>
 /* ============ 앱 글로벌 상태 (Store) ============ */
 const DEFAULT_GAS_URL = 'https://script.google.com/macros/s/AKfycbwjFv7OSDc6T4vD0nUQA5E-W1QazAEU5dowQroEXard5DCMtP0FiMRlwtIjuEfDzo8phA/exec';
-const APP_CACHE_VERSION = 3;
+const APP_CACHE_VERSION = 4;
 const BRIDGE_CHANNEL = 'sey-budget-bridge-v1';
 const AUTH_STORAGE_KEY = 'sey_session_auth_v2';
-const BOOT_CACHE_KEY = 'sey_boot_cache_v3';
-const MONTH_CACHE_PREFIX = 'sey_month_cache_v3_';
+const BOOT_CACHE_KEY = 'sey_boot_cache_v4';
+const MONTH_CACHE_PREFIX = 'sey_month_cache_v4_';
 const PENDING_QUEUE_KEY = 'sey_pending_tx_v2';
+const SETTLEMENT_DRAFT_PREFIX = 'sey_settlement_draft_v1_';
 const CACHE_MAX_AGE = 7 * 24 * 60 * 60 * 1000;
 
 const STATE = {
-  authToken: '', sessionUser: '', ym: '', revision: 0, lastSyncAt: 0,
+  authToken: '', sessionUser: '', ym: '', currentYm: '', monthMode: 'auto', revision: 0, lastSyncAt: 0,
   config: { types: ['지출','수입','저축','대출상환'], byType: {} },
   summary: null, budget: null, recent: [], transactions: [], assets: null,
   templates: [], recurrings: [], recurringStatus: null, assetSnapshots: [], pending: [],
   aiReady: false, aiHistory: [], closeHistory: [], insight: null, descDict: {},
   editing: null, form: { type: null, cat: null, fixed: '변동', user: '', catManual: false },
   list: { mode: 'month', query: '', writer: '', type: '', category: '', rows: [], count: 0, pageSize: 40 },
+  settlement: null, settlementDraft: null,
   sync: { status: 'idle', message: '', inFlight: false },
   requestSeq: 0
 };
@@ -923,7 +939,37 @@ function renderSyncStatus(message, kind){
 function fmt(n){ n=Math.round(n||0); const neg=n<0; return (neg?'-':'')+'₩'+Math.abs(n).toLocaleString('en-US'); }
 function comma(n){ return Math.round(Math.abs(n||0)).toLocaleString('en-US'); }
 function pad(x){ return String(x).padStart(2,'0'); }
-function todayStr(){ const d=new Date(); return d.getFullYear()+'-'+pad(d.getMonth()+1)+'-'+pad(d.getDate()); }
+function todayStr(){
+  try {
+    const parts = new Intl.DateTimeFormat('en-CA', { timeZone:'Asia/Seoul', year:'numeric', month:'2-digit', day:'2-digit' }).formatToParts(new Date());
+    const map = {}; parts.forEach(p => { map[p.type] = p.value; });
+    return map.year+'-'+map.month+'-'+map.day;
+  } catch(e) {
+    const d=new Date(); return d.getFullYear()+'-'+pad(d.getMonth()+1)+'-'+pad(d.getDate());
+  }
+}
+function lastDateOfYm(ym){
+  const parts = String(ym || todayStr().slice(0,7)).split('-');
+  const d = new Date(Number(parts[0]), Number(parts[1]), 0);
+  return d.getFullYear()+'-'+pad(d.getMonth()+1)+'-'+pad(d.getDate());
+}
+function settlementDraftKey(ym){ return SETTLEMENT_DRAFT_PREFIX + String(ym || ''); }
+function loadSettlementDraft(ym){
+  try {
+    const data = JSON.parse(localStorage.getItem(settlementDraftKey(ym)) || 'null');
+    return data && data.ym === ym && Array.isArray(data.rows) ? data : { ym:ym, rows:[], pasteText:'', updatedAt:0 };
+  } catch(e) { return { ym:ym, rows:[], pasteText:'', updatedAt:0 }; }
+}
+function saveSettlementDraft(draft){
+  if (!draft || !draft.ym) return;
+  draft.updatedAt = Date.now();
+  STATE.settlementDraft = draft;
+  localStorage.setItem(settlementDraftKey(draft.ym), JSON.stringify(draft));
+}
+function clearSettlementDraft(ym){
+  localStorage.removeItem(settlementDraftKey(ym));
+  if (STATE.settlementDraft && STATE.settlementDraft.ym === ym) STATE.settlementDraft = { ym:ym, rows:[], pasteText:'', updatedAt:Date.now() };
+}
 function esc(s){ return String(s||'').replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c])); }
 function emo(cat){
   const m={'식비':'🍔','교통/차량':'🚗','주거/통신':'🏠','쇼핑/문화':'🛍️','경조/이벤트':'🎉','건강/의료':'💊','용돈':'🪙','월급':'💰','상여':'💎','금융수입':'📈','기타수입':'💳'};
@@ -944,9 +990,162 @@ function toast(msg, err){
 <script>
 /* ============ UI 컴포넌트 렌더러 (Components) ============ */
 
+function settlementDraftForCurrent(){
+  const ym = STATE.ym || todayStr().slice(0,7);
+  if (!STATE.settlementDraft || STATE.settlementDraft.ym !== ym) STATE.settlementDraft = loadSettlementDraft(ym);
+  const draft = STATE.settlementDraft;
+  if (!Array.isArray(draft.rows)) draft.rows = [];
+  if (!Array.isArray(draft.reconciliations)) draft.reconciliations = [];
+  if (!Array.isArray(draft.investments)) draft.investments = [];
+  return draft;
+}
+
+function settlementCategories(type, selected){
+  const cfg = (STATE.config && STATE.config.byType) || {};
+  const base = cfg[type] || (type === '수입' ? ['월급','상여','금융수입','기타수입'] : type === '저축' ? ['주식/투자','저축'] : ['식비','교통/차량','주거/통신','쇼핑/문화','경조/이벤트','건강/의료','용돈','기타']);
+  const cats = base.slice();
+  if (selected && cats.indexOf(selected) < 0) cats.push(selected);
+  return cats;
+}
+
+function settlementSourceTotals(settlement, draft){
+  const map = {};
+  (settlement.sourceTotals || []).forEach(item => {
+    map[item.source] = { source:item.source, total:Number(item.total || 0), count:Number(item.count || 0) };
+  });
+  (draft.rows || []).forEach(row => {
+    const source = String(row.source || '').trim();
+    if (!source) return;
+    if (!map[source]) map[source] = { source:source, total:0, count:0 };
+    map[source].total += Number(String(row.amount || '').replace(/[^0-9.-]/g,'')) || 0;
+    map[source].count++;
+  });
+  return Object.keys(map).sort().map(key => map[key]);
+}
+
+function mergedReconciliations(settlement, draft){
+  const map = {};
+  (settlement.reconciliations || []).forEach(row => { map[row.source] = Object.assign({}, row); });
+  (draft.reconciliations || []).forEach(row => {
+    if (!row || !row.source) return;
+    map[row.source] = Object.assign({}, map[row.source] || {}, row);
+  });
+  const sourceTotals = settlementSourceTotals(settlement, draft);
+  sourceTotals.forEach(item => {
+    if (!map[item.source]) map[item.source] = { source:item.source, statementTotal:0 };
+    map[item.source].enteredTotal = item.total;
+    const hasStatement = map[item.source].statementTotal !== '' && map[item.source].statementTotal != null && Number(map[item.source].statementTotal) > 0;
+    map[item.source].difference = hasStatement ? Number(map[item.source].statementTotal) - item.total : null;
+    map[item.source].status = !hasStatement ? '명세서 입력 필요' : Math.abs(map[item.source].difference) < 1 ? '일치' : '차이';
+  });
+  return Object.keys(map).sort().map(key => map[key]);
+}
+
+function mergedInvestments(settlement, draft){
+  const map = {};
+  (settlement.investments || []).forEach(row => { map[row.account] = Object.assign({}, row); });
+  (draft.investments || []).forEach(row => {
+    if (!row || !row.account) return;
+    map[row.account] = Object.assign({}, map[row.account] || {}, row);
+  });
+  return Object.keys(map).sort().map(key => {
+    const row = map[key];
+    const previousValue = Number(row.previousValue || 0);
+    const netContribution = Number(row.netContribution || 0);
+    const endValue = Number(row.endValue || 0);
+    return Object.assign({}, row, { previousValue, netContribution, endValue, valuationChange:endValue - previousValue - netContribution });
+  });
+}
+
+function settlementTxRow(row, index){
+  const type = row.type || '지출';
+  const cats = settlementCategories(type, row.cat || '');
+  const types = ((STATE.config && STATE.config.types) || ['지출','수입','저축','대출상환']);
+  const users = ['하콩','지수'];
+  return `<div class="settlement-tx-row" data-draft-index="${index}">
+    <div class="settlement-row-top"><strong>${index + 1}</strong><button type="button" class="settlement-remove" onclick="removeSettlementDraftRow(${index})" aria-label="${index + 1}번 초안 행 삭제">삭제</button></div>
+    <div class="settlement-grid settlement-grid-main">
+      <label>날짜<input type="date" value="${esc(row.date || lastDateOfYm(STATE.ym))}" onchange="updateSettlementDraftRow(${index},'date',this.value)"></label>
+      <label>출처/계좌<input type="text" value="${esc(row.source || '')}" placeholder="예: 신한카드" oninput="updateSettlementDraftRow(${index},'source',this.value)"></label>
+      <label>구분<select onchange="changeSettlementDraftType(${index},this.value)">${types.map(t=>`<option value="${esc(t)}" ${t===type?'selected':''}>${esc(t)}</option>`).join('')}</select></label>
+      <label>분류<select onchange="updateSettlementDraftRow(${index},'cat',this.value)">${cats.map(c=>`<option value="${esc(c)}" ${c===(row.cat || cats[0])?'selected':''}>${esc(c)}</option>`).join('')}</select></label>
+      <label class="settlement-desc">내역<input type="text" value="${esc(row.desc || '')}" placeholder="예: 마트, 카드 결제" oninput="updateSettlementDraftRow(${index},'desc',this.value)"></label>
+      <label>금액<input inputmode="numeric" value="${row.amount ? comma(row.amount) : ''}" placeholder="0" oninput="updateSettlementAmount(${index},this)"></label>
+      <label>입력자<select onchange="updateSettlementDraftRow(${index},'user',this.value)">${users.map(u=>`<option value="${u}" ${u===(row.user || STATE.sessionUser || '하콩')?'selected':''}>${u}</option>`).join('')}</select></label>
+    </div>
+  </div>`;
+}
+
+function renderSettlementHome(el){
+  const settlement = STATE.settlement || {};
+  const draft = settlementDraftForCurrent();
+  const reconRows = mergedReconciliations(settlement, draft);
+  const investmentRows = mergedInvestments(settlement, draft);
+  const sourceTotals = settlementSourceTotals(settlement, draft);
+  const matchingRecon = reconRows.filter(row => row.status === '일치').length;
+  const investmentTotal = investmentRows.reduce((sum,row)=>sum + Number(row.endValue || 0),0);
+  const valuationChange = investmentRows.reduce((sum,row)=>sum + Number(row.valuationChange || 0),0);
+  const recurringCount = (settlement.recurringCandidates || []).length;
+  const statusLabel = settlement.isClosed ? '마감 완료' : '정산 중';
+  const sourceHtml = sourceTotals.length ? sourceTotals.map(item => `<div class="settlement-source"><span>${esc(item.source)}</span><strong>${fmt(item.total)}</strong><small>${item.count}건</small></div>`).join('') : '<div class="settlement-empty-inline">출처를 적으면 카드·계좌별 합계를 바로 대사할 수 있어요.</div>';
+  const draftHtml = draft.rows.length ? draft.rows.map(settlementTxRow).join('') : `<div class="settlement-empty"><strong>아직 작성한 거래가 없어요.</strong><span>행을 추가하거나 카드·계좌 내역을 붙여넣어 시작해줘.</span></div>`;
+  const reconHtml = reconRows.length ? reconRows.map((row,index) => `<div class="recon-row">
+    <div><strong>${esc(row.source)}</strong><small>입력 ${fmt(row.enteredTotal || 0)}</small></div>
+    <label>명세서 합계<input inputmode="numeric" value="${row.statementTotal ? comma(row.statementTotal) : ''}" placeholder="0" oninput="updateSettlementRecon(${index},'statementTotal',this.value)"></label>
+    <div class="recon-diff ${row.status==='일치'?'ok':row.status==='차이'?'warn':''}">${row.status==='일치'?'일치':row.difference==null?'입력 필요':'차이 '+fmt(row.difference)}</div>
+  </div>`).join('') : '<div class="settlement-empty-inline">먼저 거래 행에 출처/계좌를 적어줘.</div>';
+  const investmentHtml = investmentRows.length ? investmentRows.map((row,index) => `<div class="investment-row">
+    <input aria-label="투자계좌" value="${esc(row.account || '')}" placeholder="예: 해외주식" oninput="updateSettlementInvestment(${index},'account',this.value)">
+    <label>전월말<input inputmode="numeric" value="${row.previousValue ? comma(row.previousValue) : ''}" placeholder="0" oninput="updateSettlementInvestmentAmount(${index},'previousValue',this)"></label>
+    <label>순입금<input inputmode="numeric" value="${row.netContribution ? comma(row.netContribution) : ''}" placeholder="0" oninput="updateSettlementInvestmentAmount(${index},'netContribution',this)"></label>
+    <label>월말값<input inputmode="numeric" value="${row.endValue ? comma(row.endValue) : ''}" placeholder="0" oninput="updateSettlementInvestmentAmount(${index},'endValue',this)"></label>
+    <strong class="valuation ${row.valuationChange<0?'minus':''}">${row.valuationChange>=0?'+':''}${fmt(row.valuationChange)}</strong>
+    <button type="button" class="settlement-remove" onclick="removeSettlementInvestment(${index})" aria-label="투자 계좌 삭제">삭제</button>
+  </div>`).join('') : '<div class="settlement-empty-inline">증권계좌별 월말 평가액을 입력하면 투자금과 수익 변동을 분리해줘요.</div>';
+  el.innerHTML = `
+    <section class="settlement-hero">
+      <div class="settlement-eyebrow">${settlement.currentYm || STATE.currentYm || todayStr().slice(0,7)} 기준 · 지난달 정산</div>
+      <div class="settlement-title-line"><h1>${STATE.ym} 정산</h1><span class="settlement-status ${settlement.isClosed?'closed':''}">${statusLabel}</span></div>
+      <p>거래를 모아 입력하고, 카드·계좌와 투자 월말값까지 맞춘 뒤 한 번에 마감해요.</p>
+      <div class="settlement-metrics"><div><span>확정 거래</span><strong>${settlement.transactionCount || 0}건</strong></div><div><span>작성 초안</span><strong>${draft.rows.length}건</strong></div><div><span>대사 일치</span><strong>${matchingRecon}/${reconRows.length}</strong></div></div>
+    </section>
+
+    <section class="settlement-card">
+      <div class="settlement-section-head"><div><span class="settlement-step">1</span><h2>거래 한꺼번에 입력</h2></div><div class="settlement-actions"><button type="button" onclick="addSettlementDraftRow()">행 추가</button><button type="button" onclick="loadRecurringSettlementDrafts()" ${recurringCount?'':'disabled'}>정기거래 ${recurringCount ? recurringCount+'건' : '없음'}</button></div></div>
+      <details class="settlement-paste"><summary>카드·계좌 내역 붙여넣기</summary><p>날짜 · 출처 · 내역 · 금액 순서로 탭으로 구분해 붙여넣으면 돼요.</p><textarea id="settlementPaste" placeholder="2026-08-02&#9;신한카드&#9;마트&#9;52,300"></textarea><button type="button" onclick="importSettlementPaste()">초안에 추가</button></details>
+      <div class="settlement-draft-list">${draftHtml}</div>
+      <div class="settlement-savebar"><div>초안 ${draft.rows.length}건 · 이 화면을 닫아도 기기에 남아요</div><button type="button" class="primary" onclick="submitSettlementDraft()" ${draft.rows.length?'':'disabled'}>거래 ${draft.rows.length}건 확정 저장</button></div>
+    </section>
+
+    <section class="settlement-card">
+      <div class="settlement-section-head"><div><span class="settlement-step">2</span><h2>카드·계좌 대사</h2></div><button type="button" onclick="saveSettlementReconciliations()">대사 저장</button></div>
+      <div class="settlement-source-list">${sourceHtml}</div>
+      <div class="recon-list">${reconHtml}</div>
+    </section>
+
+    <section class="settlement-card">
+      <div class="settlement-section-head"><div><span class="settlement-step">3</span><h2>투자·자산 월말값</h2></div><button type="button" onclick="addSettlementInvestment()">계좌 추가</button></div>
+      <p class="settlement-help">순입금과 월말 평가액을 분리해 생활비와 투자 수익을 섞지 않아요.</p>
+      <div class="investment-list">${investmentHtml}</div>
+      <div class="investment-total"><span>투자 월말 합계 ${fmt(investmentTotal)}</span><strong class="${valuationChange<0?'minus':''}">평가증감 ${valuationChange>=0?'+':''}${fmt(valuationChange)}</strong></div>
+      <div class="settlement-actions bottom"><button type="button" onclick="saveSettlementInvestments()">투자 월말값 저장</button><button type="button" onclick="syncSettlementInvestmentsToAssets()">자산현황에 반영</button></div>
+    </section>
+
+    <section class="settlement-card settlement-close-card">
+      <div class="settlement-section-head"><div><span class="settlement-step">4</span><h2>${STATE.ym} 마감</h2></div></div>
+      <p>초안 거래를 모두 확정하고 대사·투자 입력을 확인한 뒤 마감해요. 마감 후 수정은 다시 열기 기록으로 남아요.</p>
+      <button type="button" class="primary close" onclick="finalizeSettlement()">${STATE.ym} 정산 마감</button>
+    </section>
+  `;
+}
+
 function renderHome(){
   const el=document.getElementById('v-home');
   if(!el) return;
+  if (STATE.settlement && STATE.settlement.showWorkspace && !STATE.settlement.isClosed) {
+    renderSettlementHome(el);
+    return;
+  }
   const keepInsightsOpen = !!(el.querySelector('#homeInsights') && el.querySelector('#homeInsights').open);
   if(!STATE.summary) {
     el.innerHTML = `
@@ -968,6 +1167,9 @@ function renderHome(){
   const isPastMonth = selectedYm < todayYm;
   const ymParts = selectedYm.split('-');
   const monthLabel = `${Number(ymParts[0])}년 ${Number(ymParts[1])}월`;
+  const closedMonthHtml = (STATE.settlement && STATE.settlement.isClosed && isPastMonth) ? `
+    <div class="settlement-closed-note"><div><strong>${STATE.ym} 정산을 마감했어요.</strong><span>수정이 필요하면 정산을 다시 열 수 있어요. 변경 기록은 남습니다.</span></div><button type="button" onclick="reopenSettlement()">정산 다시 열기</button></div>
+  ` : '';
   const cats = s.cats || [];
   const maxCat = cats.length? cats[0].amt : 1;
   const topCats = cats.slice(0,3);
@@ -1075,9 +1277,9 @@ function renderHome(){
   ` : `<div class="insight-note">${isPastMonth ? '완료된 달은 예측 대신 확정 결산 금액을 표시해요.' : '미래 월은 거래가 쌓이면 결산 정보가 표시돼요.'}</div>`;
 
   // 카테고리 예산 경고 게이지 바 계산
-  const budgetCats = (STATE.budget && STATE.budget.rows) ? STATE.budget.rows : [];
+  const budgetCats = (STATE.budget && (STATE.budget.items || STATE.budget.rows)) || [];
   const budgetGaugesHtml = budgetCats.length ? budgetCats.slice(0,4).map(b => {
-    const target = Number(b.target || 1);
+    const target = Number(b.budget || b.target || 1);
     const spent = Number(b.spent || 0);
     const pct = Math.round((spent / target) * 100);
     let cls = 'safe';
@@ -1086,7 +1288,7 @@ function renderHome(){
 
     return `<div class="budget-gauge-row">
       <div class="budget-gauge-head">
-        <span>${emo(b.cat)} ${esc(b.cat)} (${fmt(spent)} / ${fmt(target)})</span>
+        <span>${emo(b.category || b.cat)} ${esc(b.category || b.cat)} (${fmt(spent)} / ${fmt(target)})</span>
         <span class="pct-badge ${cls}">${pct >= 100 ? '⚠️ '+pct+'% 초과' : pct+'%'}</span>
       </div>
       <div class="budget-gauge-track">
@@ -1096,6 +1298,7 @@ function renderHome(){
   }).join('') : '';
 
   el.innerHTML = `
+    ${closedMonthHtml}
     ${switcherHtml}
     <div class="balance">
       <div class="lab">${isCurrentMonth ? '이번 달 남은 돈' : isPastMonth ? monthLabel + ' 결산 잔액' : monthLabel + ' 계획 잔액'}</div>
@@ -1288,7 +1491,7 @@ function txRow(t){
     <div class="ico ${icoColor}">${emo(t.cat)}</div>
     <div class="mid"><div class="d">${esc(t.desc||t.cat||'(내역없음)')}</div>
       <div class="s">
-        <span class="tag">${esc(t.cat)}</span>
+        <span class="tag">${esc(t.cat)}</span>${t.source ? `<span class="tag source-tag">${esc(t.source)}</span>` : ''}
       </div>
     </div>
     ${STATE.bulkMode ? '' : actionHtml}
@@ -1771,7 +1974,9 @@ function logout(){
 
 function applyBootData(data){
   if (!data) return;
-  STATE.ym = data.ym || STATE.ym;
+  const shouldAdoptWorkMonth = STATE.monthMode !== 'manual' || !STATE.ym;
+  if (shouldAdoptWorkMonth) STATE.ym = data.workYm || data.ym || STATE.ym;
+  STATE.currentYm = data.currentYm || STATE.currentYm || todayStr().slice(0,7);
   STATE.revision = Number(data.revision || STATE.revision || 0);
   STATE.lastSyncAt = Number(data.serverTime || Date.now());
   STATE.sessionUser = data.sessionUser || STATE.sessionUser;
@@ -1781,6 +1986,8 @@ function applyBootData(data){
   STATE.budget = data.budget || STATE.budget;
   STATE.recent = data.recent || STATE.recent || [];
   STATE.transactions = data.transactions || STATE.transactions || [];
+  STATE.settlement = data.settlement || STATE.settlement;
+  if (STATE.settlement && STATE.settlement.ym === STATE.ym) STATE.settlementDraft = loadSettlementDraft(STATE.ym);
   applyGlobalData(data);
 }
 
@@ -1810,6 +2017,8 @@ function applyMonthData(data){
   STATE.budget = data.budget || STATE.budget;
   STATE.recent = data.recent || STATE.recent || [];
   STATE.transactions = data.transactions || [];
+  STATE.settlement = data.settlement || STATE.settlement;
+  if (STATE.settlement && STATE.settlement.ym === STATE.ym) STATE.settlementDraft = loadSettlementDraft(STATE.ym);
   STATE.closeHistory = data.closeHistory || STATE.closeHistory || [];
   STATE.revision = Number(data.revision || STATE.revision || 0);
   STATE.lastSyncAt = Number(data.serverTime || Date.now());
@@ -1829,6 +2038,8 @@ function pendingAsTransaction(entry){
     fixed: data.fixed || '변동',
     user: data.user || STATE.sessionUser || '하콩',
     memo: data.memo || '',
+    source: data.source || '',
+    settlementBatch: data.settlementBatch || '',
     spendingMood: data.spendingMood || '',
     syncState: entry.lastError ? 'error' : 'pending'
   };
@@ -1911,13 +2122,11 @@ function refreshBootData(silent){
   const startedYm = STATE.ym;
   STATE.sync.bootPromise = api('getBoot').then(data => {
     saveBootCache(data);
-    if (!startedYm || STATE.ym === startedYm) {
-      if (!startedYm || data.ym === startedYm) applyBootData(data);
-      else applyGlobalData(data);
-      mergePendingTransactions();
-      renderAll();
-      if (startedYm && data.ym !== startedYm) refreshVisibleMonth(true).catch(()=>{});
-    }
+    if (STATE.monthMode !== 'manual') applyBootData(data);
+    else if (data.ym === startedYm) applyMonthData(data);
+    else applyGlobalData(data);
+    mergePendingTransactions();
+    renderAll();
     if (!silent) toast('✅ 최신 장부로 동기화 완료');
     renderSyncStatus();
     return data;
@@ -1997,9 +2206,10 @@ function openQuickEntryModal(){
   document.getElementById('sheet').classList.add('on');
   
   const titleEl = document.getElementById('sheetTitle');
-  if(titleEl) titleEl.textContent = STATE.editing ? '거래 수정' : '빠른 입력';
+  const isSettlementMonth = STATE.settlement && !STATE.settlement.isClosed && STATE.settlement.ym === STATE.ym && STATE.ym !== todayStr().slice(0,7);
+  if(titleEl) titleEl.textContent = STATE.editing ? '거래 수정' : (isSettlementMonth ? STATE.ym + ' 정산 거래 추가' : '빠른 입력');
   const extraFields = document.getElementById('extraFields');
-  if (extraFields) extraFields.open = !!STATE.editing;
+  if (extraFields) extraFields.open = !!STATE.editing || !!isSettlementMonth;
 
   if (!STATE.editing) {
     document.getElementById('fAmount').value = '';
@@ -2018,15 +2228,12 @@ function openQuickEntryModal(){
 
   const dateInp = document.getElementById('fDate');
   if(dateInp && !dateInp.value){
-    // 전월 일괄입력 워크플로우: 보고 있는 월(STATE.ym)이 오늘이 속한 월과 다르면
-    // 해당 월의 마지막 날짜로 자동 세팅
+    // 정산 중인 과거 월은 날짜를 숨기지 않고, 해당 월 마지막 일을 시작값으로 제시한다.
     const today = todayStr();
     const todayYm = today.slice(0,7);
     if(STATE.ym && STATE.ym !== todayYm){
       // 다른 월 보는 중 → 해당 월 마지막 날짜로 기본값
-      const parts = STATE.ym.split('-');
-      const d = new Date(parts[0], parts[1], 0);
-      dateInp.value = d.getFullYear() + '-' + pad(d.getMonth()+1) + '-' + pad(d.getDate());
+      dateInp.value = lastDateOfYm(STATE.ym);
     } else {
       dateInp.value = today;
     }
@@ -2169,6 +2376,289 @@ function closeQuickEntryModal(){
   const continueBtn = document.getElementById('continueBtn');
   if(continueBtn) continueBtn.style.display = '';
   restoreDialogTrigger();
+}
+
+/* ============ 월초 일괄정산 작업대 ============ */
+function settlementDraftState(){
+  return settlementDraftForCurrent();
+}
+
+function settlementRowSeed(data){
+  const source = data || {};
+  return {
+    clientId: source.clientId || createClientId(),
+    date: source.date || lastDateOfYm(STATE.ym),
+    source: source.source || '',
+    type: source.type || '지출',
+    cat: source.cat || '식비',
+    desc: source.desc || '',
+    amount: Number(source.amount || 0),
+    fixed: source.fixed || '변동',
+    user: source.user || STATE.sessionUser || '하콩',
+    memo: source.memo || '',
+    spendingMood: source.spendingMood || '',
+    settlementBatch: source.settlementBatch || ''
+  };
+}
+
+function persistSettlementDraftAndRender(){
+  const draft = settlementDraftState();
+  saveSettlementDraft(draft);
+  renderHome();
+}
+
+function addSettlementDraftRow(data){
+  const draft = settlementDraftState();
+  draft.rows.push(settlementRowSeed(data));
+  persistSettlementDraftAndRender();
+}
+
+function removeSettlementDraftRow(index){
+  const draft = settlementDraftState();
+  draft.rows.splice(Number(index), 1);
+  persistSettlementDraftAndRender();
+}
+
+function updateSettlementDraftRow(index, field, value){
+  const draft = settlementDraftState();
+  const row = draft.rows[Number(index)];
+  if (!row) return;
+  row[field] = value;
+  saveSettlementDraft(draft);
+}
+
+function updateSettlementAmount(index, input){
+  const raw = String(input.value || '').replace(/[^0-9]/g, '');
+  input.value = raw ? Number(raw).toLocaleString('en-US') : '';
+  updateSettlementDraftRow(index, 'amount', raw ? Number(raw) : 0);
+}
+
+function changeSettlementDraftType(index, type){
+  const draft = settlementDraftState();
+  const row = draft.rows[Number(index)];
+  if (!row) return;
+  row.type = type;
+  const cats = settlementCategories(type, '');
+  row.cat = cats[0] || '기타';
+  persistSettlementDraftAndRender();
+}
+
+function loadRecurringSettlementDrafts(){
+  const candidates = (STATE.settlement && STATE.settlement.recurringCandidates) || [];
+  if (!candidates.length) return toast('불러올 정기거래 초안이 없어.');
+  const draft = settlementDraftState();
+  const existing = new Set([].concat(draft.rows || [], STATE.transactions || []).map(row => [row.date, row.desc, Number(row.amount || 0)].join('|')));
+  let added = 0;
+  candidates.forEach(candidate => {
+    const key = [candidate.date, candidate.desc, Number(candidate.amount || 0)].join('|');
+    if (existing.has(key)) return;
+    draft.rows.push(settlementRowSeed(candidate));
+    existing.add(key);
+    added++;
+  });
+  saveSettlementDraft(draft);
+  renderHome();
+  toast(added ? '정기거래 초안 '+added+'건을 가져왔어.' : '이미 입력됐거나 초안에 있는 정기거래야.');
+}
+
+function importSettlementPaste(){
+  const box = document.getElementById('settlementPaste');
+  const text = box ? String(box.value || '').trim() : '';
+  if (!text) return toast('붙여넣을 내역이 없어.', true);
+  const draft = settlementDraftState();
+  let added = 0, skipped = 0;
+  text.split(/\r?\n/).forEach(line => {
+    const cols = line.split('\t').map(v => v.trim());
+    if (cols.length < 3) { skipped++; return; }
+    let date = cols[0];
+    let source = '', desc = '', amount = '';
+    if (cols.length >= 4) { source = cols[1]; desc = cols[2]; amount = cols[3]; }
+    else { desc = cols[1]; amount = cols[2]; }
+    if (/^\d{1,2}[./-]\d{1,2}$/.test(date)) {
+      const p = date.split(/[./-]/); date = String(STATE.ym).slice(0,4)+'-'+pad(p[0])+'-'+pad(p[1]);
+    }
+    const number = Number(String(amount).replace(/[^0-9.-]/g,''));
+    if (!/^\d{4}-\d{2}-\d{2}$/.test(date) || !desc || !(number > 0)) { skipped++; return; }
+    draft.rows.push(settlementRowSeed({ date, source, desc, amount:number }));
+    added++;
+  });
+  if (box) box.value = '';
+  saveSettlementDraft(draft);
+  renderHome();
+  toast(added+'건을 초안에 넣었어.' + (skipped ? ' 형식이 맞지 않은 '+skipped+'건은 제외했어.' : ''), skipped > 0);
+}
+
+function applySettlementResponse(data){
+  if (!data) return;
+  STATE.settlement = data;
+  STATE.settlement.showWorkspace = !data.isClosed && STATE.ym !== (STATE.currentYm || todayStr().slice(0,7));
+  STATE.settlementDraft = loadSettlementDraft(STATE.ym);
+}
+
+function submitSettlementDraft(){
+  const draft = settlementDraftState();
+  const rows = (draft.rows || []).slice();
+  if (!rows.length) return;
+  const invalid = rows.find(row => !/^\d{4}-\d{2}-\d{2}$/.test(String(row.date || '')) || !String(row.desc || '').trim() || !(Number(row.amount || 0) > 0));
+  if (invalid) return toast('날짜 · 내역 · 금액이 비어 있는 초안이 있어.', true);
+  const batchId = 'settlement_' + STATE.ym + '_' + Date.now();
+  const pending = rows.slice();
+  const completed = new Set();
+  const submitBtnText = '정산 거래 저장 중…';
+  renderSyncStatus(submitBtnText, 'syncing');
+  const sendNext = () => {
+    if (!pending.length) return Promise.resolve();
+    const chunk = pending.splice(0, 50);
+    return api('addTransactionsFast', chunk.map(row => ({
+      clientId: row.clientId,
+      data: Object.assign({}, row, { settlementBatch: batchId })
+    }))).then(res => {
+      (res.results || []).forEach(result => { if (result && result.ok) completed.add(result.clientId); });
+      return sendNext();
+    });
+  };
+  sendNext().then(() => {
+    draft.rows = rows.filter(row => !completed.has(row.clientId));
+    saveSettlementDraft(draft);
+    return refreshVisibleMonth(true);
+  }).then(() => {
+    toast(completed.size+'건을 장부에 확정 저장했어.');
+    renderSyncStatus('월정산 거래 저장 완료', 'saved');
+  }).catch(err => {
+    toast((err && err.message) || '일부 거래를 저장하지 못했어. 초안은 그대로 남아 있어.', true);
+    renderSyncStatus('정산 초안 저장 실패 · 다시 시도 가능', 'pending');
+  });
+}
+
+function settlementReconRowsForEdit(){
+  const draft = settlementDraftState();
+  return mergedReconciliations(STATE.settlement || {}, draft).map(row => Object.assign({}, row));
+}
+
+function updateSettlementRecon(index, field, value){
+  const draft = settlementDraftState();
+  const rows = settlementReconRowsForEdit();
+  const row = rows[Number(index)];
+  if (!row) return;
+  if (field === 'statementTotal') {
+    const raw = String(value || '').replace(/[^0-9]/g,'');
+    row[field] = raw ? Number(raw) : 0;
+  } else row[field] = value;
+  draft.reconciliations = rows;
+  saveSettlementDraft(draft);
+}
+
+function saveSettlementReconciliations(){
+  const rows = settlementReconRowsForEdit().filter(row => row.source && Number(row.statementTotal || 0) > 0);
+  if (!rows.length) return toast('명세서 합계를 입력한 출처가 없어.', true);
+  renderSyncStatus('카드·계좌 대사 저장 중', 'syncing');
+  api('saveReconciliations', STATE.ym, rows, STATE.sessionUser || '하콩').then(data => {
+    applySettlementResponse(data);
+    renderHome();
+    renderSyncStatus('대사 저장 완료', 'saved');
+    toast('대사 '+rows.length+'개를 저장했어.');
+  }).catch(err => toast((err && err.message) || '대사를 저장하지 못했어.', true));
+}
+
+function settlementInvestmentRowsForEdit(){
+  const draft = settlementDraftState();
+  return mergedInvestments(STATE.settlement || {}, draft).map(row => Object.assign({}, row));
+}
+
+function addSettlementInvestment(){
+  const draft = settlementDraftState();
+  const rows = settlementInvestmentRowsForEdit();
+  rows.push({ account:'', previousValue:0, netContribution:0, endValue:0, memo:'' });
+  draft.investments = rows;
+  persistSettlementDraftAndRender();
+}
+
+function removeSettlementInvestment(index){
+  const draft = settlementDraftState();
+  const rows = settlementInvestmentRowsForEdit();
+  rows.splice(Number(index), 1);
+  draft.investments = rows;
+  persistSettlementDraftAndRender();
+}
+
+function updateSettlementInvestment(index, field, value){
+  const draft = settlementDraftState();
+  const rows = settlementInvestmentRowsForEdit();
+  if (!rows[Number(index)]) return;
+  rows[Number(index)][field] = value;
+  draft.investments = rows;
+  saveSettlementDraft(draft);
+}
+
+function updateSettlementInvestmentAmount(index, field, input){
+  const raw = String(input.value || '').replace(/[^0-9-]/g,'');
+  input.value = raw ? Number(raw).toLocaleString('en-US') : '';
+  updateSettlementInvestment(index, field, raw ? Number(raw) : 0);
+}
+
+function saveSettlementInvestments(){
+  const rows = settlementInvestmentRowsForEdit().filter(row => String(row.account || '').trim());
+  if (!rows.length) return toast('투자계좌 이름을 한 건 이상 입력해줘.', true);
+  renderSyncStatus('투자 월말값 저장 중', 'syncing');
+  api('saveInvestmentMonthly', STATE.ym, rows, STATE.sessionUser || '하콩').then(data => {
+    const draft = settlementDraftState(); draft.investments = [];
+    saveSettlementDraft(draft);
+    applySettlementResponse(data);
+    renderHome();
+    renderSyncStatus('투자 월말값 저장 완료', 'saved');
+    toast('투자계좌 '+rows.length+'개의 월말값을 저장했어.');
+  }).catch(err => toast((err && err.message) || '투자 월말값을 저장하지 못했어.', true));
+}
+
+function syncSettlementInvestmentsToAssets(){
+  const draft = settlementDraftState();
+  if ((draft.investments || []).length) return toast('투자 월말값을 먼저 저장한 뒤 자산현황에 반영해줘.', true);
+  renderSyncStatus('투자값을 자산현황에 반영 중', 'syncing');
+  api('syncInvestmentToAssets', STATE.ym, STATE.sessionUser || '하콩').then(res => {
+    if (res && res.assets) STATE.assets = res.assets;
+    renderHome();
+    renderSyncStatus('자산현황 반영 완료', 'saved');
+    toast('투자 월말값을 자산현황의 주식/투자에 반영했어.');
+  }).catch(err => toast((err && err.message) || '자산현황 반영에 실패했어.', true));
+}
+
+function finalizeSettlement(){
+  const draft = settlementDraftState();
+  if ((draft.rows || []).length) return toast('작성 중인 거래 초안을 먼저 확정 저장해줘.', true);
+  const recon = mergedReconciliations(STATE.settlement || {}, draft);
+  const warnings = recon.filter(row => row.status !== '일치').length;
+  const investmentRows = mergedInvestments(STATE.settlement || {}, draft);
+  const message = warnings || !investmentRows.length
+    ? '대사 미일치 '+warnings+'개, 투자 월말값 '+investmentRows.length+'개야. 그래도 마감할까?'
+    : STATE.ym+' 정산을 마감할까? 마감 후 수정은 기록으로 남아.';
+  if (!confirm(message)) return;
+  renderSyncStatus(STATE.ym+' 정산 마감 중', 'syncing');
+  api('finalizeSettlementMonth', { ym:STATE.ym, user:STATE.sessionUser || '하콩', saveAssetSnapshot:true }).then(() => {
+    clearSettlementDraft(STATE.ym);
+    STATE.monthMode = 'auto';
+    return api('getBoot');
+  }).then(data => {
+    applyBootData(data);
+    saveBootCache(data);
+    renderAll();
+    renderSyncStatus(STATE.ym+' 화면으로 전환 완료', 'saved');
+    toast('✅ 정산 마감 완료! 이제 '+STATE.ym+' 화면을 보여줄게.');
+  }).catch(err => toast((err && err.message) || '정산 마감에 실패했어.', true));
+}
+
+function reopenSettlement(){
+  if (!STATE.settlement || !STATE.settlement.isClosed) return;
+  if (!confirm(STATE.ym+' 정산을 다시 열까? 수정 이력은 그대로 보관돼.')) return;
+  renderSyncStatus(STATE.ym+' 정산 다시 여는 중', 'syncing');
+  api('reopenSettlementMonth', STATE.ym, STATE.sessionUser || '하콩').then(res => {
+    applySettlementResponse(res && res.settlement);
+    renderAll();
+    renderSyncStatus('정산 다시 열기 완료', 'saved');
+    toast(STATE.ym+' 정산을 다시 열었어.');
+  }).catch(err => {
+    renderSyncStatus('정산 다시 열기 실패', 'pending');
+    toast((err && err.message) || '정산을 다시 열지 못했어.', true);
+  });
 }
 
 function addQuickAmount(val){
@@ -2551,6 +3041,7 @@ function changeMonth(delta){
   const newYm = y + '-' + pad(m);
 
   const requestId = ++STATE.requestSeq;
+  STATE.monthMode = 'manual';
   STATE.list.pageSize = 40;
   const cached = loadMonthCache(newYm);
   STATE.ym = newYm;
@@ -2934,10 +3425,13 @@ function changeMonth(delta){
       toast('💾 부부 회고 저장 중...');
 
       api('saveMonthlyReview', reviewData).then(res => {
-        if(!STATE.closeHistory) STATE.closeHistory = [];
-        const idx = STATE.closeHistory.findIndex(h => h.ym === STATE.ym);
-        if(idx > -1) STATE.closeHistory[idx] = { ...STATE.closeHistory[idx], ...reviewData };
-        else STATE.closeHistory.unshift(reviewData);
+        if (res && Array.isArray(res.history)) STATE.closeHistory = res.history;
+        else {
+          if(!STATE.closeHistory) STATE.closeHistory = [];
+          const idx = STATE.closeHistory.findIndex(h => h.ym === STATE.ym);
+          if(idx > -1) STATE.closeHistory[idx] = { ...STATE.closeHistory[idx], ...reviewData };
+          else STATE.closeHistory.unshift(reviewData);
+        }
         
         renderReview();
         toast('✅ 이번 달 부부 회고가 저장되었어! 👏');
@@ -2977,9 +3471,10 @@ function changeMonth(delta){
 
     function applyRecommendBudget() {
       toast('💡 과거 소비 데이터 분석 중...');
-      api('recommendBudget', STATE.ym).then(items => {
-        if(items && items.length) {
-          renderBudgetItems(items);
+      api('recommendBudget', STATE.ym).then(res => {
+        const items = (res && res.items) || [];
+        if(items.length) {
+          renderBudgetItems(items.map(item => ({ category:item.category, budget:item.recommended || item.currentBudget || 0 })));
           toast('✨ AI 추천 예산이 반영되었어!');
         } else {
           toast('추천할 이전 지출 데이터가 충분하지 않아.');
@@ -2991,10 +3486,24 @@ function changeMonth(delta){
 
     function copyPreviousBudget() {
       toast('📋 전월 예산 불러오는 중...');
-      api('copyBudget', STATE.ym, '').then(res => {
-        if(res && (res.items || res.rows)) {
-          renderBudgetItems(res.items || res.rows);
-          toast('✅ 전월 예산을 복사해왔어!');
+      const parts = String(STATE.ym || '').split('-');
+      let year = Number(parts[0]), month = Number(parts[1]) - 1;
+      if (month < 1) { year--; month = 12; }
+      const previousYm = year + '-' + pad(month);
+      const copy = overwrite => api('copyBudget', previousYm, STATE.ym, { user:STATE.sessionUser || '하콩', source:'예산 화면 전월 복사', overwrite:!!overwrite });
+      copy(false).then(res => {
+        if (res && res.needsOverwrite) {
+          if (!confirm(STATE.ym+'에 이미 저장된 예산이 있어. 전월 예산으로 덮어쓸까?')) return null;
+          return copy(true);
+        }
+        return res;
+      }).then(res => {
+        if (!res) return;
+        if (res.skipped) return toast(res.message || '복사할 전월 예산이 없어.', true);
+        if (res.budget) {
+          STATE.budget = res.budget;
+          renderBudgetItems(res.budget.items || res.budget.rows || []);
+          toast('✅ '+previousYm+' 예산을 가져왔어!');
         }
       }).catch(err => {
         toast('복사 실패: ' + err.message, true);
@@ -3083,7 +3592,11 @@ function bindApp(){
   document.addEventListener('visibilitychange', () => {
     if (document.visibilityState === 'visible' && STATE.authToken) {
       flushPendingQueue();
-      if (Date.now() - Number(STATE.lastSyncAt || 0) > 60000) refreshVisibleMonth(true).catch(()=>{});
+      const todayYm = todayStr().slice(0,7);
+      if (STATE.currentYm && STATE.currentYm !== todayYm) {
+        STATE.monthMode = 'auto';
+        refreshBootData(true).catch(()=>{});
+      } else if (Date.now() - Number(STATE.lastSyncAt || 0) > 60000) refreshVisibleMonth(true).catch(()=>{});
     }
   });
 

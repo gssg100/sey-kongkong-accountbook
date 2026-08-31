@@ -34,9 +34,13 @@ const SHEET_ASSET_SNAP = '📈자산스냅샷';
 const SHEET_ACTION_LOG = '작업로그';
 const SHEET_RECURRING  = '🔁정기거래';
 const SHEET_CLOSE_MONTH = '📌월마감';
+const SHEET_SETTLEMENT = '📋월정산상태';
+const SHEET_RECONCILIATION = '🧾대사';
+const SHEET_INVESTMENT_MONTHLY = '📈투자월말';
 const TZ = 'Asia/Seoul';
 
-const TX_META_HEADERS = ['입력자', '거래ID', '생성일시', '수정일시', '수정자', '삭제여부', '소비성격'];
+// 기존 장부 열은 그대로 두고, 정산에 필요한 메타 열만 뒤에 안전하게 추가한다.
+const TX_META_HEADERS = ['입력자', '거래ID', '생성일시', '수정일시', '수정자', '삭제여부', '소비성격', '출처/계좌', '정산배치ID'];
 const SPENDING_MEANINGS = [
   '필수', '생활', '즐거움', '가족', '투자', '아쉬움',
   '필수소비', '계획소비', '충동소비', '감성소비', '투자성', '미지정'
@@ -55,7 +59,9 @@ const BRIDGE_API_ALLOWLIST = [
   'getCloseMonthHistory', 'getMonthlyReview', 'saveMonthlyReview', 'getMonthlyReviewHistory',
   'getCloseMonthPreview', 'getTodayTasks', 'getCashflowForecast', 'getHomeInsight', 'closeMonth',
   'getTemplates', 'saveTemplate', 'deleteTemplate', 'updateAssetCategory', 'saveAssetSnapshot',
-  'getAssetSnapshots', 'createBackup', 'runAiAnalysis', 'bulkUpdateCategory'
+  'getAssetSnapshots', 'createBackup', 'runAiAnalysis', 'bulkUpdateCategory',
+  'getSettlementData', 'saveReconciliations', 'saveInvestmentMonthly', 'syncInvestmentToAssets',
+  'finalizeSettlementMonth', 'reopenSettlementMonth'
 ];
 const BUDGET_HEADERS = ['월', '대분류', '예산', '메모', '생성일시', '수정일시', '수정자', '추천기준'];
 const TEMPLATE_HEADERS = ['템플릿명', '구분', '대분류', '내역', '기본금액', '고정/변동', '메모', '사용여부'];
@@ -64,6 +70,9 @@ const ACTION_LOG_HEADERS = ['일시', '작업', '사용자', '내용'];
 const BUDGET_LOG_HEADERS = ['일시', '사용자', '작업', '대상월', '대분류', '이전예산', '새예산', '메모'];
 const RECURRING_HEADERS = ['정기ID', '정기명', '구분', '대분류', '내역', '금액', '고정/변동', '메모', '입력자', '결제일', '사용여부', '마지막실행월', '종료월'];
 const CLOSE_MONTH_HEADERS = ['마감월', '마감일시', '마감자', '총수입', '총지출', '저축투자', '대출상환', '남은돈', '저축률', '고정비', '변동비', '총자산', '이상지출수', 'AI요약', '메모', '백업URL', '좋았던소비', '아쉬웠던소비', '다음달약속', '지수의견', '하콩의견', '같이확인할것'];
+const SETTLEMENT_HEADERS = ['대상월', '상태', '시작일시', '시작자', '마감일시', '마감자', '거래입력완료', '대사확인', '투자확인', '메모', '재개일시', '재개자'];
+const RECONCILIATION_HEADERS = ['대상월', '출처/계좌', '명세서합계', '입력합계', '차이', '상태', '수정일시', '수정자'];
+const INVESTMENT_MONTHLY_HEADERS = ['대상월', '투자계좌', '전월말평가액', '순입금', '월말평가액', '평가증감', '메모', '수정일시', '수정자'];
 const AI_HEADERS = ['분석일시', '대상월', 'AI분석', '분석스냅샷'];
 const FAST_INPUT_INSTALL_VERSION = '2026-07-04-v1';
 const EDIT_LOG_HEADERS = [
@@ -84,7 +93,8 @@ const DEFAULT_TEMPLATES = [
 ];
 const BACKUP_SHEET_NAMES = [
   SHEET_TX, SHEET_CONFIG, SHEET_ASSET, SHEET_AI, SHEET_BUDGET,
-  SHEET_TEMPLATE, SHEET_ASSET_SNAP, SHEET_EDIT_LOG, SHEET_DELETE_LOG, SHEET_RECURRING, SHEET_CLOSE_MONTH, SHEET_BUDGET_LOG
+  SHEET_TEMPLATE, SHEET_ASSET_SNAP, SHEET_EDIT_LOG, SHEET_DELETE_LOG, SHEET_RECURRING, SHEET_CLOSE_MONTH, SHEET_BUDGET_LOG,
+  SHEET_SETTLEMENT, SHEET_RECONCILIATION, SHEET_INVESTMENT_MONTHLY
 ];
 
 function ss() { return SpreadsheetApp.getActiveSpreadsheet(); }
@@ -511,7 +521,9 @@ function normalizeTxData_(data) {
     fixed: fixed,
     memo: String(data.memo || '').trim() || '웹앱',
     user: user,
-    spendingMood: normalizeSpendingMeaning_(data.spendingMood || data.meaning || data.spendingMeaning)
+    spendingMood: normalizeSpendingMeaning_(data.spendingMood || data.meaning || data.spendingMeaning),
+    source: String(data.source || data.account || '').trim().slice(0, 80),
+    settlementBatch: String(data.settlementBatch || data.batchId || '').trim().slice(0, 120)
   };
 }
 
@@ -543,6 +555,8 @@ function txMap_(ensureMeta) {
     else if (h === '수정자') map.updatedBy = i;
     else if (h === '삭제여부') map.deleted = i;
     else if (h === '소비성격') map.spendingMood = i;
+    else if (h === '출처/계좌') map.source = i;
+    else if (h === '정산배치ID') map.settlementBatch = i;
     else if (h.indexOf('날짜') > -1) map.date = i;
     else if (h.indexOf('구분') > -1) map.type = i;
     else if (h.indexOf('대분류') > -1) map.cat = i;
@@ -624,6 +638,8 @@ function txObject_(rowValues, rowNo, map) {
     createdAt: map.createdAt != null ? dateTimeText_(rowValues[map.createdAt]) : '',
     updatedAt: map.updatedAt != null ? dateTimeText_(rowValues[map.updatedAt]) : '',
     updatedBy: map.updatedBy != null ? String(rowValues[map.updatedBy] || '') : '',
+    source: map.source != null ? String(rowValues[map.source] || '') : '',
+    settlementBatch: map.settlementBatch != null ? String(rowValues[map.settlementBatch] || '') : '',
     spendingMood: spendingMood,
     meaning: spendingMood
   };
@@ -1554,8 +1570,11 @@ function closeMonthRecordFromRow_(r, rowNo) {
     goodSpending: String(r[16] || ''),
     regretSpending: String(r[17] || ''),
     nextPromise: String(r[18] || ''),
+    promiseNext: String(r[18] || ''),
     jisuComment: String(r[19] || ''),
+    jisooComment: String(r[19] || ''),
     hakongComment: String(r[20] || ''),
+    hayoungComment: String(r[20] || ''),
     checkTogether: String(r[21] || '')
   };
 }
@@ -1600,9 +1619,9 @@ function monthlyReviewRow_(ym, user, summary, assets, data) {
     String(data.backupUrl || ''),
     String(data.goodSpending || ''),
     String(data.regretSpending || ''),
-    String(data.nextPromise || ''),
-    String(data.jisuComment || ''),
-    String(data.hakongComment || ''),
+    String(data.nextPromise || data.promiseNext || ''),
+    String(data.jisuComment || data.jisooComment || ''),
+    String(data.hakongComment || data.hayoungComment || ''),
     String(data.checkTogether || '')
   ];
 }
@@ -1695,8 +1714,22 @@ function saveMonthlyReview(pin, data) {
     const summary = getMonthSummary_(ym);
     const assets = getAssets_();
     const sh = getCloseMonthSheet_();
-    const row = monthlyReviewRow_(ym, user, summary, assets, data);
-    sh.appendRow(row);
+    const last = sh.getLastRow();
+    const values = last >= 2 ? sh.getRange(2, 1, last - 1, CLOSE_MONTH_HEADERS.length).getValues() : [];
+    let existingRowNo = 0;
+    let row = monthlyReviewRow_(ym, user, summary, assets, data);
+    for (let i = values.length - 1; i >= 0; i--) {
+      if (String(values[i][0] || '').trim() === ym) {
+        existingRowNo = i + 2;
+        // 월마감에서 이미 저장한 AI 요약·백업 URL은 회고 저장 때문에 지우지 않는다.
+        row[13] = values[i][13];
+        row[14] = values[i][14];
+        row[15] = values[i][15];
+        break;
+      }
+    }
+    if (existingRowNo) sh.getRange(existingRowNo, 1, 1, CLOSE_MONTH_HEADERS.length).setValues([row]);
+    else sh.appendRow(row);
     appendActionLog_('월정리 저장', user, ym + ' 회고 기록 저장');
     return getMonthlyReview(pin, ym);
   } finally {
@@ -2207,6 +2240,407 @@ function closeMonth(pin, options) {
   }
 }
 
+// ===== 월초 일괄정산: 상태 · 대사 · 투자 월말값 =====
+function settlementSheet_() {
+  return getOrCreateSheet_(SHEET_SETTLEMENT, SETTLEMENT_HEADERS);
+}
+
+function reconciliationSheet_() {
+  return getOrCreateSheet_(SHEET_RECONCILIATION, RECONCILIATION_HEADERS);
+}
+
+function investmentMonthlySheet_() {
+  return getOrCreateSheet_(SHEET_INVESTMENT_MONTHLY, INVESTMENT_MONTHLY_HEADERS);
+}
+
+function settlementStatusFromRow_(row, rowNo) {
+  return {
+    row: rowNo || 0,
+    ym: String(row[0] || ''),
+    status: String(row[1] || '정산전') || '정산전',
+    startedAt: dateTimeText_(row[2]),
+    startedBy: String(row[3] || ''),
+    closedAt: dateTimeText_(row[4]),
+    closedBy: String(row[5] || ''),
+    transactionsConfirmed: boolText_(row[6], false),
+    reconciliationsConfirmed: boolText_(row[7], false),
+    investmentsConfirmed: boolText_(row[8], false),
+    memo: String(row[9] || ''),
+    reopenedAt: dateTimeText_(row[10]),
+    reopenedBy: String(row[11] || ''),
+    isClosed: String(row[1] || '') === '마감'
+  };
+}
+
+function getSettlementStatusCore_(ym) {
+  ym = validYm_(ym);
+  const sh = settlementSheet_();
+  const last = sh.getLastRow();
+  if (last < 2) return settlementStatusFromRow_([ym, '정산전'], 0);
+  const values = sh.getRange(2, 1, last - 1, SETTLEMENT_HEADERS.length).getValues();
+  for (let i = values.length - 1; i >= 0; i--) {
+    if (String(values[i][0] || '').trim() === ym) return settlementStatusFromRow_(values[i], i + 2);
+  }
+  return settlementStatusFromRow_([ym, '정산전'], 0);
+}
+
+function upsertSettlementStatusCore_(ym, patch) {
+  ym = validYm_(ym);
+  patch = patch || {};
+  const sh = settlementSheet_();
+  const last = sh.getLastRow();
+  let rowNo = 0;
+  let row = new Array(SETTLEMENT_HEADERS.length).fill('');
+  if (last >= 2) {
+    const values = sh.getRange(2, 1, last - 1, SETTLEMENT_HEADERS.length).getValues();
+    for (let i = values.length - 1; i >= 0; i--) {
+      if (String(values[i][0] || '').trim() === ym) {
+        rowNo = i + 2;
+        row = values[i].slice();
+        break;
+      }
+    }
+  }
+  const now = new Date();
+  row[0] = ym;
+  if (patch.status != null) row[1] = String(patch.status);
+  if (!row[1]) row[1] = '정산중';
+  if (!row[2]) row[2] = now;
+  if (patch.startedBy != null) row[3] = String(patch.startedBy || '');
+  if (patch.closed === true) {
+    row[1] = '마감';
+    row[4] = now;
+    row[5] = String(patch.closedBy || patch.user || '웹앱');
+  }
+  if (patch.reopened === true) {
+    row[1] = '정산중';
+    row[10] = now;
+    row[11] = String(patch.reopenedBy || patch.user || '웹앱');
+  }
+  if (patch.transactionsConfirmed != null) row[6] = patch.transactionsConfirmed === true;
+  if (patch.reconciliationsConfirmed != null) row[7] = patch.reconciliationsConfirmed === true;
+  if (patch.investmentsConfirmed != null) row[8] = patch.investmentsConfirmed === true;
+  if (patch.memo != null) row[9] = String(patch.memo || '');
+  if (rowNo) sh.getRange(rowNo, 1, 1, SETTLEMENT_HEADERS.length).setValues([row]);
+  else {
+    sh.appendRow(row);
+    rowNo = sh.getLastRow();
+  }
+  return settlementStatusFromRow_(row, rowNo);
+}
+
+function defaultWorkMonthContext_() {
+  const currentYm = currentYm_();
+  const previousYm = shiftYm_(currentYm, -1);
+  const previousStatus = getSettlementStatusCore_(previousYm);
+  if (!previousStatus.isClosed) {
+    return { currentYm: currentYm, workYm: previousYm, needsSettlement: true, previousStatus: previousStatus };
+  }
+  return { currentYm: currentYm, workYm: currentYm, needsSettlement: false, previousStatus: previousStatus };
+}
+
+function sourceTotalsFromRows_(rows) {
+  const map = {};
+  (rows || []).forEach(tx => {
+    const source = String(tx.source || '').trim();
+    if (!source) return;
+    if (!map[source]) map[source] = { source: source, total: 0, count: 0 };
+    map[source].total += numParse_(tx.amount);
+    map[source].count++;
+  });
+  return Object.keys(map).sort().map(k => ({
+    source: map[k].source,
+    total: Math.round(map[k].total),
+    count: map[k].count
+  }));
+}
+
+function reconciliationRowsCore_(ym, sourceTotals) {
+  ym = validYm_(ym);
+  const sh = reconciliationSheet_();
+  const values = sh.getLastRow() >= 2
+    ? sh.getRange(2, 1, sh.getLastRow() - 1, RECONCILIATION_HEADERS.length).getValues()
+    : [];
+  const totalMap = {};
+  (sourceTotals || []).forEach(item => { totalMap[item.source] = item; });
+  const rows = [];
+  values.forEach((r, i) => {
+    if (String(r[0] || '').trim() !== ym) return;
+    const source = String(r[1] || '').trim();
+    if (!source) return;
+    const entered = totalMap[source] ? numParse_(totalMap[source].total) : 0;
+    const statement = numParse_(r[2]);
+    const diff = statement - entered;
+    rows.push({
+      row: i + 2,
+      source: source,
+      statementTotal: statement,
+      enteredTotal: entered,
+      difference: diff,
+      status: Math.abs(diff) < 1 ? '일치' : '차이',
+      updatedAt: dateTimeText_(r[6]),
+      updatedBy: String(r[7] || '')
+    });
+    delete totalMap[source];
+  });
+  Object.keys(totalMap).sort().forEach(source => {
+    const item = totalMap[source];
+    rows.push({
+      row: 0,
+      source: source,
+      statementTotal: 0,
+      enteredTotal: numParse_(item.total),
+      difference: null,
+      status: '명세서 입력 필요',
+      updatedAt: '',
+      updatedBy: ''
+    });
+  });
+  return rows.sort((a, b) => a.source.localeCompare(b.source));
+}
+
+function investmentRowsCore_(ym) {
+  ym = validYm_(ym);
+  const previousYm = shiftYm_(ym, -1);
+  const sh = investmentMonthlySheet_();
+  const values = sh.getLastRow() >= 2
+    ? sh.getRange(2, 1, sh.getLastRow() - 1, INVESTMENT_MONTHLY_HEADERS.length).getValues()
+    : [];
+  const previous = {};
+  values.forEach(r => {
+    if (String(r[0] || '').trim() !== previousYm) return;
+    const account = String(r[1] || '').trim();
+    if (account) previous[account] = numParse_(r[4]);
+  });
+  const rows = [];
+  values.forEach((r, i) => {
+    if (String(r[0] || '').trim() !== ym) return;
+    const account = String(r[1] || '').trim();
+    if (!account) return;
+    const previousValue = numParse_(r[2]) || numParse_(previous[account]);
+    const netContribution = numParse_(r[3]);
+    const endValue = numParse_(r[4]);
+    rows.push({
+      row: i + 2,
+      account: account,
+      previousValue: previousValue,
+      netContribution: netContribution,
+      endValue: endValue,
+      valuationChange: endValue - previousValue - netContribution,
+      memo: String(r[6] || ''),
+      updatedAt: dateTimeText_(r[7]),
+      updatedBy: String(r[8] || '')
+    });
+  });
+  return rows.sort((a, b) => a.account.localeCompare(b.account));
+}
+
+function recurringCandidatesForSettlement_(ym, recurrings) {
+  return (recurrings || []).filter(r => {
+    if (!r.enabled || String(r.lastRunYm || '') === ym) return false;
+    return !(r.endYm && compareYm_(ym, r.endYm) > 0);
+  }).map(r => ({
+    id: r.id,
+    date: dateText_(dateOfRecurring_(ym, r.day)),
+    type: r.type,
+    cat: r.cat,
+    desc: r.desc || r.name,
+    amount: numParse_(r.amount),
+    fixed: r.fixed || '고정',
+    memo: recurringMemo_(r),
+    user: r.user || '',
+    source: '',
+    day: r.day,
+    name: r.name
+  }));
+}
+
+function buildSettlementDataFromSnapshot_(ym, snapshot, context) {
+  ym = validYm_(ym);
+  context = context || {};
+  const transactions = context.transactions || monthTransactionsFromSnapshot_(ym, snapshot, 1000);
+  const summary = context.summary || monthSummaryFromSnapshot_(ym, snapshot);
+  const sourceTotals = sourceTotalsFromRows_(transactions);
+  const reconciliations = reconciliationRowsCore_(ym, sourceTotals);
+  const investments = investmentRowsCore_(ym);
+  const status = getSettlementStatusCore_(ym);
+  const recurrings = context.recurrings || getRecurringsCore_();
+  const reconciliationIssues = reconciliations.filter(r => r.status !== '일치').length;
+  return {
+    ym: ym,
+    currentYm: currentYm_(),
+    status: status,
+    isClosed: status.isClosed,
+    needsSettlement: !status.isClosed,
+    summary: summary,
+    transactionCount: transactions.length,
+    sourceTotals: sourceTotals,
+    reconciliations: reconciliations,
+    reconciliationIssues: reconciliationIssues,
+    investments: investments,
+    investmentTotal: investments.reduce((sum, r) => sum + numParse_(r.endValue), 0),
+    investmentValuationChange: investments.reduce((sum, r) => sum + numParse_(r.valuationChange), 0),
+    recurringCandidates: recurringCandidatesForSettlement_(ym, recurrings),
+    uncategorizedCount: transactions.filter(t => !String(t.cat || '').trim() || String(t.cat || '') === '기타').length
+  };
+}
+
+function getSettlementData(pin, ym) {
+  guard_(pin);
+  ym = validYm_(ym || defaultWorkMonthContext_().workYm);
+  const snapshot = readTxSnapshot_();
+  return buildSettlementDataFromSnapshot_(ym, snapshot);
+}
+
+function saveReconciliations(pin, ym, items, user) {
+  guard_(pin);
+  ym = validYm_(ym);
+  if (!Array.isArray(items)) throw new Error('대사 항목 형식을 확인해줘.');
+  const clean = items.map(item => ({
+    source: String((item && (item.source || item.account)) || '').trim().slice(0, 80),
+    statementTotal: numParse_(item && (item.statementTotal != null ? item.statementTotal : item.total))
+  })).filter(item => item.source);
+  const lock = LockService.getScriptLock();
+  lock.waitLock(15000);
+  try {
+    const snapshot = readTxSnapshot_();
+    const totals = sourceTotalsFromRows_(monthTransactionsFromSnapshot_(ym, snapshot, 1000));
+    const totalMap = {};
+    totals.forEach(item => { totalMap[item.source] = numParse_(item.total); });
+    const sh = reconciliationSheet_();
+    const last = sh.getLastRow();
+    const existing = last >= 2 ? sh.getRange(2, 1, last - 1, RECONCILIATION_HEADERS.length).getValues() : [];
+    clean.forEach(item => {
+      let rowNo = 0;
+      for (let i = existing.length - 1; i >= 0; i--) {
+        if (String(existing[i][0] || '').trim() === ym && String(existing[i][1] || '').trim() === item.source) {
+          rowNo = i + 2;
+          break;
+        }
+      }
+      const entered = totalMap[item.source] || 0;
+      const diff = item.statementTotal - entered;
+      const row = [ym, item.source, item.statementTotal, entered, diff, Math.abs(diff) < 1 ? '일치' : '차이', new Date(), String(user || '웹앱')];
+      if (rowNo) sh.getRange(rowNo, 1, 1, RECONCILIATION_HEADERS.length).setValues([row]);
+      else sh.appendRow(row);
+    });
+    upsertSettlementStatusCore_(ym, { status: '정산중', startedBy: user || '웹앱' });
+    appendActionLog_('월정산 대사 저장', user || '웹앱', ym + ' 대사 ' + clean.length + '개 저장');
+  } finally {
+    lock.releaseLock();
+  }
+  return getSettlementData(pin, ym);
+}
+
+function saveInvestmentMonthly(pin, ym, items, user) {
+  guard_(pin);
+  ym = validYm_(ym);
+  if (!Array.isArray(items)) throw new Error('투자 월말 항목 형식을 확인해줘.');
+  const clean = items.map(item => ({
+    account: String((item && item.account) || '').trim().slice(0, 80),
+    previousValue: numParse_(item && item.previousValue),
+    netContribution: numParse_(item && item.netContribution),
+    endValue: numParse_(item && item.endValue),
+    memo: String((item && item.memo) || '').trim().slice(0, 300)
+  })).filter(item => item.account);
+  const lock = LockService.getScriptLock();
+  lock.waitLock(15000);
+  try {
+    const previousYm = shiftYm_(ym, -1);
+    const oldRows = investmentRowsCore_(previousYm);
+    const previousMap = {};
+    oldRows.forEach(row => { previousMap[row.account] = numParse_(row.endValue); });
+    const sh = investmentMonthlySheet_();
+    const last = sh.getLastRow();
+    const existing = last >= 2 ? sh.getRange(2, 1, last - 1, INVESTMENT_MONTHLY_HEADERS.length).getValues() : [];
+    clean.forEach(item => {
+      let rowNo = 0;
+      for (let i = existing.length - 1; i >= 0; i--) {
+        if (String(existing[i][0] || '').trim() === ym && String(existing[i][1] || '').trim() === item.account) {
+          rowNo = i + 2;
+          break;
+        }
+      }
+      const previousValue = item.previousValue || numParse_(previousMap[item.account]);
+      const valuationChange = item.endValue - previousValue - item.netContribution;
+      const row = [ym, item.account, previousValue, item.netContribution, item.endValue, valuationChange, item.memo, new Date(), String(user || '웹앱')];
+      if (rowNo) sh.getRange(rowNo, 1, 1, INVESTMENT_MONTHLY_HEADERS.length).setValues([row]);
+      else sh.appendRow(row);
+    });
+    upsertSettlementStatusCore_(ym, { status: '정산중', startedBy: user || '웹앱', investmentsConfirmed: clean.length > 0 });
+    appendActionLog_('투자 월말 저장', user || '웹앱', ym + ' 투자계좌 ' + clean.length + '개 저장');
+  } finally {
+    lock.releaseLock();
+  }
+  return getSettlementData(pin, ym);
+}
+
+function syncInvestmentToAssets(pin, ym, user) {
+  guard_(pin);
+  ym = validYm_(ym);
+  const investments = investmentRowsCore_(ym);
+  if (!investments.length) throw new Error('먼저 투자 월말값을 한 건 이상 저장해줘.');
+  const lock = LockService.getScriptLock();
+  lock.waitLock(15000);
+  try {
+    const sh = ss().getSheetByName(SHEET_ASSET);
+    if (!sh) throw new Error('자산현황 시트를 찾지 못했어.');
+    const cur = getAssets_();
+    cur.items.stock.subItems = investments.map(row => ({ name: row.account, amount: numParse_(row.endValue) }));
+    sh.clearContents();
+    const newData = [];
+    ['cash', 'safe', 'stock', 'estate', 'debt', 'saving'].forEach(key => {
+      const item = cur.items[key];
+      if (item && item.subItems && item.subItems.length) item.subItems.forEach(sub => newData.push([key, sub.name, numParse_(sub.amount)]));
+      else if (item && numParse_(item.value) > 0) newData.push([key, item.label, numParse_(item.value)]);
+    });
+    if (newData.length) sh.getRange(1, 1, newData.length, 3).setValues(newData);
+    bumpDataRevision_();
+    appendActionLog_('투자값 자산 반영', user || '웹앱', ym + ' 투자계좌 ' + investments.length + '개 반영');
+    return { ok: true, assets: getAssets_(), investments: investments };
+  } finally {
+    lock.releaseLock();
+  }
+}
+
+function finalizeSettlementMonth(pin, options) {
+  guard_(pin);
+  const opt = options || {};
+  const ym = validYm_(opt.ym || defaultWorkMonthContext_().workYm);
+  const user = String(opt.user || '웹앱').trim() || '웹앱';
+  const before = getSettlementData(pin, ym);
+  if (before.isClosed) return { ok: true, alreadyClosed: true, settlement: before };
+  const closeResult = closeMonth(pin, {
+    ym: ym,
+    user: user,
+    memo: String(opt.memo || '').trim(),
+    saveAssetSnapshot: opt.saveAssetSnapshot !== false,
+    copyBudgetToNextMonth: opt.copyBudgetToNextMonth === true,
+    overwriteNextBudget: opt.overwriteNextBudget === true,
+    createBackup: opt.createBackup === true,
+    runAi: false
+  });
+  if (!closeResult || closeResult.ok === false) return closeResult;
+  upsertSettlementStatusCore_(ym, {
+    closed: true,
+    user: user,
+    transactionsConfirmed: true,
+    reconciliationsConfirmed: before.reconciliationIssues === 0,
+    investmentsConfirmed: before.investments.length > 0,
+    memo: String(opt.memo || '').trim()
+  });
+  appendActionLog_('월정산 마감', user, ym + ' 정산 마감');
+  return { ok: true, closeResult: closeResult, settlement: getSettlementData(pin, ym) };
+}
+
+function reopenSettlementMonth(pin, ym, user) {
+  guard_(pin);
+  ym = validYm_(ym);
+  const updated = upsertSettlementStatusCore_(ym, { reopened: true, user: user || '웹앱' });
+  appendActionLog_('월정산 재개', user || '웹앱', ym + ' 정산 다시 열기');
+  return { ok: true, status: updated, settlement: getSettlementData(pin, ym) };
+}
+
 // ===== 자주 쓰는 거래 템플릿 =====
 function getTemplates(pin) {
   guard_(pin);
@@ -2405,14 +2839,23 @@ function buildTxResponse_(ym) {
 }
 
 function buildBootData_(session) {
-  const ym = currentYm_();
+  const work = defaultWorkMonthContext_();
+  const ym = work.workYm;
   const snapshot = readTxSnapshot_();
   const summary = monthSummaryFromSnapshot_(ym, snapshot);
   const budget = getBudgetProgress_(ym, summary);
   const recurrings = getRecurringsCore_();
   const transactions = monthTransactionsFromSnapshot_(ym, snapshot, 1000);
+  const settlement = buildSettlementDataFromSnapshot_(ym, snapshot, {
+    summary: summary,
+    transactions: transactions,
+    recurrings: recurrings
+  });
+  settlement.showWorkspace = work.needsSettlement;
   return {
     ym: ym,
+    currentYm: work.currentYm,
+    workYm: work.workYm,
     sessionUser: session.user || '',
     revision: getDataRevision_(),
     cacheVersion: 2,
@@ -2430,7 +2873,8 @@ function buildBootData_(session) {
     aiReady: !!props_().getProperty('GROQ_API_KEY'),
     aiHistory: getAiHistory_(8),
     closeHistory: getCloseMonthHistoryCore_(6),
-    descDict: getDescDictFromSnapshot_(snapshot)
+    descDict: getDescDictFromSnapshot_(snapshot),
+    settlement: settlement
   };
 }
 
@@ -2447,6 +2891,8 @@ function getMonthData(pin, ym) {
   const summary = monthSummaryFromSnapshot_(ym, snapshot);
   const budget = getBudgetProgress_(ym, summary);
   const transactions = monthTransactionsFromSnapshot_(ym, snapshot, 1000);
+  const settlement = buildSettlementDataFromSnapshot_(ym, snapshot, { summary: summary, transactions: transactions });
+  settlement.showWorkspace = !settlement.isClosed && ym !== currentYm_();
   return {
     ym: ym,
     summary: summary,
@@ -2455,6 +2901,7 @@ function getMonthData(pin, ym) {
     transactions: transactions,
     count: transactions.length,
     closeHistory: getCloseMonthHistoryCore_(6),
+    settlement: settlement,
     revision: getDataRevision_(),
     serverTime: Date.now()
   };
@@ -2628,6 +3075,8 @@ function buildTxRow_(clean, map, lastCol, txId, createdAt) {
   if (map.createdAt != null) row[map.createdAt] = createdAt || new Date();
   if (map.deleted != null) row[map.deleted] = false;
   if (map.spendingMood != null) row[map.spendingMood] = clean.spendingMood;
+  if (map.source != null) row[map.source] = clean.source || '';
+  if (map.settlementBatch != null) row[map.settlementBatch] = clean.settlementBatch || '';
   return row;
 }
 
@@ -2646,6 +3095,8 @@ function txResultFromClean_(clean, rowNo, txId, createdAt) {
     createdAt: dateTimeText_(createdAt),
     updatedAt: '',
     updatedBy: '',
+    source: clean.source || '',
+    settlementBatch: clean.settlementBatch || '',
     spendingMood: clean.spendingMood,
     meaning: clean.spendingMood
   };
@@ -2766,6 +3217,7 @@ function addTransactionsFast(pin, items) {
   }
 
   if (response.inserted > 0) {
+    bumpDataRevision_();
     appendActionLog_('빠른 거래 입력', '웹앱', response.inserted + '건 저장 / 중복 ' + response.duplicates + '건');
   }
   response.revision = getDataRevision_();
@@ -2818,6 +3270,8 @@ function updateTransaction(pin, row, data, ym) {
     newValues[map.memo] = clean.memo;
     if (map.user != null) newValues[map.user] = clean.user;
     if (map.spendingMood != null) newValues[map.spendingMood] = clean.spendingMood;
+    if (map.source != null && data && (data.source != null || data.account != null)) newValues[map.source] = clean.source;
+    if (map.settlementBatch != null && data && (data.settlementBatch != null || data.batchId != null)) newValues[map.settlementBatch] = clean.settlementBatch;
     if (map.updatedAt != null) newValues[map.updatedAt] = new Date();
     if (map.updatedBy != null) newValues[map.updatedBy] = clean.user;
     sh.getRange(r, 1, 1, lastCol).setValues([newValues]);

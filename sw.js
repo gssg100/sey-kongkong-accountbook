@@ -1,6 +1,6 @@
-const CACHE_NAME = 'sey-budget-shell-v4-20260830';
-const APP_SHELL = ['/', '/index.html', '/manifest.json', '/icons/icon-192.png', '/icons/icon-512.png'];
-const NAVIGATION_ENTRY = '/index.html';
+const CACHE_NAME = 'sey-budget-shell-v5-20260831';
+const APP_SHELL = ['/app.html', '/manifest.json', '/icons/icon-192.png', '/icons/icon-512.png'];
+const NAVIGATION_ENTRY = '/app.html';
 
 self.addEventListener('install', (event) => {
   event.waitUntil(caches.open(CACHE_NAME).then((cache) => cache.addAll(APP_SHELL)));
