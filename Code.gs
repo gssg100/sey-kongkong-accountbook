@@ -37,6 +37,8 @@ const SHEET_CLOSE_MONTH = '📌월마감';
 const SHEET_SETTLEMENT = '📋월정산상태';
 const SHEET_RECONCILIATION = '🧾대사';
 const SHEET_INVESTMENT_MONTHLY = '📈투자월말';
+const SHEET_SETTLEMENT_DRAFT = '🗂정산공유초안';
+const SHEET_INVESTMENT_HOLDING = '📈투자종목월말';
 const TZ = 'Asia/Seoul';
 
 // 기존 장부 열은 그대로 두고, 정산에 필요한 메타 열만 뒤에 안전하게 추가한다.
@@ -61,7 +63,8 @@ const BRIDGE_API_ALLOWLIST = [
   'getTemplates', 'saveTemplate', 'deleteTemplate', 'updateAssetCategory', 'saveAssetSnapshot',
   'getAssetSnapshots', 'createBackup', 'runAiAnalysis', 'bulkUpdateCategory',
   'getSettlementData', 'saveReconciliations', 'saveInvestmentMonthly', 'syncInvestmentToAssets',
-  'finalizeSettlementMonth', 'reopenSettlementMonth'
+  'getSettlementDraft', 'saveSettlementDraft', 'clearSettlementDraft', 'getSettlementBatches', 'revertSettlementBatch',
+  'saveInvestmentHoldings', 'finalizeSettlementMonth', 'reopenSettlementMonth'
 ];
 const BUDGET_HEADERS = ['월', '대분류', '예산', '메모', '생성일시', '수정일시', '수정자', '추천기준'];
 const TEMPLATE_HEADERS = ['템플릿명', '구분', '대분류', '내역', '기본금액', '고정/변동', '메모', '사용여부'];
@@ -71,8 +74,10 @@ const BUDGET_LOG_HEADERS = ['일시', '사용자', '작업', '대상월', '대�
 const RECURRING_HEADERS = ['정기ID', '정기명', '구분', '대분류', '내역', '금액', '고정/변동', '메모', '입력자', '결제일', '사용여부', '마지막실행월', '종료월'];
 const CLOSE_MONTH_HEADERS = ['마감월', '마감일시', '마감자', '총수입', '총지출', '저축투자', '대출상환', '남은돈', '저축률', '고정비', '변동비', '총자산', '이상지출수', 'AI요약', '메모', '백업URL', '좋았던소비', '아쉬웠던소비', '다음달약속', '지수의견', '하콩의견', '같이확인할것'];
 const SETTLEMENT_HEADERS = ['대상월', '상태', '시작일시', '시작자', '마감일시', '마감자', '거래입력완료', '대사확인', '투자확인', '메모', '재개일시', '재개자'];
-const RECONCILIATION_HEADERS = ['대상월', '출처/계좌', '명세서합계', '입력합계', '차이', '상태', '수정일시', '수정자'];
+const RECONCILIATION_HEADERS = ['대상월', '출처/계좌', '명세서합계', '입력합계', '차이', '상태', '수정일시', '수정자', '대사유형', '차이사유', '명세서입력됨'];
 const INVESTMENT_MONTHLY_HEADERS = ['대상월', '투자계좌', '전월말평가액', '순입금', '월말평가액', '평가증감', '메모', '수정일시', '수정자'];
+const SETTLEMENT_DRAFT_HEADERS = ['대상월', '초안JSON', '수정일시', '수정자', '비움여부'];
+const INVESTMENT_HOLDING_HEADERS = ['대상월', '투자계좌', '종목코드', '종목명', '수량', '평균매수가', '월말가격', '월말평가액', '평가손익', '통화', '메모', '수정일시', '수정자'];
 const AI_HEADERS = ['분석일시', '대상월', 'AI분석', '분석스냅샷'];
 const FAST_INPUT_INSTALL_VERSION = '2026-07-04-v1';
 const EDIT_LOG_HEADERS = [
@@ -94,7 +99,7 @@ const DEFAULT_TEMPLATES = [
 const BACKUP_SHEET_NAMES = [
   SHEET_TX, SHEET_CONFIG, SHEET_ASSET, SHEET_AI, SHEET_BUDGET,
   SHEET_TEMPLATE, SHEET_ASSET_SNAP, SHEET_EDIT_LOG, SHEET_DELETE_LOG, SHEET_RECURRING, SHEET_CLOSE_MONTH, SHEET_BUDGET_LOG,
-  SHEET_SETTLEMENT, SHEET_RECONCILIATION, SHEET_INVESTMENT_MONTHLY
+  SHEET_SETTLEMENT, SHEET_RECONCILIATION, SHEET_INVESTMENT_MONTHLY, SHEET_SETTLEMENT_DRAFT, SHEET_INVESTMENT_HOLDING
 ];
 
 function ss() { return SpreadsheetApp.getActiveSpreadsheet(); }
@@ -213,6 +218,11 @@ function installFastInputUpgrade() {
     getOrCreateSheet_(SHEET_RECURRING, RECURRING_HEADERS, []);
     getOrCreateSheet_(SHEET_CLOSE_MONTH, CLOSE_MONTH_HEADERS, []);
     getOrCreateSheet_(SHEET_BUDGET_LOG, BUDGET_LOG_HEADERS, []);
+    getOrCreateSheet_(SHEET_SETTLEMENT, SETTLEMENT_HEADERS, []);
+    getOrCreateSheet_(SHEET_RECONCILIATION, RECONCILIATION_HEADERS, []);
+    getOrCreateSheet_(SHEET_INVESTMENT_MONTHLY, INVESTMENT_MONTHLY_HEADERS, []);
+    getOrCreateSheet_(SHEET_SETTLEMENT_DRAFT, SETTLEMENT_DRAFT_HEADERS, []);
+    getOrCreateSheet_(SHEET_INVESTMENT_HOLDING, INVESTMENT_HOLDING_HEADERS, []);
     getOrCreateLogSheet_(SHEET_EDIT_LOG, EDIT_LOG_HEADERS);
     getOrCreateLogSheet_(SHEET_DELETE_LOG, DELETE_LOG_HEADERS);
 
@@ -2253,6 +2263,139 @@ function investmentMonthlySheet_() {
   return getOrCreateSheet_(SHEET_INVESTMENT_MONTHLY, INVESTMENT_MONTHLY_HEADERS);
 }
 
+function settlementDraftSheet_() {
+  return getOrCreateSheet_(SHEET_SETTLEMENT_DRAFT, SETTLEMENT_DRAFT_HEADERS);
+}
+
+function investmentHoldingSheet_() {
+  return getOrCreateSheet_(SHEET_INVESTMENT_HOLDING, INVESTMENT_HOLDING_HEADERS);
+}
+
+function normalizeDraftList_(list, max, mapper) {
+  return (Array.isArray(list) ? list : []).slice(0, max).map(mapper).filter(Boolean);
+}
+
+function normalizeSettlementDraft_(ym, raw) {
+  let input = raw || {};
+  if (typeof input === 'string') {
+    try { input = JSON.parse(input); } catch (e) { input = {}; }
+  }
+  const draft = {
+    ym: ym,
+    rows: normalizeDraftList_(input.rows, 300, row => {
+      if (!row || typeof row !== 'object') return null;
+      return {
+        clientId: String(row.clientId || makeTxId_()).slice(0, 140),
+        date: String(row.date || '').slice(0, 20),
+        source: String(row.source || '').trim().slice(0, 80),
+        type: String(row.type || '지출').trim().slice(0, 40),
+        cat: String(row.cat || '기타').trim().slice(0, 80),
+        desc: String(row.desc || '').trim().slice(0, 180),
+        amount: numParse_(row.amount),
+        fixed: String(row.fixed || '변동').trim().slice(0, 30),
+        user: String(row.user || '').trim().slice(0, 20),
+        memo: String(row.memo || '').trim().slice(0, 300),
+        spendingMood: String(row.spendingMood || '').trim().slice(0, 30),
+        imported: row.imported === true,
+        forceDuplicate: row.forceDuplicate === true
+      };
+    }),
+    reconciliations: normalizeDraftList_(input.reconciliations, 80, row => row && row.source ? {
+      source: String(row.source).trim().slice(0, 80),
+      kind: normalizeReconciliationKind_(row.kind),
+      statementTotal: numParse_(row.statementTotal),
+      statementProvided: row.statementProvided === true,
+      reason: String(row.reason || '').trim().slice(0, 300)
+    } : null),
+    investments: normalizeDraftList_(input.investments, 80, row => row && row.account ? {
+      account: String(row.account).trim().slice(0, 80),
+      previousValue: numParse_(row.previousValue),
+      netContribution: numParse_(row.netContribution),
+      endValue: numParse_(row.endValue),
+      memo: String(row.memo || '').trim().slice(0, 300)
+    } : null),
+    holdings: normalizeDraftList_(input.holdings, 300, row => row && row.account && (row.ticker || row.name) ? {
+      account: String(row.account).trim().slice(0, 80),
+      ticker: String(row.ticker || '').trim().toUpperCase().slice(0, 24),
+      name: String(row.name || '').trim().slice(0, 100),
+      quantity: numParse_(row.quantity), averagePrice: numParse_(row.averagePrice), endPrice: numParse_(row.endPrice),
+      endValue: row.endValue == null || String(row.endValue).trim() === '' ? '' : numParse_(row.endValue), endValueManual: row.endValueManual === true,
+      currency: String(row.currency || 'KRW').trim().slice(0, 8), memo: String(row.memo || '').trim().slice(0, 300)
+    } : null),
+    updatedAt: Math.max(0, Number(input.updatedAt || 0)),
+    updatedBy: String(input.updatedBy || '').trim().slice(0, 20),
+    cleared: input.cleared === true
+  };
+  return draft;
+}
+
+function getSettlementDraftCore_(ym) {
+  ym = validYm_(ym);
+  const sh = settlementDraftSheet_();
+  const last = sh.getLastRow();
+  if (last < 2) return normalizeSettlementDraft_(ym, {});
+  const values = sh.getRange(2, 1, last - 1, SETTLEMENT_DRAFT_HEADERS.length).getValues();
+  for (let i = values.length - 1; i >= 0; i--) {
+    const row = values[i];
+    if (String(row[0] || '').trim() !== ym) continue;
+    const draft = normalizeSettlementDraft_(ym, row[1]);
+    draft.updatedAt = row[2] instanceof Date ? row[2].getTime() : Number(row[2] || draft.updatedAt || 0);
+    draft.updatedBy = String(row[3] || draft.updatedBy || '');
+    draft.cleared = boolText_(row[4], draft.cleared);
+    return draft;
+  }
+  return normalizeSettlementDraft_(ym, {});
+}
+
+function getSettlementDraft(pin, ym) {
+  guard_(pin);
+  return { ok: true, draft: getSettlementDraftCore_(ym || defaultWorkMonthContext_().workYm) };
+}
+
+function saveSettlementDraft(pin, ym, rawDraft, user) {
+  guard_(pin);
+  ym = validYm_(ym);
+  const incoming = normalizeSettlementDraft_(ym, rawDraft);
+  const author = String(user || incoming.updatedBy || '웹앱').trim() || '웹앱';
+  const lock = LockService.getScriptLock();
+  lock.waitLock(15000);
+  try {
+    const sh = settlementDraftSheet_();
+    const last = sh.getLastRow();
+    const values = last >= 2 ? sh.getRange(2, 1, last - 1, SETTLEMENT_DRAFT_HEADERS.length).getValues() : [];
+    let rowNo = 0;
+    let current = normalizeSettlementDraft_(ym, {});
+    for (let i = values.length - 1; i >= 0; i--) {
+      if (String(values[i][0] || '').trim() !== ym) continue;
+      rowNo = i + 2;
+      current = normalizeSettlementDraft_(ym, values[i][1]);
+      current.updatedAt = values[i][2] instanceof Date ? values[i][2].getTime() : Number(values[i][2] || 0);
+      break;
+    }
+    if (current.updatedAt && incoming.updatedAt && incoming.updatedAt < current.updatedAt) {
+      current.updatedBy = rowNo ? String(values[rowNo - 2][3] || '') : '';
+      current.cleared = rowNo ? boolText_(values[rowNo - 2][4], false) : false;
+      return { ok: true, conflict: true, draft: current };
+    }
+    incoming.updatedAt = Date.now();
+    incoming.updatedBy = author;
+    const text = JSON.stringify(incoming);
+    if (text.length > 45000) throw new Error('공유 초안이 너무 커서 저장할 수 없어. 거래를 나눠서 확정 저장해줘.');
+    const row = [ym, text, new Date(incoming.updatedAt), author, incoming.cleared === true];
+    if (rowNo) sh.getRange(rowNo, 1, 1, SETTLEMENT_DRAFT_HEADERS.length).setValues([row]);
+    else sh.appendRow(row);
+    return { ok: true, conflict: false, draft: incoming };
+  } finally {
+    lock.releaseLock();
+  }
+}
+
+function clearSettlementDraft(pin, ym, user) {
+  guard_(pin);
+  ym = validYm_(ym);
+  return saveSettlementDraft(pin, ym, { ym: ym, rows: [], reconciliations: [], investments: [], cleared: true, updatedAt: Date.now() }, user || '웹앱');
+}
+
 function settlementStatusFromRow_(row, rowNo) {
   return {
     row: rowNo || 0,
@@ -2339,47 +2482,97 @@ function defaultWorkMonthContext_() {
   return { currentYm: currentYm, workYm: currentYm, needsSettlement: false, previousStatus: previousStatus };
 }
 
-function sourceTotalsFromRows_(rows) {
+function normalizeReconciliationKind_(kind) {
+  const value = String(kind || 'card').trim().toLowerCase();
+  return ['card', 'account', 'cash', 'investment'].indexOf(value) > -1 ? value : 'card';
+}
+
+function reconciliationFormula_(kind) {
+  const map = {
+    card: '지출 합계',
+    account: '수입 − 지출 − 저축 − 대출상환',
+    cash: '현금 지출 합계',
+    investment: '저축·투자 입금 합계'
+  };
+  return map[normalizeReconciliationKind_(kind)];
+}
+
+function sourceTotalsFromRows_(rows, kindBySource) {
   const map = {};
   (rows || []).forEach(tx => {
     const source = String(tx.source || '').trim();
     if (!source) return;
-    if (!map[source]) map[source] = { source: source, total: 0, count: 0 };
-    map[source].total += numParse_(tx.amount);
+    const kind = normalizeReconciliationKind_((kindBySource || {})[source]);
+    if (!map[source]) map[source] = { source: source, kind: kind, expense: 0, net: 0, investment: 0, count: 0 };
+    const amount = numParse_(tx.amount);
+    if (tx.type === '지출') map[source].expense += amount;
+    if (tx.type === '저축') map[source].investment += amount;
+    map[source].net += tx.type === '수입' ? amount : -amount;
     map[source].count++;
   });
-  return Object.keys(map).sort().map(k => ({
-    source: map[k].source,
-    total: Math.round(map[k].total),
-    count: map[k].count
-  }));
+  return Object.keys(map).sort().map(k => {
+    const item = map[k];
+    const total = item.kind === 'account' ? item.net : item.kind === 'investment' ? item.investment : item.expense;
+    return {
+      source: item.source,
+      kind: item.kind,
+      total: Math.round(total),
+      count: item.count,
+      formula: reconciliationFormula_(item.kind)
+    };
+  });
 }
 
-function reconciliationRowsCore_(ym, sourceTotals) {
+function reconciliationSettingsCore_(ym) {
   ym = validYm_(ym);
   const sh = reconciliationSheet_();
   const values = sh.getLastRow() >= 2
     ? sh.getRange(2, 1, sh.getLastRow() - 1, RECONCILIATION_HEADERS.length).getValues()
     : [];
-  const totalMap = {};
-  (sourceTotals || []).forEach(item => { totalMap[item.source] = item; });
-  const rows = [];
+  const settings = {};
   values.forEach((r, i) => {
     if (String(r[0] || '').trim() !== ym) return;
     const source = String(r[1] || '').trim();
     if (!source) return;
-    const entered = totalMap[source] ? numParse_(totalMap[source].total) : 0;
-    const statement = numParse_(r[2]);
-    const diff = statement - entered;
-    rows.push({
+    settings[source] = {
       row: i + 2,
       source: source,
-      statementTotal: statement,
-      enteredTotal: entered,
-      difference: diff,
-      status: Math.abs(diff) < 1 ? '일치' : '차이',
+      kind: normalizeReconciliationKind_(r[8]),
+      statementTotal: numParse_(r[2]),
+      statementProvided: boolText_(r[10], r[2] !== '' && r[2] != null),
+      reason: String(r[9] || ''),
       updatedAt: dateTimeText_(r[6]),
       updatedBy: String(r[7] || '')
+    };
+  });
+  return settings;
+}
+
+function reconciliationRowsCore_(ym, sourceTotals, settings) {
+  ym = validYm_(ym);
+  settings = settings || reconciliationSettingsCore_(ym);
+  const totalMap = {};
+  (sourceTotals || []).forEach(item => { totalMap[item.source] = item; });
+  const rows = [];
+  Object.keys(settings).forEach(source => {
+    const setting = settings[source];
+    const entered = totalMap[source] ? numParse_(totalMap[source].total) : 0;
+    const statement = numParse_(setting.statementTotal);
+    const hasStatement = setting.statementProvided === true;
+    const diff = hasStatement ? statement - entered : null;
+    rows.push({
+      row: setting.row,
+      source: source,
+      kind: setting.kind,
+      formula: reconciliationFormula_(setting.kind),
+      statementTotal: statement,
+      statementProvided: hasStatement,
+      enteredTotal: entered,
+      difference: diff,
+      status: !hasStatement ? '명세서 입력 필요' : Math.abs(diff) < 1 ? '일치' : '차이',
+      reason: setting.reason,
+      updatedAt: setting.updatedAt,
+      updatedBy: setting.updatedBy
     });
     delete totalMap[source];
   });
@@ -2388,10 +2581,14 @@ function reconciliationRowsCore_(ym, sourceTotals) {
     rows.push({
       row: 0,
       source: source,
+      kind: item.kind,
+      formula: item.formula,
       statementTotal: 0,
+      statementProvided: false,
       enteredTotal: numParse_(item.total),
       difference: null,
       status: '명세서 입력 필요',
+      reason: '',
       updatedAt: '',
       updatedBy: ''
     });
@@ -2435,6 +2632,151 @@ function investmentRowsCore_(ym) {
   return rows.sort((a, b) => a.account.localeCompare(b.account));
 }
 
+function investmentHoldingsCore_(ym) {
+  ym = validYm_(ym);
+  const sh = investmentHoldingSheet_();
+  const values = sh.getLastRow() >= 2
+    ? sh.getRange(2, 1, sh.getLastRow() - 1, INVESTMENT_HOLDING_HEADERS.length).getValues()
+    : [];
+  const totals = {};
+  const rows = values.filter(row => String(row[0] || '').trim() === ym).map((row, i) => {
+    const quantity = numParse_(row[4]);
+    const averagePrice = numParse_(row[5]);
+    const endPrice = numParse_(row[6]);
+    const endValue = numParse_(row[7]) || quantity * endPrice;
+    const profit = numParse_(row[8]) || (endValue - quantity * averagePrice);
+    const account = String(row[1] || '').trim();
+    totals[account] = (totals[account] || 0) + endValue;
+    return {
+      row: i + 2,
+      account: account,
+      ticker: String(row[2] || ''),
+      name: String(row[3] || ''),
+      quantity: quantity,
+      averagePrice: averagePrice,
+      endPrice: endPrice,
+      endValue: endValue,
+      profit: profit,
+      currency: String(row[9] || 'KRW'),
+      memo: String(row[10] || ''),
+      updatedAt: dateTimeText_(row[11]),
+      updatedBy: String(row[12] || '')
+    };
+  });
+  return { rows: rows.sort((a, b) => (a.account + a.name).localeCompare(b.account + b.name)), totals: totals };
+}
+
+function saveInvestmentHoldings(pin, ym, items, user) {
+  guard_(pin);
+  ym = validYm_(ym);
+  if (!Array.isArray(items)) throw new Error('투자 종목 목록 형식을 확인해줘.');
+  const clean = items.map(item => {
+    const account = String((item && item.account) || '').trim().slice(0, 80);
+    const ticker = String((item && item.ticker) || '').trim().toUpperCase().slice(0, 24);
+    const name = String((item && item.name) || '').trim().slice(0, 100);
+    const quantity = numParse_(item && item.quantity);
+    const averagePrice = numParse_(item && item.averagePrice);
+    const endPrice = numParse_(item && item.endPrice);
+    const explicitEndValue = item && item.endValueManual !== false && item.endValue != null && String(item.endValue).trim() !== '';
+    const endValue = explicitEndValue ? numParse_(item.endValue) : quantity * endPrice;
+    if (!account || (!ticker && !name)) return null;
+    return {
+      account: account, ticker: ticker, name: name || ticker, quantity: quantity,
+      averagePrice: averagePrice, endPrice: endPrice, endValue: endValue,
+      profit: endValue - quantity * averagePrice,
+      currency: String((item && item.currency) || 'KRW').trim().toUpperCase().slice(0, 8) || 'KRW',
+      memo: String((item && item.memo) || '').trim().slice(0, 300)
+    };
+  }).filter(Boolean).slice(0, 300);
+  const lock = LockService.getScriptLock();
+  lock.waitLock(15000);
+  try {
+    const sh = investmentHoldingSheet_();
+    const values = sh.getLastRow() >= 2
+      ? sh.getRange(2, 1, sh.getLastRow() - 1, INVESTMENT_HOLDING_HEADERS.length).getValues()
+      : [];
+    const kept = values.filter(row => String(row[0] || '').trim() !== ym);
+    const now = new Date();
+    const next = kept.concat(clean.map(item => [ym, item.account, item.ticker, item.name, item.quantity, item.averagePrice, item.endPrice, item.endValue, item.profit, item.currency, item.memo, now, String(user || '웹앱')]));
+    sh.clearContents();
+    sh.getRange(1, 1, 1, INVESTMENT_HOLDING_HEADERS.length).setValues([INVESTMENT_HOLDING_HEADERS]);
+    if (next.length) sh.getRange(2, 1, next.length, INVESTMENT_HOLDING_HEADERS.length).setValues(next);
+    upsertSettlementStatusCore_(ym, { status: '정산중', startedBy: user || '웹앱' });
+    appendActionLog_('투자 종목 월말 저장', user || '웹앱', ym + ' 종목 ' + clean.length + '개 저장');
+  } finally {
+    lock.releaseLock();
+  }
+  return getSettlementData(pin, ym);
+}
+
+function settlementBatchesCore_(ym, transactions) {
+  ym = validYm_(ym);
+  const groups = {};
+  (transactions || []).forEach(tx => {
+    const id = String(tx.settlementBatch || '').trim();
+    if (!id) return;
+    if (!groups[id]) groups[id] = { id: id, count: 0, amount: 0, expense: 0, income: 0, save: 0, sources: {}, latestAt: tx.createdAt || '' };
+    const group = groups[id];
+    const amount = numParse_(tx.amount);
+    group.count++;
+    group.amount += amount;
+    if (tx.type === '지출') group.expense += amount;
+    else if (tx.type === '수입') group.income += amount;
+    else if (tx.type === '저축') group.save += amount;
+    if (tx.source) group.sources[tx.source] = (group.sources[tx.source] || 0) + 1;
+    if (String(tx.createdAt || '') > String(group.latestAt || '')) group.latestAt = tx.createdAt;
+  });
+  return Object.keys(groups).map(id => {
+    const group = groups[id];
+    return {
+      id: id, count: group.count, amount: Math.round(group.amount), expense: Math.round(group.expense), income: Math.round(group.income), save: Math.round(group.save),
+      sources: Object.keys(group.sources).sort(), createdAt: group.latestAt
+    };
+  }).sort((a, b) => String(b.createdAt).localeCompare(String(a.createdAt)) || b.count - a.count);
+}
+
+function getSettlementBatches(pin, ym) {
+  guard_(pin);
+  ym = validYm_(ym || defaultWorkMonthContext_().workYm);
+  const snapshot = readTxSnapshot_();
+  return { ok: true, ym: ym, batches: settlementBatchesCore_(ym, monthTransactionsFromSnapshot_(ym, snapshot, 1000)) };
+}
+
+function revertSettlementBatch(pin, batchId, user) {
+  guard_(pin);
+  const id = String(batchId || '').trim();
+  if (!id) throw new Error('되돌릴 정산 묶음이 없어.');
+  const lock = LockService.getScriptLock();
+  lock.waitLock(15000);
+  let ym = '';
+  let reverted = 0;
+  try {
+    const info = txMap_(true);
+    if (info.map.settlementBatch == null || info.map.deleted == null) throw new Error('정산 묶음 정보를 찾지 못했어.');
+    const last = info.sh.getLastRow();
+    if (last < 2) throw new Error('되돌릴 거래가 없어.');
+    const values = info.sh.getRange(2, 1, last - 1, info.lastCol).getValues();
+    values.forEach(row => {
+      if (String(row[info.map.settlementBatch] || '').trim() !== id || isDeleted_(row, info.map)) return;
+      const rowYm = ymOf_(row[info.map.date]);
+      if (!ym) ym = rowYm;
+      if (ym !== rowYm) return;
+      row[info.map.deleted] = true;
+      if (info.map.updatedAt != null) row[info.map.updatedAt] = new Date();
+      if (info.map.updatedBy != null) row[info.map.updatedBy] = String(user || '웹앱');
+      reverted++;
+    });
+    if (!ym || !reverted) throw new Error('이미 되돌렸거나 해당 정산 묶음을 찾지 못했어.');
+    if (getSettlementStatusCore_(ym).isClosed) throw new Error('마감된 달은 먼저 정산을 다시 연 뒤 되돌릴 수 있어.');
+    info.sh.getRange(2, 1, values.length, info.lastCol).setValues(values);
+    bumpDataRevision_();
+    appendActionLog_('정산 묶음 되돌리기', user || '웹앱', ym + ' / ' + id + ' / ' + reverted + '건');
+  } finally {
+    lock.releaseLock();
+  }
+  return { ok: true, ym: ym, reverted: reverted, settlement: getSettlementData(pin, ym) };
+}
+
 function recurringCandidatesForSettlement_(ym, recurrings) {
   return (recurrings || []).filter(r => {
     if (!r.enabled || String(r.lastRunYm || '') === ym) return false;
@@ -2460,9 +2802,13 @@ function buildSettlementDataFromSnapshot_(ym, snapshot, context) {
   context = context || {};
   const transactions = context.transactions || monthTransactionsFromSnapshot_(ym, snapshot, 1000);
   const summary = context.summary || monthSummaryFromSnapshot_(ym, snapshot);
-  const sourceTotals = sourceTotalsFromRows_(transactions);
-  const reconciliations = reconciliationRowsCore_(ym, sourceTotals);
+  const reconciliationSettings = reconciliationSettingsCore_(ym);
+  const kindBySource = {};
+  Object.keys(reconciliationSettings).forEach(source => { kindBySource[source] = reconciliationSettings[source].kind; });
+  const sourceTotals = sourceTotalsFromRows_(transactions, kindBySource);
+  const reconciliations = reconciliationRowsCore_(ym, sourceTotals, reconciliationSettings);
   const investments = investmentRowsCore_(ym);
+  const holdings = investmentHoldingsCore_(ym);
   const status = getSettlementStatusCore_(ym);
   const recurrings = context.recurrings || getRecurringsCore_();
   const reconciliationIssues = reconciliations.filter(r => r.status !== '일치').length;
@@ -2480,8 +2826,12 @@ function buildSettlementDataFromSnapshot_(ym, snapshot, context) {
     investments: investments,
     investmentTotal: investments.reduce((sum, r) => sum + numParse_(r.endValue), 0),
     investmentValuationChange: investments.reduce((sum, r) => sum + numParse_(r.valuationChange), 0),
+    investmentHoldings: holdings.rows,
+    investmentHoldingTotals: holdings.totals,
     recurringCandidates: recurringCandidatesForSettlement_(ym, recurrings),
-    uncategorizedCount: transactions.filter(t => !String(t.cat || '').trim() || String(t.cat || '') === '기타').length
+    uncategorizedCount: transactions.filter(t => !String(t.cat || '').trim() || String(t.cat || '') === '기타').length,
+    sharedDraft: getSettlementDraftCore_(ym),
+    batches: settlementBatchesCore_(ym, transactions)
   };
 }
 
@@ -2498,13 +2848,18 @@ function saveReconciliations(pin, ym, items, user) {
   if (!Array.isArray(items)) throw new Error('대사 항목 형식을 확인해줘.');
   const clean = items.map(item => ({
     source: String((item && (item.source || item.account)) || '').trim().slice(0, 80),
-    statementTotal: numParse_(item && (item.statementTotal != null ? item.statementTotal : item.total))
+    kind: normalizeReconciliationKind_(item && item.kind),
+    statementTotal: numParse_(item && (item.statementTotal != null ? item.statementTotal : item.total)),
+    statementProvided: !!(item && (item.statementProvided === true || (item.statementProvided == null && item.statementTotal != null && String(item.statementTotal).trim() !== ''))),
+    reason: String((item && item.reason) || '').trim().slice(0, 300)
   })).filter(item => item.source);
   const lock = LockService.getScriptLock();
   lock.waitLock(15000);
   try {
     const snapshot = readTxSnapshot_();
-    const totals = sourceTotalsFromRows_(monthTransactionsFromSnapshot_(ym, snapshot, 1000));
+    const kinds = {};
+    clean.forEach(item => { kinds[item.source] = item.kind; });
+    const totals = sourceTotalsFromRows_(monthTransactionsFromSnapshot_(ym, snapshot, 1000), kinds);
     const totalMap = {};
     totals.forEach(item => { totalMap[item.source] = numParse_(item.total); });
     const sh = reconciliationSheet_();
@@ -2519,8 +2874,8 @@ function saveReconciliations(pin, ym, items, user) {
         }
       }
       const entered = totalMap[item.source] || 0;
-      const diff = item.statementTotal - entered;
-      const row = [ym, item.source, item.statementTotal, entered, diff, Math.abs(diff) < 1 ? '일치' : '차이', new Date(), String(user || '웹앱')];
+      const diff = item.statementProvided ? item.statementTotal - entered : '';
+      const row = [ym, item.source, item.statementTotal, entered, diff, !item.statementProvided ? '명세서 입력 필요' : Math.abs(diff) < 1 ? '일치' : '차이', new Date(), String(user || '웹앱'), item.kind, item.reason, item.statementProvided];
       if (rowNo) sh.getRange(rowNo, 1, 1, RECONCILIATION_HEADERS.length).setValues([row]);
       else sh.appendRow(row);
     });
@@ -2610,6 +2965,11 @@ function finalizeSettlementMonth(pin, options) {
   const user = String(opt.user || '웹앱').trim() || '웹앱';
   const before = getSettlementData(pin, ym);
   if (before.isClosed) return { ok: true, alreadyClosed: true, settlement: before };
+  const checklist = opt.checklist || {};
+  if (checklist.transactions !== true) throw new Error('거래 입력 확인을 체크한 뒤 마감해줘.');
+  if (before.reconciliationIssues > 0 && checklist.reconciliations !== true) throw new Error('대사 차이를 확인했는지 체크하거나, 대사 금액을 맞춘 뒤 마감해줘.');
+  if (before.reconciliationIssues > 0 && String(checklist.reconciliationReason || '').trim().length < 2) throw new Error('대사 차이가 남았다면 마감 사유를 짧게 적어줘.');
+  if (checklist.investments !== true) throw new Error('투자 월말값 입력 또는 해당 없음 확인을 체크한 뒤 마감해줘.');
   // 월말값을 저장했다면 마감 스냅샷 직전에 자산현황에도 반영한다.
   // 별도 버튼을 누르는 것을 놓쳐도 월말 자산 스냅샷이 오래된 값을 담지 않게 한다.
   const investmentSync = before.investments.length ? syncInvestmentToAssets(pin, ym, user) : null;
@@ -2618,7 +2978,7 @@ function finalizeSettlementMonth(pin, options) {
     user: user,
     memo: String(opt.memo || '').trim(),
     saveAssetSnapshot: opt.saveAssetSnapshot !== false,
-    copyBudgetToNextMonth: opt.copyBudgetToNextMonth === true,
+    copyBudgetToNextMonth: opt.copyBudgetToNextMonth !== false,
     overwriteNextBudget: opt.overwriteNextBudget === true,
     createBackup: opt.createBackup === true,
     runAi: false
@@ -2628,9 +2988,9 @@ function finalizeSettlementMonth(pin, options) {
     closed: true,
     user: user,
     transactionsConfirmed: true,
-    reconciliationsConfirmed: before.reconciliationIssues === 0,
-    investmentsConfirmed: before.investments.length > 0,
-    memo: String(opt.memo || '').trim()
+    reconciliationsConfirmed: before.reconciliationIssues === 0 || checklist.reconciliations === true,
+    investmentsConfirmed: before.investments.length > 0 || checklist.investments === true,
+    memo: String(opt.memo || '').trim() + (checklist.reconciliationReason ? ' / 대사확인: ' + String(checklist.reconciliationReason).trim() : '')
   });
   appendActionLog_('월정산 마감', user, ym + ' 정산 마감');
   return { ok: true, closeResult: closeResult, investmentSync: investmentSync, settlement: getSettlementData(pin, ym) };
@@ -3105,6 +3465,14 @@ function txResultFromClean_(clean, rowNo, txId, createdAt) {
   };
 }
 
+function settlementDedupeKey_(tx) {
+  const compact = value => String(value == null ? '' : value).trim().toLowerCase().replace(/\s+/g, ' ');
+  return [
+    dateText_(tx.date), compact(tx.type), compact(tx.cat), compact(tx.desc),
+    Math.round(numParse_(tx.amount)), compact(tx.source)
+  ].join('\u001f');
+}
+
 function addTxCore_(clean, externalTxId) {
   const info = txMap_(true);
   assertTxCore_(info.map);
@@ -3132,7 +3500,7 @@ function addTransactionsFast(pin, items) {
     let clientId = '';
     try {
       clientId = normalizeClientTxId_(raw.clientId || raw.txId || makeTxId_());
-      return { index: index, clientId: clientId, clean: normalizeTxData_(raw.data || raw), error: '' };
+      return { index: index, clientId: clientId, clean: normalizeTxData_(raw.data || raw), dedupe: raw.dedupe === true, error: '' };
     } catch (e) {
       return { index: index, clientId: clientId || String(raw.clientId || ''), clean: null, error: e.message || '입력값을 확인해줘.' };
     }
@@ -3149,15 +3517,21 @@ function addTransactionsFast(pin, items) {
       ? info.sh.getRange(2, 1, lastRow - 1, info.lastCol).getValues()
       : [];
     const existingById = {};
+    const existingByDedupe = {};
     if (info.map.txId != null) {
       existingValues.forEach((row, i) => {
         const id = String(row[info.map.txId] || '').trim();
         if (id && !existingById[id]) existingById[id] = { row: i + 2, values: row };
+        if (!isDeleted_(row, info.map)) {
+          const fingerprint = settlementDedupeKey_(txObject_(row, i + 2, info.map));
+          if (fingerprint && !existingByDedupe[fingerprint]) existingByDedupe[fingerprint] = { row: i + 2, values: row };
+        }
       });
     }
 
     const newRows = [];
     const planned = {};
+    const plannedByDedupe = {};
     const results = new Array(prepared.length);
     const createdAt = new Date();
     let duplicates = 0;
@@ -3188,6 +3562,28 @@ function addTransactionsFast(pin, items) {
         results[entry.index] = planned[entry.clientId];
         return;
       }
+      const fingerprint = entry.dedupe ? settlementDedupeKey_(entry.clean) : '';
+      const naturalDuplicate = fingerprint ? existingByDedupe[fingerprint] : null;
+      if (naturalDuplicate) {
+        duplicates++;
+        results[entry.index] = {
+          ok: true,
+          duplicate: true,
+          duplicateReason: 'matchingTransaction',
+          clientId: entry.clientId,
+          row: naturalDuplicate.row,
+          txId: info.map.txId != null ? String(naturalDuplicate.values[info.map.txId] || '') : '',
+          ym: ymOf_(naturalDuplicate.values[info.map.date]),
+          transaction: txObject_(naturalDuplicate.values, naturalDuplicate.row, info.map)
+        };
+        return;
+      }
+      if (fingerprint && plannedByDedupe[fingerprint]) {
+        duplicates++;
+        const same = plannedByDedupe[fingerprint];
+        results[entry.index] = Object.assign({}, same, { clientId: entry.clientId, duplicate: true, duplicateReason: 'sameImport' });
+        return;
+      }
 
       const rowNo = lastRow + newRows.length + 1;
       const row = buildTxRow_(entry.clean, info.map, info.lastCol, entry.clientId, createdAt);
@@ -3202,6 +3598,7 @@ function addTransactionsFast(pin, items) {
       };
       newRows.push(row);
       planned[entry.clientId] = result;
+      if (fingerprint) plannedByDedupe[fingerprint] = result;
       results[entry.index] = result;
     });
 

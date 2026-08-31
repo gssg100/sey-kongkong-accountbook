@@ -1,4 +1,4 @@
-const CACHE_NAME = 'sey-budget-shell-v5-20260831';
+const CACHE_NAME = 'sey-budget-shell-v6-20260901';
 const APP_SHELL = ['/app.html', '/manifest.json', '/icons/icon-192.png', '/icons/icon-512.png'];
 const NAVIGATION_ENTRY = '/app.html';
 
