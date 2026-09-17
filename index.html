@@ -4545,6 +4545,25 @@ function bindApp(){
 
   if ('serviceWorker' in navigator && location.protocol.indexOf('http') === 0 && !/google(?:usercontent)?\.com$/.test(location.hostname)) {
     navigator.serviceWorker.register('/sw.js').then(() => subscribePushManager()).catch(()=>{});
+    // 새 서비스워커가 올라오면 화면을 한 번만 새로고침한다.
+    // 서비스워커가 옛 셸을 캐시에서 내주는 바람에, 고쳐서 배포해도 계속
+    // 옛 화면이 보이던 문제가 있었다. 사용자가 직접 캐시를 지우지 않아도 되게 한다.
+    navigator.serviceWorker.addEventListener('message', event => {
+      const msg = event.data || {};
+      if (msg.type !== 'sw-updated' || !msg.cache) return;
+      let key = '';
+      try {
+        key = 'sey_sw_reloaded_' + msg.cache;
+        if (sessionStorage.getItem(key)) return;   // 같은 버전으로는 한 번만
+        sessionStorage.setItem(key, '1');
+      } catch(e) { return; }
+      // 입력 중이면 날리지 않는다.
+      if (document.querySelector('.sheet.on')) {
+        toast('새 버전이 준비됐어. 저장한 뒤 새로고침해줘.');
+        return;
+      }
+      location.reload();
+    });
   }
 
   const addBtn = document.getElementById('addBtn');
