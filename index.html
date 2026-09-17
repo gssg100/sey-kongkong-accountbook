@@ -4,7 +4,7 @@
 <base target="_top">
 <meta charset="utf-8">
 <meta name="app-version" content="2026-09-01-settlement-v6">
-<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, interactive-widget=resizes-content">
 <meta name="description" content="지수와 하콩이의 빠르고 편한 공동 가계부">
 <meta name="theme-color" content="#f5f5f7">
 <meta name="apple-mobile-web-app-capable" content="yes">
@@ -448,8 +448,15 @@ body.dark-mode #toast{background:rgba(58,58,60,0.92)}
 .budget-edit-row{display:flex;align-items:center;justify-content:space-between;padding:12px 0;border-bottom:1px solid var(--line-soft)}
 .budget-edit-row:last-child{border-bottom:none}
 .budget-edit-label{font-size:14px;font-weight:800;display:flex;align-items:center;gap:8px}
-.budget-edit-inp{width:130px;text-align:right;font-size:15px;font-weight:800;padding:8px 12px;border-radius:10px;border:1px solid var(--line);background:var(--bg);color:var(--ink)}
+.budget-edit-label{flex:1;min-width:0}
+.budget-edit-inp{width:118px;text-align:right;font-size:15px;font-weight:800;padding:8px 12px;border-radius:10px;border:1px solid var(--line);background:var(--bg);color:var(--ink)}
 .budget-edit-inp:focus{border-color:var(--forest);background:var(--card);outline:none}
+.budget-edit-inp:disabled{opacity:.45;text-decoration:line-through}
+.budget-del-btn{margin-left:8px;width:36px;height:36px;flex:none;border:0;border-radius:10px;background:var(--line-soft);color:var(--muted);font-size:14px;cursor:pointer}
+.budget-del-btn:hover{background:var(--expense);color:#fff}
+.budget-edit-row.is-removed .budget-edit-label{opacity:.45;text-decoration:line-through}
+.budget-edit-row.is-removed .budget-del-btn{background:var(--forest);color:#fff}
+.budget-orphan-tag{display:inline-block;margin-left:4px;padding:1px 6px;border-radius:6px;background:var(--line-soft);color:var(--muted);font-size:10px;font-weight:700;vertical-align:middle}
 
 /* 스피너 애니메이션 */
 .spinner{display:inline-block;width:18px;height:18px;border:2.5px solid rgba(255,255,255,0.3);border-radius:50%;border-top-color:#fff;animation:spin .8s linear infinite}
@@ -473,6 +480,49 @@ body.dark-mode #toast{background:rgba(58,58,60,0.92)}
 .settlement-source-list{display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:8px;margin-bottom:12px}.settlement-source{display:grid;grid-template-columns:1fr auto;gap:2px;padding:10px;border:1px solid var(--line-soft);border-radius:12px;background:var(--bg)}.settlement-source span{font-size:12px;font-weight:800}.settlement-source strong{font-size:14px}.settlement-source small{font-size:10px;color:var(--muted)}.recon-list,.investment-list,.holding-list{display:grid;gap:8px}.recon-row{display:grid;grid-template-columns:minmax(90px,1.1fr) minmax(90px,.9fr) minmax(108px,1fr) minmax(130px,1.25fr) 110px;align-items:end;gap:8px;padding:10px;border:1px solid var(--line-soft);border-radius:12px}.recon-row>div:first-child{display:grid;gap:4px}.recon-row strong{font-size:13px}.recon-row small{font-size:11px;color:var(--muted)}.recon-diff{min-height:35px;display:flex;align-items:center;justify-content:flex-end;color:var(--muted);font-size:12px;font-weight:850}.recon-diff.ok{color:var(--forest)}.recon-diff.warn{color:#b15c00}.investment-row{display:grid;grid-template-columns:minmax(100px,1.2fr) repeat(3,minmax(86px,1fr)) minmax(92px,.9fr) auto;align-items:end;gap:8px;padding:10px;border:1px solid var(--line-soft);border-radius:12px}.investment-row>input{align-self:end}.holding-row{display:grid;grid-template-columns:1fr .7fr 1.2fr repeat(3,minmax(75px,.8fr)) minmax(90px,.9fr) auto;align-items:end;gap:8px;padding:10px;border:1px solid var(--line-soft);border-radius:12px}.holding-row>input{width:100%;min-width:0;height:35px;padding:0 9px;border:1px solid var(--line);border-radius:9px;background:var(--card);color:var(--ink);font:inherit;font-size:12px;outline:none}.holding-row>input:focus{border-color:var(--forest);box-shadow:0 0 0 3px color-mix(in srgb,var(--forest) 12%,transparent)}.valuation{height:35px;display:flex;align-items:center;justify-content:flex-end;color:var(--forest);font-size:12px}.valuation.minus,.investment-total .minus{color:var(--expense)}.investment-total{display:flex;justify-content:space-between;gap:10px;margin-top:10px;padding-top:10px;border-top:1px solid var(--line-soft);font-size:12px;color:var(--muted)}.investment-total strong{color:var(--forest)}.settlement-close-card{border-color:color-mix(in srgb,var(--forest) 24%,var(--line))}.settlement-close-card .primary.close{margin-top:14px;width:100%;min-height:46px}
 .settlement-import-preview,.settlement-batches,.settlement-holdings{margin-top:12px;padding:12px;border:1px solid var(--line-soft);border-radius:14px;background:var(--bg)}.settlement-import-preview>strong,.settlement-import-preview>span{display:block}.settlement-import-preview>strong{font-size:13px}.settlement-import-preview>span,.settlement-import-preview>div{margin-top:5px;color:var(--muted);font-size:12px;line-height:1.55}.settlement-batches summary,.settlement-holdings summary{cursor:pointer;font-size:13px;font-weight:850}.settlement-batch{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-top:10px;padding-top:10px;border-top:1px solid var(--line-soft)}.settlement-batch strong,.settlement-batch span{display:block}.settlement-batch strong{font-size:12px}.settlement-batch span{margin-top:3px;color:var(--muted);font-size:11px}.settlement-batch button{flex:0 0 auto;border:1px solid var(--line);border-radius:9px;background:var(--card);color:var(--expense);font-size:11px;font-weight:800;padding:7px 8px;cursor:pointer}.settlement-holdings p{margin:8px 0 10px;color:var(--muted);font-size:12px;line-height:1.5}.settlement-checklist{display:grid;gap:9px;margin-top:14px;padding:13px;border-radius:14px;background:var(--bg);border:1px solid var(--line-soft)}.settlement-checklist>label{display:flex;align-items:flex-start;gap:8px;color:var(--ink);font-size:12px;font-weight:750;line-height:1.45}.settlement-checklist input[type=checkbox]{width:17px;height:17px;margin:0;accent-color:var(--forest)}.settlement-checklist .settlement-check-reason{display:grid;gap:5px;margin-top:2px;color:var(--muted)}.settlement-check-reason input{height:35px;padding:0 9px;border:1px solid var(--line);border-radius:9px;background:var(--card);color:var(--ink);font:inherit;font-size:12px;outline:none}.settlement-check-reason input:focus{border-color:var(--forest)}
 .source-tag{margin-left:4px;background:color-mix(in srgb,var(--forest) 11%,var(--line-soft));color:var(--forest)}
+
+/* 🔔 스마트 알림 및 푸시 센터 스타일 */
+.notif-card{margin-top:16px;padding:20px;border-radius:20px;background:var(--card);border:1px solid var(--line-soft);box-shadow:var(--shadow)}
+.notif-head{display:flex;align-items:center;justify-content:space-between;margin-bottom:14px}
+.notif-title{display:flex;align-items:center;gap:8px;font-size:16px;font-weight:900;color:var(--ink)}
+.notif-status-badge{display:inline-flex;align-items:center;padding:4px 10px;border-radius:999px;font-size:11.5px;font-weight:800}
+.notif-status-badge.granted{background:color-mix(in srgb,var(--forest) 15%,transparent);color:var(--forest)}
+.notif-status-badge.denied{background:color-mix(in srgb,var(--expense) 15%,transparent);color:var(--expense)}
+.notif-status-badge.default{background:var(--line-soft);color:var(--muted)}
+.notif-desc{font-size:12.5px;color:var(--muted);line-height:1.55;margin-bottom:14px}
+.notif-action-row{display:flex;align-items:center;gap:10px;margin-bottom:16px}
+.notif-btn-main{flex:1;min-height:40px;border:0;border-radius:12px;background:var(--forest);color:#fff;font-size:13px;font-weight:850;cursor:pointer;display:inline-flex;align-items:center;justify-content:center;gap:6px;transition:opacity .15s}
+.notif-btn-main:active{opacity:.85}
+.notif-btn-test{min-height:40px;padding:0 14px;border:1px solid var(--line);border-radius:12px;background:var(--bg);color:var(--ink);font-size:12.5px;font-weight:800;cursor:pointer}
+.notif-btn-test:active{background:var(--line-soft)}
+.notif-options-group{display:grid;gap:10px;padding-top:14px;border-top:1px solid var(--line-soft)}
+.notif-option-label{display:flex;align-items:center;justify-content:space-between;font-size:13px;font-weight:750;color:var(--ink);cursor:pointer}
+.notif-option-label input[type=checkbox]{width:18px;height:18px;accent-color:var(--forest);cursor:pointer}
+.notif-history{margin-top:14px;padding:12px;border-radius:14px;background:var(--bg);border:1px solid var(--line-soft)}
+.notif-history summary{cursor:pointer;font-size:12.5px;font-weight:800;color:var(--muted)}
+.notif-history-item{display:flex;justify-content:space-between;align-items:center;padding:8px 0;border-bottom:1px solid var(--line-soft);font-size:11.5px}
+.notif-history-item:last-child{border-bottom:none}
+
+/* 🔍 내역 검색창 스타일 */
+.list-search-wrap{position:relative;margin:10px 0 6px;display:flex;align-items:center}
+.list-search-wrap .search-ic{position:absolute;left:14px;font-size:14px;color:var(--muted);pointer-events:none}
+.list-search-inp{width:100%;height:44px;padding:0 38px 0 40px;border-radius:14px;border:1px solid var(--line);background:var(--card);color:var(--ink);font-size:14px;font-weight:650;outline:none;transition:border-color .15s,box-shadow .15s}
+.list-search-inp:focus{border-color:var(--forest);box-shadow:0 0 0 3px color-mix(in srgb,var(--forest) 12%,transparent)}
+.search-clear-btn{position:absolute;right:10px;width:24px;height:24px;border-radius:50%;border:0;background:var(--line-soft);color:var(--muted);font-size:12px;display:flex;align-items:center;justify-content:center;cursor:pointer}
+
+/* 📸 순자산 스냅샷 기록 바 */
+.asset-actions-bar{margin-bottom:14px;display:flex;gap:8px}
+.btn-snapshot{flex:1;min-height:42px;border:1px solid var(--line);border-radius:12px;background:var(--card);color:var(--ink);font-size:13px;font-weight:800;display:inline-flex;align-items:center;justify-content:center;gap:6px;cursor:pointer;box-shadow:var(--shadow);transition:background .15s}
+.btn-snapshot:active{background:var(--line-soft)}
+
+/* 📲 PWA 설치 팁 카드 */
+.pwa-tip-card{margin-top:14px;padding:14px 16px;border-radius:16px;background:linear-gradient(135deg,color-mix(in srgb,var(--forest) 8%,var(--card)),var(--card));border:1px solid color-mix(in srgb,var(--forest) 20%,var(--line));display:flex;align-items:center;gap:12px}
+.pwa-tip-icon{font-size:24px;flex-shrink:0}
+.pwa-tip-text strong{display:block;font-size:13px;color:var(--ink);margin-bottom:2px}
+.pwa-tip-text span{display:block;font-size:11.5px;color:var(--muted);line-height:1.45}
+
+/* 🔁 정기거래 결제자 배지 */
+.rec-user-badge{display:inline-flex;align-items:center;padding:2px 8px;border-radius:999px;font-size:11px;font-weight:800;background:var(--line-soft);color:var(--ink);margin-left:6px}
 
 @media (max-width:760px){.settlement-hero{padding:20px;border-radius:20px}.settlement-closed-note{align-items:flex-start;flex-direction:column}.settlement-metrics{grid-template-columns:1fr}.settlement-section-head{align-items:flex-start}.settlement-section-head>div:first-child{align-items:flex-start}.settlement-actions{justify-content:flex-start}.settlement-grid-main{grid-template-columns:repeat(2,minmax(0,1fr))}.settlement-grid-main .settlement-desc{grid-column:span 2}.settlement-savebar{align-items:stretch;flex-direction:column}.settlement-savebar .primary{width:100%}.recon-row{grid-template-columns:1fr 1fr}.recon-row>div:first-child,.recon-row .recon-reason,.recon-diff{grid-column:span 2}.recon-diff{justify-content:flex-start;height:auto;min-height:20px}.investment-row{grid-template-columns:repeat(2,minmax(0,1fr))}.investment-row>input{grid-column:span 2}.investment-row .valuation{justify-content:flex-start}.holding-row{grid-template-columns:repeat(2,minmax(0,1fr))}.holding-row>input:first-child,.holding-row>input:nth-child(3){grid-column:span 2}.holding-row .valuation{justify-content:flex-start}.settlement-close-card{padding:18px}}
 
@@ -629,6 +679,11 @@ body.dark-mode #toast{background:rgba(58,58,60,0.92)}
     </div>
 
     <div class="f-grp">
+      <div class="label">결제자 (누구 돈으로?)</div>
+      <div class="chips" id="rUserChips"></div>
+    </div>
+
+    <div class="f-grp">
       <div class="label">금액</div>
       <input type="tel" id="rAmount" class="inp" placeholder="얼마인가요?">
     </div>
@@ -744,6 +799,8 @@ const BOOT_CACHE_KEY = 'sey_boot_cache_v5';
 const MONTH_CACHE_PREFIX = 'sey_month_cache_v5_';
 const PENDING_QUEUE_KEY = 'sey_pending_tx_v2';
 const SETTLEMENT_DRAFT_PREFIX = 'sey_settlement_draft_v1_';
+const NOTIF_SETTINGS_KEY = 'sey_notif_settings_v1';
+const NOTIFIED_LOG_PREFIX = 'sey_notified_dday_';
 const CACHE_MAX_AGE = 7 * 24 * 60 * 60 * 1000;
 
 const STATE = {
@@ -756,11 +813,115 @@ const STATE = {
   list: { mode: 'month', query: '', writer: '', type: '', category: '', rows: [], count: 0, pageSize: 40 },
   settlement: null, settlementDraft: null, settlementDraftSync: { state:'idle', updatedAt:0 },
   sync: { status: 'idle', message: '', inFlight: false },
+  notifSettings: { enabled: false, dday: true, settlement: true, budgetAlert: true },
+  notifPermission: 'default',
+  notifications: [],
   requestSeq: 0
 };
 
+/* ============ localStorage 안전 래퍼 ============
+ * 저장 실패(용량 초과, 사파리 시크릿 모드 등)가 앱 흐름을 끊지 않게 한다.
+ * 특히 persistPendingQueue / saveMonthCache 가 던지면 입력이 유실되거나
+ * 화면 갱신이 멈춰버리므로, 여기서 잡고 공간을 확보한 뒤 한 번 더 시도한다.
+ */
+function pruneOldCaches(keepYm){
+  let removed = 0;
+  try {
+    const months = Object.keys(localStorage)
+      .filter(k => k.indexOf(MONTH_CACHE_PREFIX) === 0 && k !== MONTH_CACHE_PREFIX + keepYm)
+      .sort();
+    // 오래된 월 캐시부터 정리
+    months.slice(0, Math.max(1, months.length - 2)).forEach(k => { localStorage.removeItem(k); removed++; });
+    // 지난 날짜의 알림 중복방지 로그도 하루치만 남긴다 (예전에는 매일 한 개씩 영구 적재됐다)
+    const today = NOTIFIED_LOG_PREFIX + todayStr();
+    Object.keys(localStorage)
+      .filter(k => k.indexOf(NOTIFIED_LOG_PREFIX) === 0 && k !== today)
+      .forEach(k => { localStorage.removeItem(k); removed++; });
+  } catch(e) {}
+  return removed;
+}
+
+function safeSet(key, value, options){
+  const opt = options || {};
+  try {
+    localStorage.setItem(key, value);
+    return true;
+  } catch(e) {
+    if (pruneOldCaches(opt.keepYm || '')) {
+      try { localStorage.setItem(key, value); return true; } catch(e2) {}
+    }
+    if (opt.critical && typeof toast === 'function') {
+      toast('기기 저장 공간이 부족해. 브라우저 저장소를 정리해줘.', true);
+    }
+    return false;
+  }
+}
+
+function safeRemove(key){
+  try { localStorage.removeItem(key); } catch(e) {}
+}
+
+function loadNotifSettings(){
+  try {
+    const raw = localStorage.getItem(NOTIF_SETTINGS_KEY);
+    const defaults = { enabled: false, dday: true, settlement: true, budgetAlert: true };
+    return raw ? Object.assign(defaults, JSON.parse(raw)) : defaults;
+  } catch(e) { return { enabled: false, dday: true, settlement: true, budgetAlert: true }; }
+}
+
+function saveNotifSettings(settings){
+  STATE.notifSettings = Object.assign(STATE.notifSettings || {}, settings || {});
+  safeSet(NOTIF_SETTINGS_KEY, JSON.stringify(STATE.notifSettings));
+}
+
+function isAlreadyNotified(id, dateStr){
+  try {
+    const key = NOTIFIED_LOG_PREFIX + (dateStr || todayStr());
+    const raw = JSON.parse(localStorage.getItem(key) || '[]');
+    return Array.isArray(raw) && raw.indexOf(String(id)) >= 0;
+  } catch(e) { return false; }
+}
+
+function markAsNotified(id, dateStr){
+  try {
+    const key = NOTIFIED_LOG_PREFIX + (dateStr || todayStr());
+    const list = JSON.parse(localStorage.getItem(key) || '[]');
+    const arr = Array.isArray(list) ? list : [];
+    if (arr.indexOf(String(id)) < 0) {
+      arr.push(String(id));
+      safeSet(key, JSON.stringify(arr));
+    }
+  } catch(e) {}
+}
+
+/* ============ 순자산 목표 관리 ============ */
+const ASSET_GOAL_STORAGE_KEY = 'sey_asset_goal_v1';
+const DEFAULT_ASSET_GOAL = 100000000;
+
+function getAssetGoal(){
+  try {
+    const raw = localStorage.getItem(ASSET_GOAL_STORAGE_KEY);
+    const n = Number(raw);
+    return (n > 0) ? n : DEFAULT_ASSET_GOAL;
+  } catch(e) { return DEFAULT_ASSET_GOAL; }
+}
+
+function setAssetGoal(amount){
+  const n = Math.max(1000000, Math.round(Number(amount) || DEFAULT_ASSET_GOAL));
+  safeSet(ASSET_GOAL_STORAGE_KEY, String(n));
+  return n;
+}
+
 /* ============ 서버 API 통신 (GAS 직접 실행 + 제한 iframe 브리지) ============ */
-const BRIDGE = { frame: null, ready: null, readyResolve: null, origin: '', calls: new Map() };
+/*
+ * [중요] Apps Script 웹앱은 iframe을 한 겹 더 감싼다.
+ *   우리 앱  →  iframe(script.google.com)  →  iframe(googleusercontent.com) ← 브리지 코드가 도는 곳
+ * 그래서 frame.contentWindow 는 "구글 래퍼"일 뿐 브리지가 아니다.
+ * 거기에 postMessage 를 보내면 아무 데도 도착하지 않는다.
+ * 해결: 브리지가 window.top 으로 먼저 신호를 보내오면 그 event.source 를 붙잡아 두고,
+ *       이후 모든 요청을 그 창으로 보낸다.
+ */
+const BRIDGE = { frame: null, target: null, ready: null, readyResolve: null, readyReject: null, origin: '', calls: new Map() };
 
 function trustedBridgeOrigin(origin){
   try {
@@ -771,13 +932,20 @@ function trustedBridgeOrigin(origin){
 
 window.addEventListener('message', event => {
   const msg = event.data || {};
-  if (!trustedBridgeOrigin(event.origin) || event.source !== (BRIDGE.frame && BRIDGE.frame.contentWindow)) return;
   if (msg.channel !== BRIDGE_CHANNEL) return;
+  if (!trustedBridgeOrigin(event.origin)) return;
   if (msg.type === 'ready') {
+    // 손자 프레임의 창을 여기서 확보한다. contentWindow 와 비교하면 안 된다.
+    BRIDGE.target = event.source;
     BRIDGE.origin = event.origin;
     if (BRIDGE.readyResolve) BRIDGE.readyResolve();
     return;
   }
+  if (msg.type === 'setup-error') {
+    if (BRIDGE.readyReject) BRIDGE.readyReject(new Error(msg.error || '브리지 설정이 필요해.'));
+    return;
+  }
+  if (event.source !== BRIDGE.target) return;
   if (msg.type !== 'result' || !msg.id || !BRIDGE.calls.has(msg.id)) return;
   const call = BRIDGE.calls.get(msg.id);
   BRIDGE.calls.delete(msg.id);
@@ -787,20 +955,30 @@ window.addEventListener('message', event => {
 });
 
 function ensureBridge(){
+  // 브리지가 이미 자기를 알려왔다면 기다릴 필요가 없다.
+  // (ready 가 ensureBridge 호출보다 먼저 도착하는 경합에서 신호를 흘리지 않기 위함)
+  if (BRIDGE.target) return (BRIDGE.ready = BRIDGE.ready || Promise.resolve());
   if (BRIDGE.ready) return BRIDGE.ready;
   BRIDGE.ready = new Promise((resolve, reject) => {
-    BRIDGE.readyResolve = resolve;
+    let settled = false;
+    let timer = null;
+    const finish = () => { settled = true; if (timer) { clearTimeout(timer); timer = null; } };
+    BRIDGE.readyResolve = () => { if (!settled) { finish(); resolve(); } };
+    BRIDGE.readyReject = err => { if (!settled) { finish(); reject(err); } };
     const iframe = document.createElement('iframe');
     iframe.title = 'sey콩콩 데이터 연결';
     iframe.setAttribute('aria-hidden', 'true');
     iframe.tabIndex = -1;
     iframe.style.cssText = 'position:fixed;width:1px;height:1px;opacity:0;pointer-events:none;border:0;left:-9999px';
     iframe.src = DEFAULT_GAS_URL + '?bridge=1&v=' + APP_CACHE_VERSION;
-    iframe.onerror = () => reject(new Error('구글 장부 연결을 열지 못했어.'));
+    iframe.onerror = () => BRIDGE.readyReject(new Error('구글 장부 연결을 열지 못했어.'));
     BRIDGE.frame = iframe;
     document.body.appendChild(iframe);
-    setTimeout(() => {
-      if (!BRIDGE.origin) reject(new Error('구글 장부 연결 시간이 초과됐어. 인터넷 연결을 확인해줘.'));
+    timer = setTimeout(() => {
+      BRIDGE.readyReject(new Error(
+        '구글 장부 연결이 안 됐어. 인터넷 연결과, Apps Script 스크립트 속성의 ' +
+        'BRIDGE_ALLOWED_ORIGINS 에 ' + location.origin + ' 이 들어있는지 확인해줘.'
+      ));
     }, 15000);
   });
   return BRIDGE.ready;
@@ -809,8 +987,10 @@ function ensureBridge(){
 function resetBridge(){
   if (BRIDGE.frame && BRIDGE.frame.parentNode) BRIDGE.frame.parentNode.removeChild(BRIDGE.frame);
   BRIDGE.frame = null;
+  BRIDGE.target = null;
   BRIDGE.ready = null;
   BRIDGE.readyResolve = null;
+  BRIDGE.readyReject = null;
   BRIDGE.origin = '';
 }
 
@@ -822,7 +1002,7 @@ function bridgeCall(fn, args, timeoutMs){
       reject(new Error('장부 응답 시간이 초과됐어. 저장대기함에서 다시 시도할게.'));
     }, timeoutMs || 20000);
     BRIDGE.calls.set(id, { resolve, reject, timer });
-    BRIDGE.frame.contentWindow.postMessage({ channel: BRIDGE_CHANNEL, type: 'request', id, fn, args }, BRIDGE.origin);
+    BRIDGE.target.postMessage({ channel: BRIDGE_CHANNEL, type: 'request', id, fn, args }, BRIDGE.origin);
   }));
 }
 
@@ -888,19 +1068,24 @@ function cacheEnvelope(data){
 function readCache(key){
   try {
     const item = JSON.parse(localStorage.getItem(key) || 'null');
-    if (!item || item.version !== APP_CACHE_VERSION || !item.data || Date.now() - item.savedAt > CACHE_MAX_AGE) return null;
+    if (!item || item.version !== APP_CACHE_VERSION || !item.data || Date.now() - item.savedAt > CACHE_MAX_AGE) {
+      // 못 쓰는 캐시는 남겨두지 말고 지운다. 예전에는 판단만 하고 삭제하지 않아
+      // 열어본 달 수만큼 키가 영구 적재됐다.
+      if (item) safeRemove(key);
+      return null;
+    }
     return item.data;
   } catch(e) { return null; }
 }
 
 function saveBootCache(data){
   if (!data) return;
-  localStorage.setItem(BOOT_CACHE_KEY, JSON.stringify(cacheEnvelope(data)));
+  safeSet(BOOT_CACHE_KEY, JSON.stringify(cacheEnvelope(data)), { keepYm: data.ym });
   if (data.ym) saveMonthCache(data.ym, data);
 }
 
 function loadBootCache(){ return readCache(BOOT_CACHE_KEY); }
-function saveMonthCache(ym, data){ localStorage.setItem(MONTH_CACHE_PREFIX + ym, JSON.stringify(cacheEnvelope(data))); }
+function saveMonthCache(ym, data){ safeSet(MONTH_CACHE_PREFIX + ym, JSON.stringify(cacheEnvelope(data)), { keepYm: ym }); }
 function loadMonthCache(ym){ return readCache(MONTH_CACHE_PREFIX + ym); }
 function clearCachedViews(){
   localStorage.removeItem(BOOT_CACHE_KEY);
@@ -915,7 +1100,7 @@ function loadPendingQueue(){
 }
 
 function persistPendingQueue(){
-  localStorage.setItem(PENDING_QUEUE_KEY, JSON.stringify(STATE.pending || []));
+  safeSet(PENDING_QUEUE_KEY, JSON.stringify(STATE.pending || []), { critical: true });
   renderSyncStatus();
 }
 
@@ -995,7 +1180,7 @@ function hydrateSettlementDraft(ym, sharedDraft){
   const local = loadSettlementDraft(ym);
   const merged = mergeSettlementDrafts(ym, sharedDraft, local);
   STATE.settlementDraft = merged;
-  localStorage.setItem(settlementDraftKey(ym), JSON.stringify(merged));
+  safeSet(settlementDraftKey(ym), JSON.stringify(merged), { keepYm: ym });
   return merged;
 }
 function scheduleSettlementDraftSync(draft){
@@ -1014,7 +1199,7 @@ function syncSettlementDraftNow(ym){
       if (res.conflict) hydrateSettlementDraft(ym, serverDraft);
       else {
         STATE.settlementDraft = Object.assign(emptySettlementDraft(ym), serverDraft);
-        localStorage.setItem(settlementDraftKey(ym), JSON.stringify(STATE.settlementDraft));
+        safeSet(settlementDraftKey(ym), JSON.stringify(STATE.settlementDraft), { keepYm: ym });
       }
     }
     STATE.settlementDraftSync = { state:'saved', updatedAt:Date.now() };
@@ -1038,7 +1223,7 @@ function saveSettlementDraft(draft, options){
   if (!opt.keepTime) draft.updatedAt = Date.now();
   draft.cleared = false;
   STATE.settlementDraft = draft;
-  localStorage.setItem(settlementDraftKey(draft.ym), JSON.stringify(draft));
+  safeSet(settlementDraftKey(draft.ym), JSON.stringify(draft), { keepYm: draft.ym, critical: true });
   if (opt.remote !== false) scheduleSettlementDraftSync(draft);
 }
 function clearSettlementDraft(ym){
@@ -1048,7 +1233,9 @@ function clearSettlementDraft(ym){
   if (STATE.settlementDraft && STATE.settlementDraft.ym === ym) STATE.settlementDraft = cleared;
   if (STATE.authToken) api('clearSettlementDraft', ym, STATE.sessionUser || '하콩').catch(() => {});
 }
-function esc(s){ return String(s||'').replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c])); }
+// 홑따옴표까지 반드시 막는다. 예전에는 ' 가 빠져 있어서
+// 카테고리명에 홑따옴표가 들어가면 onclick 문자열이 깨져 칩이 먹통이 됐다.
+function esc(s){ return String(s==null?'':s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])); }
 function emo(cat){
   const m={'식비':'🍔','교통/차량':'🚗','주거/통신':'🏠','쇼핑/문화':'🛍️','경조/이벤트':'🎉','건강/의료':'💊','용돈':'🪙','월급':'💰','상여':'💎','금융수입':'📈','기타수입':'💳'};
   return m[cat]||'🏷️';
@@ -1503,6 +1690,48 @@ function setUserFilter(user){
 function renderMore(){
   const el=document.getElementById('v-more');
   if(!el) return;
+  
+  const perm = (typeof Notification !== 'undefined') ? Notification.permission : 'unsupported';
+  const cfg = STATE.notifSettings || loadNotifSettings();
+  let badgeClass = 'default', badgeText = '알림 꺼짐';
+  if (perm === 'granted' && cfg.enabled) {
+    badgeClass = 'granted'; badgeText = '🔔 알림 켜짐';
+  } else if (perm === 'denied') {
+    badgeClass = 'denied'; badgeText = '🚫 권한 차단됨';
+  } else if (perm === 'unsupported') {
+    badgeClass = 'default'; badgeText = '미지원 기기';
+  }
+
+  const notifs = STATE.notifications || [];
+  const notifHistoryHtml = notifs.length ? `
+    <details class="notif-history">
+      <summary>최근 받은 알림 내역 (${notifs.length}건)</summary>
+      <div style="margin-top:8px;">
+        ${notifs.map(n => `
+          <div class="notif-history-item">
+            <div><strong>${esc(n.title)}</strong><br><span style="color:var(--muted)">${esc(n.body)}</span></div>
+            <small style="color:var(--muted)">${esc(n.date || '')}</small>
+          </div>
+        `).join('')}
+      </div>
+    </details>
+  ` : '';
+
+  const isStandalone = (typeof window !== 'undefined') && (
+    (window.matchMedia && window.matchMedia('(display-mode: standalone)').matches) ||
+    window.navigator.standalone === true
+  );
+  const isIos = (typeof navigator !== 'undefined') && /iphone|ipad|ipod/i.test(navigator.userAgent || '');
+  const pwaTipHtml = (!isStandalone && isIos) ? `
+    <div class="pwa-tip-card">
+      <div class="pwa-tip-icon">📲</div>
+      <div class="pwa-tip-text">
+        <strong>홈 화면에 추가하고 앱처럼 사용해보세요</strong>
+        <span>사파리 하단 공유 버튼(⎋) > [홈 화면에 추가]를 누르면 진짜 앱처럼 알림과 전체화면을 쓸 수 있어요.</span>
+      </div>
+    </div>
+  ` : '';
+
   el.innerHTML = `
     <div class="sec-title" style="margin-top:8px">메뉴</div>
     <div class="more-grid">
@@ -1511,7 +1740,54 @@ function renderMore(){
       <button class="more-item" onclick="switchView('recurring')"><span class="more-icon">🔁</span>정기거래</button>
       ${STATE.aiReady ? '<button class="more-item" onclick="switchView(\'ai\')"><span class="more-icon">🤖</span>AI 분석</button>' : ''}
     </div>
+
+    <div class="notif-card">
+      <div class="notif-head">
+        <div class="notif-title">
+          <span>🔔</span> 스마트 알림 & 웹 푸시
+        </div>
+        <span class="notif-status-badge ${badgeClass}">${badgeText}</span>
+      </div>
+      <p class="notif-desc">
+        고정비 결제 D-Day, 월초 정산 시작, 예산 경고를 기기 알림으로 받아보세요.
+      </p>
+      <div class="notif-action-row">
+        <button type="button" class="notif-btn-main" onclick="toggleMainNotification()">
+          ${cfg.enabled && perm === 'granted' ? '🔕 알림 끄기' : '🔔 알림 활성화하기'}
+        </button>
+        <button type="button" class="notif-btn-test" onclick="sendTestNotificationNow()">
+          테스트 알림
+        </button>
+      </div>
+
+      <div class="notif-options-group">
+        <label class="notif-option-label">
+          <span>🔁 고정비 결제일 알림 (D-Day, D-1)</span>
+          <input type="checkbox" ${cfg.dday !== false ? 'checked' : ''} onchange="updateNotifOption('dday', this.checked)">
+        </label>
+        <label class="notif-option-label">
+          <span>📋 매월 1~5일 월초 정산 안내</span>
+          <input type="checkbox" ${cfg.settlement !== false ? 'checked' : ''} onchange="updateNotifOption('settlement', this.checked)">
+        </label>
+        <label class="notif-option-label">
+          <span>⚠️ 예산 과소비 속도 경고</span>
+          <input type="checkbox" ${cfg.budgetAlert !== false ? 'checked' : ''} onchange="updateNotifOption('budgetAlert', this.checked)">
+        </label>
+      </div>
+      ${notifHistoryHtml}
+    </div>
+
+    ${pwaTipHtml}
     
+    <div class="sec-title" style="margin-top:24px">데이터 백업 및 안전</div>
+    <div class="card" style="padding:16px;">
+      <div style="font-size:14px; font-weight:800; margin-bottom:6px; color:var(--ink)">💾 구글 드라이브 장부 사본 백업</div>
+      <p style="font-size:12.5px; color:var(--muted); margin:0 0 12px 0; line-height:1.5;">현재 가계부 전체 시트의 안전 백업 사본을 구글 드라이브에 즉시 생성합니다.</p>
+      <button type="button" class="btn" id="backupBtn" onclick="triggerManualBackup()" style="width:100%; background:var(--forest); color:#fff; font-weight:800; padding:12px; border-radius:12px;">
+        💾 지금 백업 사본 생성하기
+      </button>
+    </div>
+
     <div class="sec-title" style="margin-top:24px">계정 및 보안</div>
     <div class="card" style="padding:12px;">
       <button onclick="logout()" style="width:100%; padding:12px; font-size:14px; font-weight:800; color:var(--expense); display:flex; align-items:center; justify-content:center; gap:8px;">
@@ -1554,11 +1830,12 @@ function renderRecurring() {
         <div class="s">
           <span class="tag">매월 ${r.day}일</span> 
           <span class="tag">${esc(r.cat)}</span>
+          ${r.user ? `<span class="rec-user-badge">${r.user === '지수' ? '🧔 지수' : '👧 하콩'}</span>` : ''}
           ${r.endYm ? `<span class="tag" style="background:#fbe9e6;color:var(--expense);">~${r.endYm.replace('-','.')} 종료</span>` : ''}
         </div>
       </div>
       <div class="amt ${r.type==='수입'?'in':'out'}">${r.type==='수입'?'+':'-'}${comma(r.amount)}</div>
-      <button type="button" class="edit-tx-btn" title="수정" onclick="editRecurring('${r.id}')">✏️</button>
+      <button type="button" class="edit-tx-btn" title="수정" data-id="${esc(r.id)}" onclick="editRecurring(this.dataset.id)">✏️</button>
     </div>`;
   };
 
@@ -1687,6 +1964,16 @@ function renderList(){
   if (STATE.list.category) {
     txs = txs.filter(t => t.cat === STATE.list.category);
   }
+  const query = String(STATE.list.query || '').trim().toLowerCase();
+  if (query) {
+    txs = txs.filter(t => {
+      const desc = String(t.desc || '').toLowerCase();
+      const cat = String(t.cat || '').toLowerCase();
+      const memo = String(t.memo || '').toLowerCase();
+      const src = String(t.source || '').toLowerCase();
+      return desc.indexOf(query) >= 0 || cat.indexOf(query) >= 0 || memo.indexOf(query) >= 0 || src.indexOf(query) >= 0;
+    });
+  }
   const totalCount = txs.length;
   const pageSize = Number(STATE.list.pageSize || 40);
   const visibleRows = txs.slice(0, pageSize);
@@ -1696,8 +1983,8 @@ function renderList(){
   const filterChipsHtml = cats.map(c => {
     const isSelected = (!STATE.list.category && c === '전체') || (STATE.list.category === c);
     const catVal = c === '전체' ? '' : c;
-    const safeCatVal = String(catVal).replace(/['\\]/g, '');
-    return `<button type="button" class="cat-scroll-chip ${isSelected?'on':''}" onclick="filterByCat('${safeCatVal}')">${c==='전체'?'전체':emo(c)+' '+esc(c)}</button>`;
+    // 예전에는 따옴표를 지워서(replace) 이름 자체가 변형돼 필터가 안 맞았다.
+    return `<button type="button" class="cat-scroll-chip ${isSelected?'on':''}" data-cat="${esc(catVal)}" onclick="filterByCat(this.dataset.cat)">${c==='전체'?'전체':emo(c)+' '+esc(c)}</button>`;
   }).join('');
 
   const rows = visibleRows.length ? txGroupedRows(visibleRows) : `<div class="empty"><span class="e">📭</span>조건에 맞는 거래가 없어</div>`;
@@ -1706,11 +1993,19 @@ function renderList(){
     : '';
 
   const listHeadHtml = `
-    <div class="list-head" style="display:flex;align-items:center;justify-content:space-between;margin:20px 4px 12px">
+    <div class="list-head" style="display:flex;align-items:center;justify-content:space-between;margin:16px 4px 12px">
       <div class="sec-title" style="margin:0; display:flex; align-items:center; gap:8px;">${STATE.userFilter ? STATE.userFilter + ' 거래' : '거래 내역'}
         <button class="user-switch-chip ${STATE.bulkMode?'on':''}" style="font-size:11px; padding:4px 8px; margin:0;" onclick="toggleBulkMode()">☑️ 일괄 편집</button>
       </div>
       <div class="list-count" style="font-size:13px;font-weight:800;color:var(--muted);background:var(--line-soft);padding:3px 10px;border-radius:999px">${totalCount}건</div>
+    </div>
+  `;
+
+  const searchBarHtml = `
+    <div class="list-search-wrap">
+      <span class="search-ic">🔍</span>
+      <input type="text" id="listSearchInput" class="list-search-inp" placeholder="내역, 카테고리, 메모 검색" value="${esc(STATE.list.query || '')}" oninput="handleListSearch(this.value)">
+      ${query ? `<button type="button" class="search-clear-btn" onclick="clearListSearch()" aria-label="검색어 지우기">✕</button>` : ''}
     </div>
   `;
 
@@ -1722,7 +2017,8 @@ function renderList(){
   ` : '';
 
   el.innerHTML = `
-    <div class="cat-scroll-bar" style="margin-top:6px">${filterChipsHtml}</div>
+    ${searchBarHtml}
+    <div class="cat-scroll-bar" style="margin-top:4px">${filterChipsHtml}</div>
     ${listHeadHtml}
     <div class="card">${rows}</div>
     ${loadMore}
@@ -1735,7 +2031,7 @@ function renderAsset(){
   if(!el) return;
   const a=STATE.assets||{items:{},total:0};
   const items = a.items || {};
-  const goal = 100000000;
+  const goal = (typeof getAssetGoal === 'function') ? getAssetGoal() : 100000000;
   const goalPct = Math.min(100, Math.max(0, Math.round(((a.total || 0) / goal) * 100)));
 
   const assetDefs = [
@@ -1786,14 +2082,19 @@ function renderAsset(){
   }
 
   el.innerHTML=`
-    <div class="asset-goal-card">
+    <div class="asset-goal-card" onclick="editAssetGoal()" style="cursor:pointer;" title="클릭하여 목표 금액 변경">
       <div class="asset-goal-head">
-        <span>📈 올해 순자산 목표 (₩100,000,000)</span>
+        <span>📈 올해 순자산 목표 (₩${comma(goal)}) ✏️</span>
         <span class="pct">${goalPct}% 달성</span>
       </div>
       <div class="asset-goal-track">
         <div class="asset-goal-fill" style="width:${goalPct}%"></div>
       </div>
+    </div>
+    <div class="asset-actions-bar">
+      <button type="button" class="btn-snapshot" onclick="takeAssetSnapshotNow()">
+        📸 이번 달(${STATE.ym || todayStr().slice(0,7)}) 순자산 스냅샷 기록하기
+      </button>
     </div>
     <div class="sec-title"> 애플 월렛 자산 현황</div>
     <div class="card" style="margin-bottom:16px">
@@ -1957,23 +2258,48 @@ function renderBudgetItems(items){
   const container = document.getElementById('budgetItemsContainer');
   if(!container) return;
 
-  const cats = ['식비', '교통/차량', '주거/통신', '쇼핑/문화', '경조/이벤트', '건강/의료', '용돈', '기타'];
   const itemMap = {};
   (items || []).forEach(it => {
-    itemMap[it.category || it.cat] = Number(it.budget || it.target || 0);
+    const key = it.category || it.cat;
+    if (key) itemMap[key] = Number(it.budget || it.target || 0);
   });
+
+  // 목록은 ⚙️설정 시트의 지출 카테고리와, 이미 예산이 잡혀 있는 카테고리의 합집합이다.
+  // 하드코딩 목록만 그리던 예전에는 화면에 없는 예산이 저장 한 번에 삭제됐다.
+  const configured = (STATE.config && STATE.config.byType && STATE.config.byType['지출']) || [];
+  const cats = [];
+  const seen = {};
+  configured.concat(Object.keys(itemMap)).forEach(c => {
+    const key = String(c || '').trim();
+    if (key && !seen[key]) { seen[key] = true; cats.push(key); }
+  });
+  if (!cats.length) {
+    container.innerHTML = `<div class="empty"><span class="e">⚙️</span>⚙️설정 시트에 지출 카테고리가 없어</div>`;
+    const t0 = document.getElementById('budgetTotalVal');
+    if (t0) t0.textContent = '₩0';
+    return;
+  }
+
+  const removed = STATE.budgetRemoved || (STATE.budgetRemoved = new Set());
+  // 설정 시트에서 빠졌는데 예산만 남아 있는 카테고리는 눈에 띄게 표시한다.
+  const configuredSet = new Set(configured.map(c => String(c || '').trim()));
 
   let total = 0;
   const rowsHtml = cats.map(c => {
     const val = itemMap[c] || 0;
-    total += val;
+    const isRemoved = removed.has(c);
+    if (!isRemoved) total += val;
+    const orphan = !configuredSet.has(c);
     return `
-      <div class="budget-edit-row">
+      <div class="budget-edit-row${isRemoved ? ' is-removed' : ''}">
         <div class="budget-edit-label">
           <span>${emo(c)}</span>
-          <span>${esc(c)}</span>
+          <span>${esc(c)}${orphan ? ' <small class="budget-orphan-tag">설정에 없음</small>' : ''}</span>
         </div>
-        <input type="text" class="budget-edit-inp" data-cat="${c}" value="${val ? val.toLocaleString('en-US') : ''}" placeholder="0" oninput="handleBudgetInput(this)">
+        <input type="text" class="budget-edit-inp" data-cat="${esc(c)}" ${isRemoved ? 'disabled' : ''}
+               value="${val ? val.toLocaleString('en-US') : ''}" placeholder="0" oninput="handleBudgetInput(this)">
+        <button type="button" class="budget-del-btn" data-cat="${esc(c)}" title="${isRemoved ? '삭제 취소' : '이 예산 삭제'}"
+                aria-label="${esc(c)} 예산 ${isRemoved ? '삭제 취소' : '삭제'}" onclick="toggleBudgetRemove(this)">${isRemoved ? '↩︎' : '🗑'}</button>
       </div>
     `;
   }).join('');
@@ -2136,6 +2462,10 @@ function applyBootData(data){
   STATE.settlement = data.settlement || STATE.settlement;
   if (STATE.settlement && STATE.settlement.ym === STATE.ym) hydrateSettlementDraft(STATE.ym, STATE.settlement.sharedDraft);
   applyGlobalData(data);
+  setTimeout(() => {
+    checkAndDispatchDueNotifications();
+    subscribePushManager();
+  }, 1200);
 }
 
 function applyGlobalData(data){
@@ -2403,7 +2733,7 @@ function renderFormChips(){
   const typeEl = document.getElementById('typeChips');
   if(typeEl){
     typeEl.innerHTML = types.map(t=>
-      `<button type="button" class="chip ${currentType===t?'on':''}" onclick="selectFormChip('type','${t}')">${t}</button>`
+      `<button type="button" class="chip ${currentType===t?'on':''}" data-v="${esc(t)}" onclick="selectFormChip('type',this.dataset.v)">${esc(t)}</button>`
     ).join('');
   }
 
@@ -2414,7 +2744,7 @@ function renderFormChips(){
   const catEl = document.getElementById('catChips');
   if(catEl){
     catEl.innerHTML = cats.map(c=>
-      `<button type="button" class="chip ${currentCat===c?'on':''}" onclick="selectFormChip('cat','${c}')">${emo(c)} ${c}</button>`
+      `<button type="button" class="chip ${currentCat===c?'on':''}" data-v="${esc(c)}" onclick="selectFormChip('cat',this.dataset.v)">${emo(c)} ${esc(c)}</button>`
     ).join('');
   }
 
@@ -2423,7 +2753,7 @@ function renderFormChips(){
     const fixes = ['변동','고정'];
     const currentFix = STATE.form.fixed || '변동';
     fixEl.innerHTML = fixes.map(f=>
-      `<button type="button" class="chip ${currentFix===f?'on':''}" onclick="selectFormChip('fixed','${f}')">${f}</button>`
+      `<button type="button" class="chip ${currentFix===f?'on':''}" data-v="${esc(f)}" onclick="selectFormChip('fixed',this.dataset.v)">${esc(f)}</button>`
     ).join('');
   }
 
@@ -2432,7 +2762,7 @@ function renderFormChips(){
     const users = ['하콩', '지수'];
     const currentUser = STATE.form.user || '하콩';
     userEl.innerHTML = users.map(u=>
-      `<button type="button" class="chip ${currentUser===u?'on':''}" onclick="selectFormChip('user','${u}')">${u==='지수'?'🧔 지수':'👧 하콩'}</button>`
+      `<button type="button" class="chip ${currentUser===u?'on':''}" data-v="${esc(u)}" onclick="selectFormChip('user',this.dataset.v)">${u==='지수'?'🧔 지수':'👧 하콩'}</button>`
     ).join('');
   }
 
@@ -2441,7 +2771,7 @@ function renderFormChips(){
     const moods = ['필수소비','계획소비','충동소비','감성소비','투자성'];
     const currentMood = STATE.form.mood || '';
     moodEl.innerHTML = moods.map(m=>
-      `<button type="button" class="chip ${currentMood===m?'on':''}" onclick="selectFormChip('mood','${m}')">${m}</button>`
+      `<button type="button" class="chip ${currentMood===m?'on':''}" data-v="${esc(m)}" onclick="selectFormChip('mood',this.dataset.v)">${esc(m)}</button>`
     ).join('');
   }
 
@@ -3382,6 +3712,7 @@ function changeMonth(delta){
         document.getElementById('rEndYm').value = '';
         STATE.form.rType = '지출';
         STATE.form.rCat = '식비';
+        STATE.form.rUser = STATE.sessionUser || '하콩';
       }
       
       document.getElementById('recDeleteBtn').style.display = STATE.editingRecurring ? 'block' : 'none';
@@ -3399,7 +3730,7 @@ function changeMonth(delta){
       const currentType = STATE.form.rType || '지출';
       const types = ['지출','수입'];
       document.getElementById('rTypeChips').innerHTML = types.map(t=>
-        `<button type="button" class="chip ${currentType===t?'on':''}" onclick="STATE.form.rType='${t}'; STATE.form.rCat=null; renderRecurringFormChips();">${t}</button>`
+        `<button type="button" class="chip ${currentType===t?'on':''}" data-v="${esc(t)}" onclick="STATE.form.rType=this.dataset.v; STATE.form.rCat=null; renderRecurringFormChips();">${esc(t)}</button>`
       ).join('');
 
       const cfg = STATE.config || { byType:{} };
@@ -3409,8 +3740,17 @@ function changeMonth(delta){
       if(!STATE.form.rCat) STATE.form.rCat = currentCat;
       
       document.getElementById('rCatChips').innerHTML = cats.map(c=>
-        `<button type="button" class="chip ${currentCat===c?'on':''}" onclick="STATE.form.rCat='${c}'; renderRecurringFormChips();">${emo(c)} ${c}</button>`
+        `<button type="button" class="chip ${currentCat===c?'on':''}" data-v="${esc(c)}" onclick="STATE.form.rCat=this.dataset.v; renderRecurringFormChips();">${emo(c)} ${esc(c)}</button>`
       ).join('');
+
+      const rUserEl = document.getElementById('rUserChips');
+      if (rUserEl) {
+        const users = ['하콩', '지수'];
+        const currentRUser = STATE.form.rUser || '하콩';
+        rUserEl.innerHTML = users.map(u =>
+          `<button type="button" class="chip ${currentRUser===u?'on':''}" data-v="${esc(u)}" onclick="STATE.form.rUser=this.dataset.v; renderRecurringFormChips();">${u==='지수'?'🧔 지수':'👧 하콩'}</button>`
+        ).join('');
+      }
     }
 
     function submitRecurring() {
@@ -3436,6 +3776,7 @@ function changeMonth(delta){
         cat: STATE.form.rCat,
         amount: Number(amtStr.replace(/[^0-9]/g, '')),
         day: Number(day),
+        user: STATE.form.rUser || STATE.sessionUser || '하콩',
         enabled: enabled,
         endYm: endYm
       };
@@ -3443,7 +3784,8 @@ function changeMonth(delta){
       closeRecurringModal();
       toast('🔄 고정거래 저장 중...');
       api('saveRecurring', rec).then(res => {
-        STATE.recurrings = res.recurrings;
+        STATE.recurrings = (res && (res.rows || res.recurrings)) || [];
+        if (res && res.status) STATE.recurringStatus = res.status;
         renderRecurring();
         renderHome();
         toast('✅ 저장 완료');
@@ -3474,6 +3816,7 @@ function changeMonth(delta){
       
       STATE.form.rType = rec.type || '지출';
       STATE.form.rCat = rec.cat || '';
+      STATE.form.rUser = rec.user || STATE.sessionUser || '하콩';
       openRecurringModal();
     }
 
@@ -3483,7 +3826,8 @@ function changeMonth(delta){
       closeRecurringModal();
       toast('🔄 삭제 중...');
       api('deleteRecurring', id).then(res => {
-        STATE.recurrings = res.recurrings;
+        STATE.recurrings = (res && (res.rows || res.recurrings)) || [];
+        if (res && res.status) STATE.recurringStatus = res.status;
         renderRecurring();
         renderHome();
         toast('✅ 삭제 완료');
@@ -3542,7 +3886,7 @@ function changeMonth(delta){
         total += Number(item.amount) || 0;
         html += `
           <div style="display:flex; gap:8px; margin-bottom:8px; align-items:center;">
-            <input type="text" class="in-text" value="${item.name}" placeholder="항목명" oninput="STATE.assetEditTemp[${idx}].name=this.value" style="flex:1;">
+            <input type="text" class="in-text" value="${esc(item.name)}" placeholder="항목명" oninput="STATE.assetEditTemp[${idx}].name=this.value" style="flex:1;">
             <input type="text" class="in-text" value="${item.amount?item.amount.toLocaleString('en-US'):''}" placeholder="금액" oninput="updateAssetSubItemAmt(${idx}, this)" style="flex:1;">
             <button class="btn" style="background:var(--expense); color:#fff; padding:0 12px; height:48px;" onclick="removeAssetSubItem(${idx})">✕</button>
           </div>
@@ -3590,7 +3934,7 @@ function changeMonth(delta){
     function submitAssetEdit() {
       const key = STATE.assetEditKey;
       // Filter out empty items
-      const validItems = STATE.assetEditTemp.filter(i => i.name.trim() !== '' || i.amount > 0);
+      const validItems = STATE.assetEditTemp.filter(i => String(i.name || '').trim() !== '' || i.amount > 0);
       
       closeAssetEditModal();
       toast('🔄 자산 업데이트 중...');
@@ -3614,23 +3958,30 @@ function changeMonth(delta){
       document.getElementById('overlay').classList.add('on');
       document.getElementById('bulkCatSheet').classList.add('on');
       
-      const cats = ['식비', '교통/차량', '주거/통신', '쇼핑/문화', '경조/이벤트', '용돈', '기타', '월급', '부수입'];
+      // ⚙️설정 시트를 단일 출처로 쓴다. 하드코딩 목록을 쓰던 예전에는
+      // 설정에 없는 '부수입'·'기타' 같은 유령 카테고리가 만들어졌다.
+      const byType = (STATE.config && STATE.config.byType) || {};
+      const cats = [];
+      const seen = {};
+      (STATE.config && STATE.config.types || ['지출','수입','저축','대출상환']).forEach(t => {
+        (byType[t] || []).forEach(c => {
+          const key = String(c || '').trim();
+          if (key && !seen[key]) { seen[key] = true; cats.push(key); }
+        });
+      });
+      if (!cats.length) {
+        document.getElementById('bulkCatChips').innerHTML =
+          '<div class="empty"><span class="e">⚙️</span>⚙️설정 시트에 카테고리가 없어</div>';
+        STATE.bulkTargetCat = '';
+        return;
+      }
       STATE.bulkTargetCat = cats[0];
-      
-      const renderChips = () => {
-        document.getElementById('bulkCatChips').innerHTML = cats.map(c=>
-          `<button type="button" class="chip ${STATE.bulkTargetCat===c?'on':''}" onclick="STATE.bulkTargetCat='${c}'; document.getElementById('bulkCatChips').innerHTML=''">
-             ${emo(c)} ${c}
-           </button>`
-        ).join('');
-        // Re-bind click via a tiny hack or just use a simpler approach
-      };
-      
-      // Better approach for chips
+
+      // 문자열을 onclick 에 끼워넣지 않는다. 카테고리명에 홑따옴표가 들어가면 깨지기 때문.
       window.selectBulkCat = function(c) {
         STATE.bulkTargetCat = c;
         document.getElementById('bulkCatChips').innerHTML = cats.map(cat=>
-          `<button type="button" class="chip ${STATE.bulkTargetCat===cat?'on':''}" onclick="selectBulkCat('${cat}')">${emo(cat)} ${cat}</button>`
+          `<button type="button" class="chip ${STATE.bulkTargetCat===cat?'on':''}" data-cat="${esc(cat)}" onclick="selectBulkCat(this.dataset.cat)">${emo(cat)} ${esc(cat)}</button>`
         ).join('');
       };
       selectBulkCat(STATE.bulkTargetCat);
@@ -3649,12 +4000,14 @@ function changeMonth(delta){
       
       closeBulkCatModal();
       toast('🔄 변경 및 학습 중...');
-      api('bulkUpdateCategory', { ids: ids, newCat: newCat, ym: STATE.ym }).then(res => {
+      api('bulkUpdateCategory', { ids: ids, newCat: newCat, ym: STATE.ym, user: STATE.sessionUser || '' }).then(res => {
         STATE.bulkMode = false;
-        STATE.bulkSelection.clear();
-        STATE.recent = res.transactions;
-        STATE.transactions = res.transactions;
-        if(res.descDict) STATE.descDict = res.descDict;
+        if (STATE.bulkSelection) STATE.bulkSelection.clear();
+        if (res) {
+          applyMonthData(res);
+          saveMonthCache(res.ym || STATE.ym, res);
+          if (res.descDict) STATE.descDict = res.descDict;
+        }
         renderAll();
         toast('✅ 변경 및 자동분류 학습 완료!');
       }).catch(e => {
@@ -3731,7 +4084,9 @@ function changeMonth(delta){
       rememberDialogTrigger();
       document.getElementById('overlay').classList.add('on');
       document.getElementById('budgetSheet').classList.add('on');
-      
+
+      // 이전에 표시해둔 삭제 예약은 창을 다시 열 때 초기화한다.
+      STATE.budgetRemoved = new Set();
       const rows = (STATE.budget && (STATE.budget.rows || STATE.budget.items)) || [];
       renderBudgetItems(rows);
     }
@@ -3745,14 +4100,45 @@ function changeMonth(delta){
     window.handleBudgetInput = function(inp) {
       const raw = inp.value.replace(/[^0-9]/g, '');
       inp.value = raw ? Number(raw).toLocaleString('en-US') : '';
-      
+      recalcBudgetTotal();
+    };
+
+    function recalcBudgetTotal() {
       let total = 0;
       document.querySelectorAll('.budget-edit-inp').forEach(i => {
+        if (i.disabled) return;
         total += Number(i.value.replace(/[^0-9]/g, '')) || 0;
       });
       const totalEl = document.getElementById('budgetTotalVal');
       if(totalEl) totalEl.textContent = '₩' + total.toLocaleString('en-US');
+    }
+
+    // "0원 입력 = 삭제"라는 숨은 규칙 대신, 삭제를 명시적인 동작으로 만든다.
+    window.toggleBudgetRemove = function(btn) {
+      const cat = btn && btn.dataset ? btn.dataset.cat : '';
+      if (!cat) return;
+      if (!STATE.budgetRemoved) STATE.budgetRemoved = new Set();
+      if (STATE.budgetRemoved.has(cat)) STATE.budgetRemoved.delete(cat);
+      else STATE.budgetRemoved.add(cat);
+      renderBudgetItems(collectBudgetFormItems());
     };
+
+    // 현재 화면에 입력된 값을 renderBudgetItems 가 다시 그릴 수 있는 형태로 모은다.
+    function collectBudgetFormItems() {
+      const items = [];
+      document.querySelectorAll('.budget-edit-inp').forEach(inp => {
+        const cat = inp.dataset.cat;
+        const val = Number(inp.value.replace(/[^0-9]/g, '')) || 0;
+        if (cat) items.push({ category: cat, budget: val });
+      });
+      // 삭제 표시된 행은 입력칸이 disabled 라 값이 비어 보이므로, 기존 예산값을 유지시킨다.
+      const known = new Set(items.map(i => i.category));
+      ((STATE.budget && STATE.budget.items) || []).forEach(it => {
+        const cat = it.category || it.cat;
+        if (cat && !known.has(cat)) items.push({ category: cat, budget: Number(it.budget || 0) });
+      });
+      return items;
+    }
 
     function applyRecommendBudget() {
       toast('💡 과거 소비 데이터 분석 중...');
@@ -3796,25 +4182,288 @@ function changeMonth(delta){
     }
 
     function submitBudget() {
+      const removeCategories = Array.from(STATE.budgetRemoved || []);
+      const removedSet = new Set(removeCategories);
       const items = [];
       document.querySelectorAll('.budget-edit-inp').forEach(inp => {
         const cat = inp.dataset.cat;
         const val = Number(inp.value.replace(/[^0-9]/g, '')) || 0;
-        if(cat && val > 0) {
+        if(cat && val > 0 && !removedSet.has(cat)) {
           items.push({ category: cat, budget: val });
         }
       });
 
       closeBudgetModal();
       toast('🎯 예산 저장 중...');
-      api('updateBudget', STATE.ym, items, { user: STATE.form.user || '하콩' }).then(res => {
+      // mode:'merge' — 화면에 안 그려진 카테고리의 예산은 건드리지 않는다.
+      // 삭제는 removeCategories 로만 일어난다.
+      api('updateBudget', STATE.ym, items, {
+        user: STATE.form.user || '하콩',
+        mode: 'merge',
+        removeCategories: removeCategories
+      }).then(res => {
         STATE.budget = res;
+        if (STATE.budgetRemoved) STATE.budgetRemoved.clear();
         renderHome();
-        toast('✅ 예산이 성공적으로 저장되었어!');
+        toast(removeCategories.length
+          ? '✅ 예산 저장 · ' + removeCategories.length + '개 삭제했어!'
+          : '✅ 예산이 성공적으로 저장되었어!');
       }).catch(err => {
         toast('예산 저장 실패: ' + err.message, true);
       });
     }
+
+/* ============ 🔍 거래 내역 실시간 검색 컨트롤러 ============ */
+let listSearchTimer = null;
+function handleListSearch(query) {
+  STATE.list.query = query;
+  STATE.list.pageSize = 40;
+  clearTimeout(listSearchTimer);
+  listSearchTimer = setTimeout(() => {
+    renderList();
+    const inp = document.getElementById('listSearchInput');
+    if (inp) {
+      inp.focus();
+      const len = inp.value.length;
+      if (inp.setSelectionRange) inp.setSelectionRange(len, len);
+    }
+  }, 80);
+}
+
+function clearListSearch() {
+  STATE.list.query = '';
+  STATE.list.pageSize = 40;
+  renderList();
+  const inp = document.getElementById('listSearchInput');
+  if (inp) inp.focus();
+}
+
+/* ============ 💎 자산 스냅샷 및 맞춤 목표 컨트롤러 ============ */
+function takeAssetSnapshotNow() {
+  const ym = STATE.ym || todayStr().slice(0, 7);
+  toast('📸 ' + ym + ' 순자산 스냅샷 기록 중...');
+  api('saveAssetSnapshot', ym, '웹앱 수동 기록').then(res => {
+    if (res && res.snapshots) STATE.assetSnapshots = res.snapshots;
+    renderAsset();
+    toast('✅ 순자산 스냅샷이 안전하게 기록되었어!');
+  }).catch(err => {
+    toast('스냅샷 기록 실패: ' + (err && err.message), true);
+  });
+}
+
+function editAssetGoal() {
+  const cur = (typeof getAssetGoal === 'function') ? getAssetGoal() : 100000000;
+  const input = prompt('올해 달성할 순자산 목표 금액을 입력해줘 (원 단위):', String(cur));
+  if (input === null) return;
+  const amt = Number(input.replace(/[^0-9]/g, ''));
+  if (amt >= 1000000) {
+    setAssetGoal(amt);
+    renderAsset();
+    toast('🎯 순자산 목표가 ₩' + Number(amt).toLocaleString() + '으로 설정되었어!');
+  } else {
+    toast('100만 원 이상의 유효한 숫자를 입력해줘.', true);
+  }
+}
+
+/* ============ 💾 구글 드라이브 장부 사본 백업 ============ */
+function triggerManualBackup() {
+  const btn = document.getElementById('backupBtn');
+  if (btn) { btn.disabled = true; btn.textContent = '💾 백업 사본 생성 중...'; }
+  toast('💾 구글 드라이브에 장부 사본 백업 생성 중...');
+  api('createBackup').then(res => {
+    toast('✅ 백업 완료! ' + (res.name || '사본 생성됨'));
+    if (res && res.url) {
+      if (confirm('백업 파일이 생성되었어!\n\n파일명: ' + res.name + '\n지금 구글 드라이브에서 열어볼까?')) {
+        window.open(res.url, '_blank');
+      }
+    }
+  }).catch(err => {
+    toast('백업 실패: ' + (err && err.message), true);
+  }).finally(() => {
+    if (btn) { btn.disabled = false; btn.textContent = '💾 지금 백업 사본 생성하기'; }
+  });
+}
+
+/* ============ 🔔 웹 푸시 및 스마트 알림 컨트롤러 ============ */
+
+function dispatchNotification(title, options) {
+  options = options || {};
+  const notifObj = {
+    title: title,
+    body: options.body || '',
+    date: new Date().toLocaleTimeString('ko-KR', { hour: '2-digit', minute: '2-digit' })
+  };
+  STATE.notifications = [notifObj].concat(STATE.notifications || []).slice(0, 30);
+  
+  if (typeof Notification === 'undefined' || Notification.permission !== 'granted') {
+    toast(title + ': ' + notifObj.body);
+    return Promise.resolve(null);
+  }
+
+  const fullOptions = Object.assign({
+    icon: '/icons/icon-192.png',
+    badge: '/icons/icon-192.png',
+    vibrate: [100, 50, 100],
+    tag: options.tag || 'sey-notif-' + Date.now(),
+    data: { url: options.url || '/app.html' }
+  }, options);
+
+  if ('serviceWorker' in navigator && navigator.serviceWorker.ready) {
+    return navigator.serviceWorker.ready.then(reg => {
+      if (reg && reg.showNotification) return reg.showNotification(title, fullOptions);
+      return new Notification(title, fullOptions);
+    }).catch(() => {
+      try { return new Notification(title, fullOptions); } catch(e) { return null; }
+    });
+  } else {
+    try {
+      return Promise.resolve(new Notification(title, fullOptions));
+    } catch(e) {
+      toast(title + ': ' + notifObj.body);
+      return Promise.resolve(null);
+    }
+  }
+}
+
+function requestNotificationPermission() {
+  if (typeof Notification === 'undefined') {
+    toast('현재 브라우저는 알림 기능을 지원하지 않아요.', true);
+    return Promise.resolve('unsupported');
+  }
+
+  return Notification.requestPermission().then(permission => {
+    STATE.notifPermission = permission;
+    if (permission === 'granted') {
+      STATE.notifSettings.enabled = true;
+      saveNotifSettings(STATE.notifSettings);
+      toast('🔔 알림이 정상적으로 켜졌어요!');
+      subscribePushManager();
+      dispatchNotification('🔔 sey콩콩 가계부 알림 켜짐', {
+        body: '고정비 결제일과 월초 정산 알림을 기기에서 알려드릴게요.',
+        tag: 'welcome_notif'
+      });
+      renderMore();
+    } else if (permission === 'denied') {
+      STATE.notifSettings.enabled = false;
+      saveNotifSettings(STATE.notifSettings);
+      toast('알림 권한이 차단되었어요. 브라우저 설정에서 권한을 허용해줘.', true);
+      renderMore();
+    }
+    return permission;
+  });
+}
+
+function subscribePushManager() {
+  if (!('serviceWorker' in navigator) || !navigator.serviceWorker.ready) return;
+  navigator.serviceWorker.ready.then(reg => {
+    if (!reg.pushManager) return;
+    return reg.pushManager.getSubscription().then(existing => {
+      if (existing) {
+        if (STATE.authToken) {
+          api('savePushSubscription', existing.toJSON ? existing.toJSON() : existing, STATE.sessionUser || '하콩').catch(()=>{});
+        }
+      }
+    });
+  }).catch(()=>{});
+}
+
+function toggleMainNotification() {
+  const perm = (typeof Notification !== 'undefined') ? Notification.permission : 'unsupported';
+  if (perm !== 'granted') {
+    requestNotificationPermission();
+  } else {
+    STATE.notifSettings.enabled = !STATE.notifSettings.enabled;
+    saveNotifSettings(STATE.notifSettings);
+    renderMore();
+    toast(STATE.notifSettings.enabled ? '🔔 알림을 켰어요.' : '🔕 알림을 껐어요.');
+  }
+}
+
+function updateNotifOption(key, val) {
+  STATE.notifSettings[key] = val;
+  saveNotifSettings(STATE.notifSettings);
+  toast('알림 옵션이 저장되었어요.');
+}
+
+function sendTestNotificationNow() {
+  const perm = (typeof Notification !== 'undefined') ? Notification.permission : 'unsupported';
+  if (perm !== 'granted') {
+    requestNotificationPermission().then(p => {
+      if (p === 'granted') {
+        dispatchNotification('🔔 sey콩콩 가계부 테스트 알림', {
+          body: '알림 기능이 성공적으로 연결되었습니다!',
+          tag: 'test_notif_' + Date.now()
+        });
+      }
+    });
+    return;
+  }
+  dispatchNotification('🔔 sey콩콩 가계부 테스트 알림', {
+    body: '알림 기능이 완벽하게 작동 중입니다!',
+    tag: 'test_notif_' + Date.now()
+  });
+  if (STATE.authToken) {
+    api('sendNotificationTest', STATE.sessionUser || '하콩').catch(()=>{});
+  }
+  toast('테스트 알림을 보냈어요.');
+}
+
+function checkAndDispatchDueNotifications() {
+  if (!STATE.notifSettings || !STATE.notifSettings.enabled) return;
+  if (typeof Notification === 'undefined' || Notification.permission !== 'granted') return;
+
+  const now = new Date();
+  const currentDay = now.getDate();
+  const todayDateStr = todayStr();
+  const ym = STATE.ym || todayDateStr.slice(0, 7);
+
+  // 1. 고정비 결제 D-Day / D-1 알림
+  if (STATE.notifSettings.dday !== false && Array.isArray(STATE.recurrings)) {
+    STATE.recurrings.forEach(r => {
+      if (r.enabled === false) return;
+      const dueDay = Number(r.day || 0);
+      if (dueDay === currentDay) {
+        const notifKey = 'rec_dday_' + r.id + '_' + todayDateStr;
+        if (!isAlreadyNotified(notifKey, todayDateStr)) {
+          dispatchNotification('🔔 오늘 고정비 결제일 (' + (r.name || r.cat) + ')', {
+            body: (r.name || r.cat) + ' ' + fmt(r.amount || 0) + '이 오늘 결제/출금돼요.',
+            tag: notifKey,
+            url: '/app.html?tab=recurring'
+          });
+          markAsNotified(notifKey, todayDateStr);
+        }
+      } else if (dueDay === currentDay + 1) {
+        const notifKey = 'rec_d1_' + r.id + '_' + todayDateStr;
+        if (!isAlreadyNotified(notifKey, todayDateStr)) {
+          dispatchNotification('⏰ 내일 고정비 결제 예정 (' + (r.name || r.cat) + ')', {
+            body: (r.name || r.cat) + ' ' + fmt(r.amount || 0) + '이 내일 결제될 예정이에요.',
+            tag: notifKey,
+            url: '/app.html?tab=recurring'
+          });
+          markAsNotified(notifKey, todayDateStr);
+        }
+      }
+    });
+  }
+
+  // 2. 월초 정산 안내 (매월 1~5일)
+  if (STATE.notifSettings.settlement !== false && currentDay >= 1 && currentDay <= 5) {
+    const prevYmParts = ym.split('-');
+    const prevMonth = Number(prevYmParts[1]) - 1;
+    const prevYm = prevMonth === 0 ? `${Number(prevYmParts[0]) - 1}-12` : `${prevYmParts[0]}-${String(prevMonth).padStart(2, '0')}`;
+    const settlementKey = 'settlement_alert_' + prevYm + '_' + todayDateStr;
+    if (!isAlreadyNotified(settlementKey, todayDateStr)) {
+      if (!STATE.settlement || !STATE.settlement.isClosed) {
+        dispatchNotification('📋 ' + prevYm + ' 월초 정산 안내', {
+          body: '지난달 카드 명세서 대사와 투자 평가액을 맞추고 정산을 진행해줘.',
+          tag: settlementKey,
+          url: '/app.html?tab=home'
+        });
+        markAsNotified(settlementKey, todayDateStr);
+      }
+    }
+  }
+}
 
 function bindApp(){
   document.querySelectorAll('.tab[data-view]').forEach(t=>
@@ -3877,6 +4526,7 @@ function bindApp(){
   document.addEventListener('visibilitychange', () => {
     if (document.visibilityState === 'visible' && STATE.authToken) {
       flushPendingQueue();
+      checkAndDispatchDueNotifications();
       const todayYm = todayStr().slice(0,7);
       if (STATE.currentYm && STATE.currentYm !== todayYm) {
         STATE.monthMode = 'auto';
@@ -3894,7 +4544,7 @@ function bindApp(){
   });
 
   if ('serviceWorker' in navigator && location.protocol.indexOf('http') === 0 && !/google(?:usercontent)?\.com$/.test(location.hostname)) {
-    navigator.serviceWorker.register('/sw.js').catch(()=>{});
+    navigator.serviceWorker.register('/sw.js').then(() => subscribePushManager()).catch(()=>{});
   }
 
   const addBtn = document.getElementById('addBtn');
@@ -3952,8 +4602,15 @@ function bindApp(){
       } else {
         if (hint) hint.innerHTML = '';
         if (val && !STATE.form.catManual) {
-          STATE.form.cat = '기타';
-          renderFormChips();
+          // 예전에는 무조건 '기타'로 되돌렸는데, ⚙️설정 시트에 '기타'가 없으면
+          // 어떤 칩도 선택되지 않은 채 유령 카테고리로 저장됐다.
+          // 설정에 있는 값 중에서만 고르고, 없으면 현재 선택을 그대로 둔다.
+          const cats = ((STATE.config && STATE.config.byType) || {})[STATE.form.type || '지출'] || [];
+          const fallback = cats.indexOf('기타') > -1 ? '기타' : (cats.indexOf(STATE.form.cat) > -1 ? STATE.form.cat : cats[0]);
+          if (fallback && fallback !== STATE.form.cat) {
+            STATE.form.cat = fallback;
+            renderFormChips();
+          }
         }
       }
     });
