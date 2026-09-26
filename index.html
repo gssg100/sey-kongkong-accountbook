@@ -3,7 +3,7 @@
 <head>
 <base target="_top">
 <meta charset="utf-8">
-<meta name="app-version" content="2.0.0">
+<meta name="app-version" content="2.1.0">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, interactive-widget=resizes-content">
 <meta name="description" content="지수와 하콩이의 빠르고 편한 공동 가계부">
 <meta name="theme-color" content="#f5f5f7">
@@ -556,6 +556,33 @@ body.dark-mode .app-info-server.warn{color:var(--gold)}
 .app-release-head span{font-size:11.5px;color:var(--muted);font-weight:700}
 .app-release ul{margin:6px 0 0 16px;font-size:12px;color:var(--muted);line-height:1.55}
 .wallet-hint{margin-top:8px;font-size:11px;font-weight:700;color:var(--forest);opacity:.85;text-align:left}
+.app-info-card{scroll-margin-top:96px}
+
+/* 🧾 정산 입구 · 정산 화면 */
+.settlement-entry{width:100%;margin-bottom:14px;padding:14px 16px;display:flex;align-items:center;justify-content:space-between;gap:12px;text-align:left;border-radius:18px;background:var(--gold-soft);border:1px solid color-mix(in srgb,var(--gold) 45%,var(--line));color:var(--ink);box-shadow:var(--shadow)}
+.settlement-entry strong{display:block;font-size:14px;font-weight:850}
+.settlement-entry span{display:block;margin-top:2px;font-size:12px;color:var(--muted);font-weight:650}
+.settlement-entry .go{flex-shrink:0;margin:0;padding:8px 12px;border-radius:12px;background:var(--ink);color:var(--card);font-size:12.5px;font-weight:850}
+.settlement-back{margin:0 0 12px;padding:8px 12px;border-radius:12px;background:var(--line-soft);color:var(--ink);font-size:13px;font-weight:800}
+.settlement-close-warn{margin:12px 0 0;padding:10px 12px;border-radius:12px;background:var(--gold-soft);color:#b15c00;font-size:12.5px;font-weight:750}
+body.dark-mode .settlement-close-warn{color:var(--gold)}
+.settlement-close-card .primary.close:disabled{opacity:.6;cursor:wait}
+.more-badge{display:inline-block;margin-left:4px;padding:1px 6px;border-radius:999px;background:var(--expense);color:#fff;font-size:10px;font-weight:850;vertical-align:middle}
+
+/* 🧾 내역 구분별 합계 탭 */
+.list-type-summary{display:flex;gap:8px;overflow-x:auto;margin:6px 0 8px;padding:2px 0 4px;scrollbar-width:none}
+.list-type-summary::-webkit-scrollbar{display:none}
+.lts-item{flex:1 0 auto;min-width:86px;padding:10px 12px;border-radius:14px;background:var(--card);border:1px solid var(--line);text-align:left;display:flex;flex-direction:column;gap:1px;box-shadow:var(--shadow);transition:border-color .15s,background .15s}
+.lts-label{font-size:11.5px;font-weight:800;color:var(--muted)}
+.lts-amt{font-size:15px;font-weight:900;letter-spacing:-.02em;font-variant-numeric:tabular-nums;color:var(--ink)}
+.lts-item small{font-size:10.5px;font-weight:700;color:var(--muted)}
+.lts-item.out .lts-amt{color:var(--expense)}
+.lts-item.in .lts-amt{color:var(--income)}
+.lts-item.save .lts-amt{color:var(--gold)}
+.lts-item.on{border-color:var(--ink);background:color-mix(in srgb,var(--ink) 6%,var(--card));box-shadow:0 0 0 1px var(--ink) inset}
+.list-cat-total{margin:8px 4px 0;padding:10px 12px;border-radius:12px;background:var(--line-soft);font-size:13px;font-weight:750;color:var(--ink);display:flex;flex-wrap:wrap;align-items:baseline;gap:6px}
+.list-cat-total strong{font-size:15px;font-variant-numeric:tabular-nums}
+.list-cat-total span{font-size:11.5px;color:var(--muted);font-weight:700}
 
 @media (max-width:760px){.settlement-hero{padding:20px;border-radius:20px}.settlement-closed-note{align-items:flex-start;flex-direction:column}.settlement-metrics{grid-template-columns:1fr}.settlement-section-head{align-items:flex-start}.settlement-section-head>div:first-child{align-items:flex-start}.settlement-actions{justify-content:flex-start}.settlement-grid-main{grid-template-columns:repeat(2,minmax(0,1fr))}.settlement-grid-main .settlement-desc{grid-column:span 2}.settlement-savebar{align-items:stretch;flex-direction:column}.settlement-savebar .primary{width:100%}.recon-row{grid-template-columns:1fr 1fr}.recon-row>div:first-child,.recon-row .recon-reason,.recon-diff{grid-column:span 2}.recon-diff{justify-content:flex-start;height:auto;min-height:20px}.investment-row{grid-template-columns:repeat(2,minmax(0,1fr))}.investment-row>input{grid-column:span 2}.investment-row .valuation{justify-content:flex-start}.holding-row{grid-template-columns:repeat(2,minmax(0,1fr))}.holding-row>input:first-child,.holding-row>input:nth-child(3){grid-column:span 2}.holding-row .valuation{justify-content:flex-start}.settlement-close-card{padding:18px}}
 
@@ -631,6 +658,7 @@ body.dark-mode .app-info-server.warn{color:var(--gold)}
     <section class="view" id="v-ai"></section>
     <section class="view" id="v-review"></section>
     <section class="view" id="v-more"></section>
+    <section class="view" id="v-settlement"></section>
   </main>
 
   <nav class="tabbar" aria-label="주요 메뉴">
@@ -831,9 +859,9 @@ body.dark-mode .app-info-server.warn{color:var(--gold)}
 <script>
 /* ============ 앱 글로벌 상태 (Store) ============ */
 /* @release:start — pwa-site/scripts/build-static.mjs 가 release.json 을 보고 자동으로 채운다. 손으로 고치지 말 것. */
-const APP_VERSION = '2.0.0';
-const APP_BUILT_AT = '2026-09-26T17:44:51+09:00';
-const APP_RELEASE_NOTES = [{"version":"2.0.0","date":"2026-09-26T17:44:51+09:00","notes":["앱 버전 표시 추가 — 새 버전이 적용되면 화면 위에 알려줘요","자산: 보물창고 '비상금'이 저장 후 0원으로 되돌아가던 문제 수정","자산: 항목을 전부 지워도 옛 금액이 다시 살아나던 문제 수정","자산: 한 줄로 합쳐진 항목은 수정 창에서 원본(8/2) 세부항목을 불러와 확인 후 저장","자주 쓰는 거래 버튼이 이름에 따옴표가 있으면 눌리지 않던 문제 수정","보안: 누구나 볼 수 있던 화면 코드에서 자산 금액 정보 제거"]}];
+const APP_VERSION = '2.1.0';
+const APP_BUILT_AT = '2026-09-26T18:01:20+09:00';
+const APP_RELEASE_NOTES = [{"version":"2.1.0","date":"2026-09-26T18:01:20+09:00","notes":["정산 마감이 안 되던 문제 수정 — 응답 대기 20초 → 3분, 늦어져도 실제 마감 여부를 다시 확인","앱이 항상 이번 달로 열려요 — 지난달 정산은 홈 맨 위 '정산하기' 카드와 더보기 > 월 정산에서","내역: 지출·수입·저축 탭에 합계 금액 표시, 분류를 고르면 분류 합계와 비중까지","정산: 저장 안 한 대사·투자값을 마감 전에 자동 저장, 체크 항목이 화면 갱신에도 유지","정산: 빈 초안 행은 자동 정리, 다음 달 예산 덮어쓰기를 거절해도 마감은 진행"]},{"version":"2.0.0","date":"2026-09-26T17:44:51+09:00","notes":["앱 버전 표시 추가 — 새 버전이 적용되면 화면 위에 알려줘요","자산: 보물창고 '비상금'이 저장 후 0원으로 되돌아가던 문제 수정","자산: 항목을 전부 지워도 옛 금액이 다시 살아나던 문제 수정","자산: 한 줄로 합쳐진 항목은 수정 창에서 원본(8/2) 세부항목을 불러와 확인 후 저장","자주 쓰는 거래 버튼이 이름에 따옴표가 있으면 눌리지 않던 문제 수정","보안: 누구나 볼 수 있던 화면 코드에서 자산 금액 정보 제거"]}];
 /* @release:end */
 const DEFAULT_GAS_URL = 'https://script.google.com/macros/s/AKfycbwjFv7OSDc6T4vD0nUQA5E-W1QazAEU5dowQroEXard5DCMtP0FiMRlwtIjuEfDzo8phA/exec';
 const APP_CACHE_VERSION = 5;
@@ -1050,21 +1078,34 @@ function bridgeCall(fn, args, timeoutMs){
   }));
 }
 
+// 서버에서 오래 걸리는 작업은 기본 20초로 끊으면 안 된다.
+// 예전에는 정산 마감(설정·거래·자산·예산을 차례로 읽고 쓰는 작업)이 20초를 넘기면
+// 서버는 계속 마감하는데 화면은 "실패"로 끝나, 마감이 안 되는 것처럼 보였다.
+const API_TIMEOUTS = {
+  finalizeSettlementMonth: 180000, closeMonth: 180000, createBackup: 120000, runAiAnalysis: 90000,
+  addTransactionsFast: 60000, syncInvestmentToAssets: 60000, saveReconciliations: 45000,
+  saveInvestmentMonthly: 45000, saveInvestmentHoldings: 45000, getSettlementData: 45000,
+  createSessionAndGetBoot: 45000, getBoot: 45000, revertSettlementBatch: 60000, bulkUpdateCategory: 60000
+};
+function apiTimeout(fn){ return API_TIMEOUTS[fn] || 20000; }
+function isTimeoutError(err){ return /시간이 초과/.test((err && err.message) || ''); }
+
 function srv(fn){ return function(){
   const args = Array.prototype.slice.call(arguments);
+  const timeoutMs = apiTimeout(fn);
   if (typeof google !== 'undefined' && google.script && google.script.run) {
     return new Promise((resolve, reject)=>{
       let settled = false;
       const timer = setTimeout(() => {
         if (!settled) { settled = true; reject(new Error('장부 응답 시간이 초과됐어.')); }
-      }, 20000);
+      }, timeoutMs);
       const runner = google.script.run
         .withSuccessHandler(data => { if (!settled) { settled = true; clearTimeout(timer); resolve(data); } })
         .withFailureHandler(err => { if (!settled) { settled = true; clearTimeout(timer); reject(err instanceof Error ? err : new Error((err && err.message) || String(err))); } });
       runner[fn].apply(runner,args);
     });
   }
-  return bridgeCall(fn, args, 20000);
+  return bridgeCall(fn, args, timeoutMs);
 }; }
 
 function api(fn){
@@ -1426,9 +1467,37 @@ function settlementTxRow(row, index){
   </div>`;
 }
 
+/** 정산 전용 화면. 홈을 대신하지 않고 따로 연다. */
+function renderSettlementView(){
+  const el = document.getElementById('v-settlement');
+  if (!el) return;
+  const settlement = STATE.settlement || {};
+  const todayYm = (STATE.currentYm || todayStr().slice(0,7));
+  const back = `<button type="button" class="settlement-back" onclick="switchView('home')">‹ 홈으로</button>`;
+  if (!settlement.ym || settlement.ym !== STATE.ym) {
+    el.innerHTML = back + `<div class="settlement-empty"><strong>${esc(STATE.ym)} 정산 정보를 불러오는 중이에요…</strong></div>`;
+    return;
+  }
+  if (STATE.ym >= todayYm) {
+    const pending = STATE.pendingSettlementYm;
+    el.innerHTML = back + `<div class="settlement-empty"><strong>정산은 달이 끝난 뒤에 해요.</strong>
+      <span>${pending ? esc(pending) + ' 정산이 남아 있어요.' : '지금은 마감할 지난달이 없어요.'}</span>
+      ${pending ? `<div class="settlement-actions" style="justify-content:center;margin-top:12px"><button type="button" data-ym="${esc(pending)}" onclick="openSettlement(this.dataset.ym)">${esc(pending)} 정산하기</button></div>` : ''}</div>`;
+    return;
+  }
+  if (settlement.isClosed) {
+    el.innerHTML = back + `<div class="settlement-closed-note"><div><strong>${esc(STATE.ym)} 정산은 마감됐어요.</strong><span>수정이 필요하면 정산을 다시 열 수 있어요. 변경 기록은 남습니다.</span></div><button type="button" onclick="reopenSettlement()">정산 다시 열기</button></div>`;
+    return;
+  }
+  const wrap = { innerHTML: '' };
+  renderSettlementHome(wrap);
+  el.innerHTML = back + wrap.innerHTML;
+}
+
 function renderSettlementHome(el){
   const settlement = STATE.settlement || {};
   const draft = settlementDraftForCurrent();
+  const ck = (typeof settlementChecklist === 'function') ? settlementChecklist() : { budget:true };
   const reconRows = mergedReconciliations(settlement, draft);
   const investmentRows = mergedInvestments(settlement, draft);
   const holdingRows = mergedInvestmentHoldings(settlement, draft);
@@ -1506,24 +1575,23 @@ function renderSettlementHome(el){
       <div class="settlement-section-head"><div><span class="settlement-step">4</span><h2>${STATE.ym} 마감</h2></div></div>
       <p>마감 전 확인 항목을 남겨두면, 다음 달에 다시 봐도 결산 기준이 분명해요.</p>
       <div class="settlement-checklist">
-        <label><input id="settlementCheckTransactions" type="checkbox"> 거래 초안을 모두 확정했고 누락을 확인했어요</label>
-        <label><input id="settlementCheckReconciliation" type="checkbox" ${reconciliationIssues===0?'checked':''}> 카드·계좌 대사 차이를 확인했어요</label>
-        <label><input id="settlementCheckInvestments" type="checkbox"> 투자 월말값을 입력했거나 이번 달에는 해당 없어요</label>
-        <label><input id="settlementCheckBudget" type="checkbox" checked> ${STATE.ym} 예산을 다음 달 예산의 시작값으로 복사</label>
-        ${reconciliationIssues ? '<label class="settlement-check-reason">대사 차이 마감 사유<input id="settlementReconciliationReason" placeholder="예: 결제일 차이, 다음 달 반영"></label>' : ''}
+        <label><input id="settlementCheckTransactions" type="checkbox" ${ck.transactions?'checked':''} onchange="setSettlementCheck('transactions',this.checked)"> 거래 초안을 모두 확정했고 누락을 확인했어요</label>
+        <label><input id="settlementCheckInvestments" type="checkbox" ${ck.investments?'checked':''} onchange="setSettlementCheck('investments',this.checked)"> 투자 월말값을 입력했거나 이번 달에는 해당 없어요</label>
+        <label><input id="settlementCheckBudget" type="checkbox" ${ck.budget!==false?'checked':''} onchange="setSettlementCheck('budget',this.checked)"> ${STATE.ym} 예산을 다음 달 예산의 시작값으로 복사</label>
+        ${reconciliationIssues ? `<label class="settlement-check-reason">대사가 안 맞는 곳 ${reconciliationIssues}곳 · 그대로 마감할 사유<input id="settlementReconciliationReason" value="${esc(ck.reason || '')}" placeholder="예: 결제일 차이, 다음 달 반영" oninput="setSettlementCheck('reason',this.value)"></label>` : ''}
       </div>
-      <button type="button" class="primary close" onclick="finalizeSettlement()">${STATE.ym} 정산 마감</button>
+      ${draft.rows.length ? `<p class="settlement-close-warn">⚠️ 확정 저장하지 않은 거래 초안 ${draft.rows.length}건이 있어요. 1단계에서 먼저 저장해줘요.</p>` : ''}
+      <button type="button" class="primary close" id="settlementCloseBtn" onclick="finalizeSettlement()" ${STATE.settlementClosing?'disabled':''}>${STATE.settlementClosing ? '마감 처리 중… (최대 1~2분)' : STATE.ym + ' 정산 마감'}</button>
     </section>
   `;
 }
 
 function renderHome(){
+  // 정산 작업 함수들은 끝나고 renderHome() 을 부른다. 정산 화면이 열려 있으면 그쪽을 다시 그린다.
+  const settleView = document.getElementById('v-settlement');
+  if (settleView && settleView.classList && settleView.classList.contains('on')) renderSettlementView();
   const el=document.getElementById('v-home');
   if(!el) return;
-  if (STATE.settlement && STATE.settlement.showWorkspace && !STATE.settlement.isClosed) {
-    renderSettlementHome(el);
-    return;
-  }
   const keepInsightsOpen = !!(el.querySelector('#homeInsights') && el.querySelector('#homeInsights').open);
   if(!STATE.summary) {
     el.innerHTML = `
@@ -1548,6 +1616,15 @@ function renderHome(){
   const closedMonthHtml = (STATE.settlement && STATE.settlement.isClosed && isPastMonth) ? `
     <div class="settlement-closed-note"><div><strong>${STATE.ym} 정산을 마감했어요.</strong><span>수정이 필요하면 정산을 다시 열 수 있어요. 변경 기록은 남습니다.</span></div><button type="button" onclick="reopenSettlement()">정산 다시 열기</button></div>
   ` : '';
+  // 마감 안 된 달이 있으면 홈 맨 위에 입구만 둔다. (예전에는 홈 전체가 정산 양식으로 바뀌었다)
+  // 서버가 알려준 "마감 안 된 지난달" 하나만 안내한다. (정산 기능 이전의 옛 달까지 매번 띄우지 않는다)
+  const settleYm = STATE.pendingSettlementYm || '';
+  const settleParts = settleYm ? settleYm.split('-') : [];
+  const settlementEntryHtml = settleYm ? `
+    <button type="button" class="settlement-entry" data-ym="${esc(settleYm)}" onclick="openSettlement(this.dataset.ym)">
+      <div><strong>📋 ${Number(settleParts[1])}월 정산이 아직 안 끝났어요</strong><span>거래·카드 대사·투자값을 맞추고 마감해요</span></div>
+      <span class="go">정산하기 ›</span>
+    </button>` : '';
   const cats = s.cats || [];
   const maxCat = cats.length? cats[0].amt : 1;
   const topCats = cats.slice(0,3);
@@ -1698,6 +1775,7 @@ function renderHome(){
   }).join('') : '';
 
   el.innerHTML = `
+    ${settlementEntryHtml}
     ${closedMonthHtml}
     ${switcherHtml}
     <div class="balance">
@@ -1853,6 +1931,7 @@ function renderMore(){
   el.innerHTML = `
     <div class="sec-title" style="margin-top:8px">메뉴</div>
     <div class="more-grid">
+      <button class="more-item" onclick="openSettlement()"><span class="more-icon">🧾</span>월 정산${STATE.pendingSettlementYm ? ' <small class="more-badge">남음</small>' : ''}</button>
       <button class="more-item" onclick="switchView('review')"><span class="more-icon">📋</span>월정리 · 회고</button>
       <button class="more-item" onclick="openBudgetModal()"><span class="more-icon">🎯</span>예산 관리</button>
       <button class="more-item" onclick="switchView('recurring')"><span class="more-icon">🔁</span>정기거래</button>
@@ -2042,21 +2121,23 @@ function txRow(t){
   </div>`;
 }
 
-function txGroupedRows(list){
+function txGroupedRows(list, sumType){
   if(!list || !list.length) return '';
+  // 구분을 골랐으면 날짜별 합계도 그 구분 기준으로 보여준다. (수입을 보는데 "지출 0원"이 뜨지 않게)
+  const dayType = sumType || '지출';
   const groups = {};
   const dates = [];
   list.forEach(t=>{
     const d = t.date || '기타';
-    if(!groups[d]){ groups[d] = { rows:[], daySpent:0 }; dates.push(d); }
+    if(!groups[d]){ groups[d] = { rows:[], daySum:0 }; dates.push(d); }
     groups[d].rows.push(t);
-    if(t.type === '지출') groups[d].daySpent += Number(t.amount||0);
+    if(t.type === dayType) groups[d].daySum += Number(t.amount||0);
   });
   return dates.map(d=>{
     const g = groups[d];
     const header = `<div class="date-group-header">
       <span class="date-title">${formatDateTitle(d)}</span>
-      <span class="date-total">${g.daySpent > 0 ? '지출 ' + comma(g.daySpent) + '원' : ''}</span>
+      <span class="date-total">${g.daySum > 0 ? dayType + ' ' + comma(g.daySum) + '원' : ''}</span>
     </div>`;
     const rowsHtml = g.rows.map(txRow).join('');
     return header + rowsHtml;
@@ -2088,13 +2169,6 @@ function renderList(){
   if (STATE.userFilter) {
     txs = txs.filter(t => t.user === STATE.userFilter);
   }
-  const selectedType = STATE.list.type || '';
-  if (selectedType) {
-    txs = txs.filter(t => t.type === selectedType);
-  }
-  if (STATE.list.category) {
-    txs = txs.filter(t => t.cat === STATE.list.category);
-  }
   const query = String(STATE.list.query || '').trim().toLowerCase();
   if (query) {
     txs = txs.filter(t => {
@@ -2105,21 +2179,52 @@ function renderList(){
       return desc.indexOf(query) >= 0 || cat.indexOf(query) >= 0 || memo.indexOf(query) >= 0 || src.indexOf(query) >= 0;
     });
   }
+  // 구분별 합계는 구분·분류 필터를 걸기 전 목록 기준이다. 그래야 "지출"을 눌러도 수입 합계가 같이 보인다.
+  const typeTotals = {};
+  txs.forEach(t => {
+    const k = t.type || '미분류';
+    if (!typeTotals[k]) typeTotals[k] = { amount: 0, count: 0 };
+    typeTotals[k].amount += Number(t.amount || 0);
+    typeTotals[k].count++;
+  });
+  const allCount = txs.length;
+  const selectedType = STATE.list.type || '';
+  if (selectedType) {
+    txs = txs.filter(t => t.type === selectedType);
+  }
+  const typeCount = txs.length;
+  const typeAmount = txs.reduce((a, t) => a + Number(t.amount || 0), 0);
+  if (STATE.list.category) {
+    txs = txs.filter(t => t.cat === STATE.list.category);
+  }
   const totalCount = txs.length;
   const pageSize = Number(STATE.list.pageSize || 40);
   const visibleRows = txs.slice(0, pageSize);
 
-  // 구분 탭 칩: 전체, 지출, 수입, 저축
-  const typeChipsList = ['', '지출', '수입', '저축'];
+  // 구분 요약 탭: 누르면 그 구분만 보이고, 금액 합계가 탭 안에 바로 보인다.
+  const typeTabs = [
+    { t: '', label: '전체', cls: '' },
+    { t: '지출', label: '지출', cls: 'out' },
+    { t: '수입', label: '수입', cls: 'in' },
+    { t: '저축', label: '저축·투자', cls: 'save' },
+    { t: '대출상환', label: '대출상환', cls: 'repay' }
+  ].filter(x => !x.t || x.t === '지출' || x.t === '수입' || (typeTotals[x.t] && typeTotals[x.t].count) || selectedType === x.t);
   const typeChipsHtml = `
-    <div class="user-switcher-strip" style="margin:4px 0 8px;">
-      ${typeChipsList.map(t => {
-        const isTOn = (selectedType === t);
-        const label = t ? t : '전체 구분';
-        return `<button type="button" class="user-switch-chip ${isTOn?'on':''}" onclick="filterByType('${esc(t)}')">${esc(label)}</button>`;
+    <div class="list-type-summary" role="tablist" aria-label="구분별 합계">
+      ${typeTabs.map(x => {
+        const on = selectedType === x.t;
+        const tot = x.t ? (typeTotals[x.t] || { amount: 0, count: 0 }) : { amount: null, count: allCount };
+        return `<button type="button" role="tab" aria-selected="${on}" class="lts-item ${x.cls} ${on ? 'on' : ''}" data-type="${esc(x.t)}" onclick="filterByType(this.dataset.type)">
+          <span class="lts-label">${esc(x.label)}</span>
+          <strong class="lts-amt">${tot.amount == null ? tot.count + '건' : fmt(tot.amount)}</strong>
+          ${tot.amount == null ? '' : `<small>${tot.count}건</small>`}
+        </button>`;
       }).join('')}
     </div>
   `;
+  const catTotalHtml = (selectedType && STATE.list.category) ? `
+    <div class="list-cat-total">${emo(STATE.list.category)} ${esc(STATE.list.category)} 합계 <strong>${fmt(txs.reduce((a, t) => a + Number(t.amount || 0), 0))}</strong>
+      <span>${totalCount}건${typeAmount > 0 ? ' · ' + selectedType + '의 ' + Math.round(txs.reduce((a, t) => a + Number(t.amount || 0), 0) / typeAmount * 100) + '%' : ''}</span></div>` : '';
 
   const defaultCatsByType = {
     '지출': ['식비', '교통/차량', '주거/통신', '쇼핑/문화', '경조/이벤트', '건강/의료', '용돈', '기타'],
@@ -2146,7 +2251,7 @@ function renderList(){
     return `<button type="button" class="cat-scroll-chip ${isSelected?'on':''}" data-cat="${esc(catVal)}" onclick="filterByCat(this.dataset.cat)">${c==='전체'?'전체':emo(c)+' '+esc(c)}</button>`;
   }).join('');
 
-  const rows = visibleRows.length ? txGroupedRows(visibleRows) : `<div class="empty"><span class="e">📭</span>조건에 맞는 거래가 없어</div>`;
+  const rows = visibleRows.length ? txGroupedRows(visibleRows, selectedType) : `<div class="empty"><span class="e">📭</span>조건에 맞는 거래가 없어</div>`;
   const loadMore = visibleRows.length < totalCount
     ? `<button type="button" class="list-more-btn" onclick="loadMoreTransactions()">다음 40건 보기 <span>${visibleRows.length}/${totalCount}</span></button>`
     : '';
@@ -2179,6 +2284,7 @@ function renderList(){
     ${searchBarHtml}
     ${typeChipsHtml}
     <div class="cat-scroll-bar" style="margin-top:4px">${filterChipsHtml}</div>
+    ${catTotalHtml}
     ${listHeadHtml}
     <div class="card">${rows}</div>
     ${loadMore}
@@ -2618,7 +2724,7 @@ function showReleaseBannerIfNew(){
   const box = document.getElementById('releaseBanner');
   if (!box) return;
   const latest = (APP_RELEASE_NOTES || [])[0] || {};
-  const notes = (latest.version === APP_VERSION ? (latest.notes || []) : []).slice(0, 3);
+  const notes = (latest.version === APP_VERSION ? (latest.notes || []) : []).slice(0, 2);
   const when = formatReleaseTime(APP_BUILT_AT);
   box.innerHTML = `
     <div class="rb-main">
@@ -2701,6 +2807,7 @@ function applyBootData(data){
   STATE.settlement = data.settlement || STATE.settlement;
   if (STATE.settlement && STATE.settlement.ym === STATE.ym) hydrateSettlementDraft(STATE.ym, STATE.settlement.sharedDraft);
   STATE.serverVersion = data.appVersion || STATE.serverVersion || '';
+  STATE.pendingSettlementYm = data.pendingSettlementYm != null ? data.pendingSettlementYm : (STATE.pendingSettlementYm || '');
   applyGlobalData(data);
   setTimeout(() => {
     checkAndDispatchDueNotifications();
@@ -2889,6 +2996,7 @@ function renderView(v){
   else if (v === 'recurring') renderRecurring();
   else if (v === 'ai') renderAi();
   else if (v === 'review') renderReview();
+  else if (v === 'settlement') renderSettlementView();
 }
 
 function renderAll(){
@@ -2899,13 +3007,39 @@ function renderAll(){
 }
 
 function switchView(v){
-  const moreChildren = ['ai','review','recurring'];
+  const moreChildren = ['ai','review','recurring','settlement'];
   const tabView = moreChildren.indexOf(v) > -1 ? 'more' : v;
   document.querySelectorAll('.tab[data-view]').forEach(t=>t.classList.toggle('active', t.dataset.view===tabView));
-  ['home','list','recurring','asset','ai','review','more'].forEach(name=>
-    document.getElementById('v-'+name).classList.toggle('on', name===v));
+  ['home','list','recurring','asset','ai','review','more','settlement'].forEach(name=>{
+    const view = document.getElementById('v-'+name);
+    if (view) view.classList.toggle('on', name===v);
+  });
   renderView(v);
   window.scrollTo(0,0);
+}
+
+function shiftYmClient(ym, delta){
+  const p = String(ym || '').split('-').map(Number);
+  const d = new Date(p[0], p[1] - 1 + delta, 1);
+  return d.getFullYear() + '-' + pad(d.getMonth() + 1);
+}
+
+function monthsBetween(fromYm, toYm){
+  const a = String(fromYm || '').split('-').map(Number), b = String(toYm || '').split('-').map(Number);
+  return (b[0] - a[0]) * 12 + (b[1] - a[1]);
+}
+
+/**
+ * 정산 작업대 열기. 예전에는 지난달이 마감되지 않으면 앱이 한 달 내내 지난달 정산 화면으로
+ * 열렸다(홈이 정산 양식으로 바뀌고, 빠른입력 날짜도 지난달 말일로 잡혔다).
+ * 이제 홈은 항상 이번 달이고, 정산은 여기서 필요한 달로 옮겨가 연다.
+ */
+function openSettlement(ym){
+  const currentYm = STATE.currentYm || todayStr().slice(0,7);
+  // 지정이 없으면: 남은 정산 달 → 지금 보는 지난달 → 이번 달 기준 지난달 순으로 연다.
+  const target = ym || STATE.pendingSettlementYm || (STATE.ym && STATE.ym < currentYm ? STATE.ym : shiftYmClient(currentYm, -1));
+  if (target && target !== STATE.ym) changeMonth(monthsBetween(STATE.ym, target));
+  switchView('settlement');
 }
 
 function closeActiveSheet(){
@@ -3525,46 +3659,127 @@ function syncSettlementInvestmentsToAssets(){
   }).catch(err => toast((err && err.message) || '자산현황 반영에 실패했어.', true));
 }
 
-function finalizeSettlement(){
-  const draft = settlementDraftState();
-  if ((draft.rows || []).length) return toast('작성 중인 거래 초안을 먼저 확정 저장해줘.', true);
-  const recon = mergedReconciliations(STATE.settlement || {}, draft);
-  const warnings = recon.filter(row => row.status !== '일치').length;
-  const investmentRows = mergedInvestments(STATE.settlement || {}, draft);
-  const checked = id => !!((document.getElementById(id) || {}).checked);
-  const reconciliationReason = ((document.getElementById('settlementReconciliationReason') || {}).value || '').trim();
-  if (!checked('settlementCheckTransactions')) return toast('거래 입력 확인을 체크해줘.', true);
-  if (warnings && (!checked('settlementCheckReconciliation') || reconciliationReason.length < 2)) return toast('대사 차이를 확인하고 마감 사유를 적어줘.', true);
-  if (!checked('settlementCheckInvestments')) return toast('투자 월말값 또는 해당 없음 확인을 체크해줘.', true);
-  const copyBudget = checked('settlementCheckBudget');
-  const investmentNote = investmentRows.length ? '\n저장된 투자 월말값은 자산현황에도 함께 반영돼.' : '';
-  if (!confirm(STATE.ym+' 정산을 마감할까?'+investmentNote)) return;
-  renderSyncStatus(STATE.ym+' 정산 마감 중', 'syncing');
-  const requestClose = overwriteNextBudget => api('finalizeSettlementMonth', {
-    ym:STATE.ym, user:STATE.sessionUser || '하콩', saveAssetSnapshot:true,
-    copyBudgetToNextMonth:copyBudget, overwriteNextBudget:!!overwriteNextBudget,
-    checklist:{ transactions:true, reconciliations:checked('settlementCheckReconciliation'), investments:true, reconciliationReason }
+/* 마감 체크리스트는 STATE 에 둔다. 예전에는 화면의 체크박스 값만 읽어서,
+ * 공유 초안 동기화·앱 복귀 등으로 화면이 다시 그려지면 체크가 풀려 마감이 계속 막혔다. */
+function settlementChecklist(){
+  const ym = STATE.ym;
+  if (!STATE.settlementChecklist || STATE.settlementChecklist.ym !== ym) {
+    STATE.settlementChecklist = { ym, transactions:false, reconciliation:false, investments:false, budget:true, reason:'' };
+  }
+  return STATE.settlementChecklist;
+}
+function setSettlementCheck(field, value){ settlementChecklist()[field] = value; }
+
+function waitMs(ms){ return new Promise(resolve => setTimeout(resolve, ms)); }
+
+// 응답이 늦어 화면이 먼저 포기해도 서버는 마감을 끝냈을 수 있다. 실제 상태를 몇 번 확인한다.
+function confirmSettlementClosedLater(ym, tries){
+  return waitMs(8000).then(() => api('getSettlementData', ym)).then(data => {
+    if (data && data.isClosed) return true;
+    return tries > 1 ? confirmSettlementClosedLater(ym, tries - 1) : false;
+  }).catch(() => tries > 1 ? confirmSettlementClosedLater(ym, tries - 1) : false);
+}
+
+// 화면에만 있고 서버에 저장 안 된 대사·투자 월말값을 마감 전에 저장한다.
+// 예전에는 이 값들이 화면 계산(일치)과 서버 계산(명세서 미입력)이 달라,
+// 사유 입력칸이 없는데 서버가 "마감 사유를 적어줘"로 거절하는 막다른 길이 생겼다.
+function saveSettlementPartsBeforeClose(draft){
+  const user = STATE.sessionUser || '하콩';
+  let chain = Promise.resolve(null);
+  const recon = settlementReconRowsForEdit().filter(row => row.source);
+  if ((draft.reconciliations || []).length && recon.length) chain = chain.then(() => api('saveReconciliations', STATE.ym, recon, user));
+  const investments = settlementInvestmentRowsForEdit().filter(row => String(row.account || '').trim());
+  if ((draft.investments || []).length && investments.length) chain = chain.then(() => api('saveInvestmentMonthly', STATE.ym, investments, user));
+  return chain.then(res => res || api('getSettlementData', STATE.ym)).then(data => {
+    if (data) applySettlementResponse(data);
+    return STATE.settlement || {};
   });
-  requestClose(false).then(result => {
+}
+
+function setSettlementClosing(busy){
+  STATE.settlementClosing = !!busy;
+  const btn = document.getElementById('settlementCloseBtn');
+  if (btn) { btn.disabled = !!busy; btn.textContent = busy ? '마감 처리 중… (최대 1~2분)' : STATE.ym + ' 정산 마감'; }
+}
+
+function finalizeSettlement(){
+  if (STATE.settlementClosing) return;
+  const ym = STATE.ym;
+  const draft = settlementDraftState();
+  // 날짜만 있고 내역·금액이 빈 행은 조용히 정리한다. 이런 행 하나 때문에 마감이 막혔다.
+  const isBlankRow = row => !String(row.desc || '').trim() && !(Number(row.amount || 0) > 0);
+  if ((draft.rows || []).some(isBlankRow)) {
+    draft.rows = draft.rows.filter(row => !isBlankRow(row));
+    saveSettlementDraft(draft);
+  }
+  if ((draft.rows || []).length) {
+    renderSettlementView();
+    return toast('확정 저장하지 않은 거래 초안 '+draft.rows.length+'건이 있어. 1단계의 "확정 저장"을 먼저 눌러줘.', true);
+  }
+  const ck = settlementChecklist();
+  if (!ck.transactions) return toast('4단계에서 "거래 초안을 모두 확정했어요"를 체크해줘.', true);
+  if (!ck.investments) return toast('4단계에서 "투자 월말값을 입력했거나 해당 없어요"를 체크해줘.', true);
+  if (!confirm(ym+' 정산을 마감할까?\n저장된 투자 월말값이 있으면 자산현황에도 함께 반영돼.')) return;
+
+  setSettlementClosing(true);
+  renderSyncStatus(ym+' 정산 마감 준비 중', 'syncing');
+  const requestClose = (overwriteNextBudget, reason) => api('finalizeSettlementMonth', {
+    ym:ym, user:STATE.sessionUser || '하콩', saveAssetSnapshot:true,
+    copyBudgetToNextMonth:ck.budget !== false, overwriteNextBudget:!!overwriteNextBudget,
+    checklist:{ transactions:true, reconciliations:true, investments:true, reconciliationReason:reason }
+  });
+  let reason = String(ck.reason || '').trim();
+
+  saveSettlementPartsBeforeClose(draft).then(settlement => {
+    if (settlement.isClosed) return { ok:true, alreadyClosed:true };
+    // 서버 기준 대사 차이로 판단한다. 사유가 없으면 여기서 바로 물어본다.
+    const issues = Number(settlement.reconciliationIssues || 0);
+    if (issues > 0 && reason.length < 2) {
+      const typed = prompt('카드·계좌 대사가 맞지 않는 곳이 '+issues+'곳 있어.\n그대로 마감하려면 사유를 짧게 적어줘. (예: 결제일 차이)', '');
+      if (typed == null) return null;
+      reason = String(typed).trim();
+      if (reason.length < 2) throw new Error('대사 차이 마감 사유를 두 글자 이상 적어줘.');
+      ck.reason = reason;
+    }
+    renderSyncStatus(ym+' 정산 마감 중 · 자산·예산 정리까지 1~2분 걸릴 수 있어', 'syncing');
+    return requestClose(false, reason);
+  }).then(result => {
     if (result && result.needsOverwriteNextBudget) {
-      if (!confirm('다음 달 예산이 이미 있어. '+STATE.ym+' 예산으로 덮어쓸까?')) return null;
-      return requestClose(true);
+      if (!confirm('다음 달 예산이 이미 있어. '+ym+' 예산으로 덮어쓸까?\n(취소하면 다음 달 예산은 그대로 두고 마감해)')) {
+        ck.budget = false;
+        return api('finalizeSettlementMonth', { ym:ym, user:STATE.sessionUser || '하콩', saveAssetSnapshot:true,
+          copyBudgetToNextMonth:false, checklist:{ transactions:true, reconciliations:true, investments:true, reconciliationReason:reason } });
+      }
+      return requestClose(true, reason);
     }
     return result;
+  }).catch(err => {
+    if (!isTimeoutError(err)) throw err;
+    renderSyncStatus(ym+' 서버가 마감을 마무리하는 중인지 확인하고 있어', 'syncing');
+    return confirmSettlementClosedLater(ym, 4).then(closed => {
+      if (closed) return { ok:true, confirmedLater:true };
+      throw new Error('서버 응답이 늦어 마감 여부를 확인하지 못했어. 잠시 뒤 다시 눌러줘. (이미 마감됐다면 자동으로 이어서 처리돼)');
+    });
   }).then(result => {
     if (!result) return null;
     if (result.ok === false) throw new Error(result.message || '정산을 마감하지 못했어.');
-    clearSettlementDraft(STATE.ym);
+    clearSettlementDraft(ym);
     STATE.monthMode = 'auto';
     return api('getBoot');
   }).then(data => {
+    setSettlementClosing(false);
     if (!data) { renderSyncStatus(); return; }
     applyBootData(data);
     saveBootCache(data);
+    switchView('home');
     renderAll();
-    renderSyncStatus(STATE.ym+' 화면으로 전환 완료', 'saved');
-    toast('✅ 정산 마감 완료! 이제 '+STATE.ym+' 화면을 보여줄게.');
-  }).catch(err => toast((err && err.message) || '정산 마감에 실패했어.', true));
+    renderSyncStatus(ym+' 정산 마감 완료', 'saved');
+    toast('✅ '+ym+' 정산 마감 완료! 이번 달 화면으로 돌아왔어.');
+  }).catch(err => {
+    setSettlementClosing(false);
+    renderSyncStatus(ym+' 정산 마감 실패 · 다시 시도 가능', 'pending');
+    toast((err && err.message) || '정산 마감에 실패했어.', true);
+  });
 }
 
 function reopenSettlement(){
