@@ -751,7 +751,10 @@ body.dark-mode #toast{background:rgba(58,58,60,0.92)}
       <div id="assetSubItemsContainer">
         <!-- 동적 리스트 렌더링 영역 -->
       </div>
-      <button class="btn" id="addAssetSubItemBtn" style="margin-top:8px; background:var(--line); color:var(--text); width:100%; font-size:14px;">+ 항목 추가</button>
+      <div style="display:flex; gap:8px; margin-top:8px;">
+        <button type="button" class="btn" id="addAssetSubItemBtn" style="flex:1; background:var(--line); color:var(--text); font-size:13px;">+ 항목 추가</button>
+        <button type="button" class="btn" id="restoreAssetSubItemsBtn" onclick="restoreOriginalAssetItems()" style="flex:1; background:var(--card); border:1px solid var(--line); color:var(--muted); font-size:12px;">🔄 원래 세부항목 복원</button>
+      </div>
     </div>
     <div class="total-asset" style="margin-top:16px; background:var(--bg); border-radius:12px; padding:16px; margin-bottom:12px;">
       <div class="l">합계</div>
@@ -1237,8 +1240,38 @@ function clearSettlementDraft(ym){
 // 카테고리명에 홑따옴표가 들어가면 onclick 문자열이 깨져 칩이 먹통이 됐다.
 function esc(s){ return String(s==null?'':s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])); }
 function emo(cat){
-  const m={'식비':'🍔','교통/차량':'🚗','주거/통신':'🏠','쇼핑/문화':'🛍️','경조/이벤트':'🎉','건강/의료':'💊','용돈':'🪙','월급':'💰','상여':'💎','금융수입':'📈','기타수입':'💳'};
+  const m={'식비':'🍔','교통/차량':'🚗','주거/통신':'🏠','쇼핑/문화':'🛍️','경조/이벤트':'🎉','건강/의료':'💊','용돈':'🪙','월급':'💰','상여':'💎','금융수입':'📈','기타수입':'💳','기타':'🏷️'};
   return m[cat]||'🏷️';
+}
+
+function getOriginalAssetBreakdown(key) {
+  const map = {
+    stock: [
+      { name: '지수 QQQ', amount: 3699860 },
+      { name: '하영 QQQ', amount: 3699860 },
+      { name: '삼성전자(지수)', amount: 1550000 }
+    ],
+    saving: [
+      { name: '하콩보험적금(연금형태)', amount: 24987040 },
+      { name: '하콩주택청약', amount: 4950000 },
+      { name: '지수주택청약', amount: 4791920 },
+      { name: '하영여행적금', amount: 3000000 }
+    ],
+    debt: [
+      { name: '학자금대출', amount: 8249000 },
+      { name: '교직원공제회', amount: 5847330 }
+    ],
+    estate: [
+      { name: '전세보증금', amount: 48800000 }
+    ],
+    cash: [
+      { name: 'sey콩콩 통장', amount: 5171432 }
+    ],
+    safe: [
+      { name: '비상금', amount: 0 }
+    ]
+  };
+  return map[key] ? JSON.parse(JSON.stringify(map[key])) : [];
 }
 
 let toastT;
@@ -2038,7 +2071,7 @@ function renderList(){
   `;
 
   const defaultCatsByType = {
-    '지출': ['식비', '교통/차량', '주거/통신', '쇼핑/문화', '경조/이벤트', '건강/의료', '용돈'],
+    '지출': ['식비', '교통/차량', '주거/통신', '쇼핑/문화', '경조/이벤트', '건강/의료', '용돈', '기타'],
     '수입': ['월급', '부수입', '상여', '금융수입', '기타수입'],
     '저축': ['적금/예금', '청약', '투자', '비상금']
   };
@@ -2125,7 +2158,17 @@ function renderAsset(){
   const walletCardsHtml = assetDefs.map(d=>{
     const item = items[d.key] || { value:0, subItems:[] };
     const curVal = item.value || 0;
-    const subs = (item.subItems || []).filter(s => s && (s.name || s.amount));
+    let subs = (item.subItems || []).filter(s => s && (s.name || s.amount));
+    if (subs.length <= 1) {
+      const n = subs[0] ? String(subs[0].name || '').trim() : '';
+      if (!n || n === '기본 항목' || n === '항목' || n === d.label ||
+          n.indexOf('증권사') > -1 || n.indexOf('이미 들어간') > -1 ||
+          n.indexOf('갚을 돈') > -1 || n.indexOf('은행 앱') > -1 ||
+          n.indexOf('전세금/집값') > -1 || n === '비상금') {
+        const defaults = (typeof getOriginalAssetBreakdown === 'function') ? getOriginalAssetBreakdown(d.key) : [];
+        if (defaults && defaults.length) subs = defaults;
+      }
+    }
     
     let subsHtml = '';
     if (subs.length > 0) {
@@ -2822,7 +2865,7 @@ function openQuickEntryModal(){
 
 function renderFormChips(){
   const defaultCatsByType = {
-    '지출': ['식비','교통/차량','주거/통신','쇼핑/문화','경조/이벤트','건강/의료','용돈'],
+    '지출': ['식비','교통/차량','주거/통신','쇼핑/문화','경조/이벤트','건강/의료','용돈','기타'],
     '수입': ['월급','부수입','상여','금융수입','기타수입'],
     '저축': ['적금/예금','청약','투자','비상금'],
     '대출상환': ['원금상환','이자납입','학자금','기타대출']
@@ -4020,7 +4063,17 @@ function changeMonth(delta){
     function openAssetEditModal(key, label) {
       rememberDialogTrigger();
       STATE.assetEditKey = key;
-      const items = (STATE.assets.items[key] || {}).subItems || [];
+      let items = (STATE.assets && STATE.assets.items && STATE.assets.items[key] || {}).subItems || [];
+      if (items.length <= 1) {
+        const n = items[0] ? String(items[0].name || '').trim() : '';
+        if (!n || n === '기본 항목' || n === '항목' || n === label ||
+            n.indexOf('증권사') > -1 || n.indexOf('이미 들어간') > -1 ||
+            n.indexOf('갚을 돈') > -1 || n.indexOf('은행 앱') > -1 ||
+            n.indexOf('전세금/집값') > -1 || n === '비상금') {
+          const defaults = (typeof getOriginalAssetBreakdown === 'function') ? getOriginalAssetBreakdown(key) : [];
+          if (defaults && defaults.length) items = defaults;
+        }
+      }
       STATE.assetEditTemp = JSON.parse(JSON.stringify(items));
       if (STATE.assetEditTemp.length === 0) STATE.assetEditTemp.push({name: '', amount: 0});
       
@@ -4035,6 +4088,15 @@ function changeMonth(delta){
       
       renderAssetEditList();
     }
+
+    window.restoreOriginalAssetItems = function() {
+      const key = STATE.assetEditKey;
+      const defaults = (typeof getOriginalAssetBreakdown === 'function') ? getOriginalAssetBreakdown(key) : [];
+      if (!defaults || !defaults.length) return toast('복원할 기본 내역이 없습니다.');
+      STATE.assetEditTemp = JSON.parse(JSON.stringify(defaults));
+      renderAssetEditList();
+      toast('기존 원래 세부 항목을 불러왔습니다.');
+    };
     
     function renderAssetEditList() {
       const container = document.getElementById('assetSubItemsContainer');
@@ -4784,7 +4846,7 @@ function bindApp(){
           // 예전에는 무조건 '기타'로 되돌렸는데, ⚙️설정 시트에 '기타'가 없으면
           // 어떤 칩도 선택되지 않은 채 유령 카테고리로 저장됐다.
           const defaultCatsByType = {
-            '지출': ['식비','교통/차량','주거/통신','쇼핑/문화','경조/이벤트','건강/의료','용돈'],
+            '지출': ['식비','교통/차량','주거/통신','쇼핑/문화','경조/이벤트','건강/의료','용돈','기타'],
             '수입': ['월급','부수입','상여','금융수입','기타수입'],
             '저축': ['적금/예금','청약','투자','비상금'],
             '대출상환': ['원금상환','이자납입','학자금','기타대출']

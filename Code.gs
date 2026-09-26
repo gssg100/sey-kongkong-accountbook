@@ -3456,7 +3456,7 @@ function getDescDict_() {
 // ===== 설정탭 -> 드롭다운 데이터 =====
 function getConfig_() {
   const defaultByType = {
-    '지출': ['식비', '교통/차량', '주거/통신', '쇼핑/문화', '경조/이벤트', '건강/의료', '용돈'],
+    '지출': ['식비', '교통/차량', '주거/통신', '쇼핑/문화', '경조/이벤트', '건강/의료', '용돈', '기타'],
     '수입': ['월급', '부수입', '상여', '금융수입', '기타수입'],
     '저축': ['적금/예금', '청약', '투자', '비상금'],
     '대출상환': ['원금상환', '이자납입', '학자금', '기타대출']
@@ -3474,6 +3474,15 @@ function getConfig_() {
     if (type === '수입' && cat === '수입') continue;
     if (!byType[type]) byType[type] = [];
     if (byType[type].indexOf(cat) === -1) byType[type].push(cat);
+  }
+
+  // 지출 카테고리에 '기타'가 없으면 자동 추가 및 시트 행 반영
+  if (!byType['지출']) byType['지출'] = [];
+  if (byType['지출'].indexOf('기타') === -1) {
+    byType['지출'].push('기타');
+    try {
+      sh.appendRow(['지출', '기타', '기타 잡비, 미분류 지출']);
+    } catch (e) {}
   }
 
   // 각 타입별로 등록된 카테고리가 전혀 없으면 기본 카테고리 제공
@@ -3981,6 +3990,99 @@ function getAssets_() {
     } else if (colA || colB || colC) {
       unknownRows.push([colA, colB, colC]);
     }
+  }
+
+  // 원본 기록 상세 내역 정의 (사용자 원본 엑셀 및 거래내역 기반)
+  const defaultSubItems = {
+    cash: [
+      { name: 'sey콩콩 통장', amount: 5171432 }
+    ],
+    safe: [
+      { name: '비상금', amount: 0 }
+    ],
+    stock: [
+      { name: '지수 QQQ', amount: 3699860 },
+      { name: '하콩 QQQ', amount: 3699860 },
+      { name: '삼성전자(지수)', amount: 1550000 }
+    ],
+    estate: [
+      { name: '전세보증금', amount: 48800000 }
+    ],
+    saving: [
+      { name: '하콩보험적금(연금형태)', amount: 24987040 },
+      { name: '하콩주택청약', amount: 4950000 },
+      { name: '지수주택청약', amount: 4791920 },
+      { name: '하콩여행적금', amount: 3000000 }
+    ],
+    debt: [
+      { name: '학자금대출', amount: 8249000 },
+      { name: '교직원공제회', amount: 5847330 }
+    ]
+  };
+
+  let wasMigrated = false;
+  ['stock', 'saving', 'debt', 'cash', 'estate', 'safe'].forEach(k => {
+    const list = items[k].subItems || [];
+    let isLumped = false;
+    if (list.length === 0) {
+      isLumped = true;
+    } else if (list.length === 1) {
+      const n = String(list[0].name || '').trim();
+      const lbl = items[k].label;
+      if (!n || n === '기본 항목' || n === '항목' || n === lbl ||
+          n.indexOf('증권사') > -1 || n.indexOf('이미 들어간') > -1 ||
+          n.indexOf('갚을 돈') > -1 || n.indexOf('은행 앱') > -1 ||
+          n.indexOf('전세금/집값') > -1 || n === '비상금') {
+        isLumped = true;
+      }
+    }
+    if (isLumped) {
+      const defs = defaultSubItems[k] || [];
+      const curVal = items[k].value;
+      const defTotal = defs.reduce((acc, cur) => acc + cur.amount, 0);
+      if (curVal > 0 && defTotal > 0 && curVal !== defTotal) {
+        let running = 0;
+        items[k].subItems = defs.map((d, idx) => {
+          if (idx === defs.length - 1) {
+            return { name: d.name, amount: curVal - running };
+          }
+          const part = Math.round((curVal * d.amount) / defTotal);
+          running += part;
+          return { name: d.name, amount: part };
+        });
+      } else {
+        items[k].subItems = JSON.parse(JSON.stringify(defs));
+        items[k].value = defTotal;
+      }
+      wasMigrated = true;
+    }
+  });
+
+  if (wasMigrated) {
+    try {
+      const lock = LockService.getScriptLock();
+      if (lock.tryLock(5000)) {
+        try {
+          const newData = [];
+          ['cash', 'safe', 'stock', 'estate', 'debt', 'saving'].forEach(k => {
+            const info = items[k];
+            if (info && info.subItems && info.subItems.length > 0) {
+              info.subItems.forEach(sub => {
+                newData.push([k, String((sub && sub.name) || ''), numParse_(sub && sub.amount)]);
+              });
+            }
+          });
+          (unknownRows || []).forEach(row => newData.push(row));
+          sh.clearContents();
+          if (newData.length > 0) {
+            sh.getRange(1, 1, newData.length, 3).setValues(newData);
+          }
+          bumpDataRevision_();
+        } finally {
+          lock.releaseLock();
+        }
+      }
+    } catch (e) {}
   }
 
   let total = items.cash.value + items.safe.value + items.stock.value
