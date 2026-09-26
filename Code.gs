@@ -3455,21 +3455,38 @@ function getDescDict_() {
 
 // ===== 설정탭 -> 드롭다운 데이터 =====
 function getConfig_() {
+  const defaultByType = {
+    '지출': ['식비', '교통/차량', '주거/통신', '쇼핑/문화', '경조/이벤트', '건강/의료', '용돈'],
+    '수입': ['월급', '부수입', '상여', '금융수입', '기타수입'],
+    '저축': ['적금/예금', '청약', '투자', '비상금'],
+    '대출상환': ['원금상환', '이자납입', '학자금', '기타대출']
+  };
+  const standardTypes = ['지출', '수입', '저축', '대출상환'];
   const sh = ss().getSheetByName(SHEET_CONFIG);
-  if (!sh) return { types: ['지출', '수입', '저축', '대출상환'], byType: {} };
+  if (!sh) return { types: standardTypes, byType: defaultByType };
+
   const vals = sh.getDataRange().getValues();
   const byType = {};
-  const order = [];
   for (let i = 1; i < vals.length; i++) {
     const type = String(vals[i][0]).trim();
     const cat = String(vals[i][1]).trim();
     if (!type || !cat) continue;
     if (type === '수입' && cat === '수입') continue;
-    if (!byType[type]) { byType[type] = []; order.push(type); }
+    if (!byType[type]) byType[type] = [];
     if (byType[type].indexOf(cat) === -1) byType[type].push(cat);
   }
-  // 입력 편의를 위해 지출을 맨 앞으로
-  order.sort((a, b) => (a === '지출' ? -1 : b === '지출' ? 1 : 0));
+
+  // 각 타입별로 등록된 카테고리가 전혀 없으면 기본 카테고리 제공
+  standardTypes.forEach(t => {
+    if (!byType[t] || !byType[t].length) {
+      byType[t] = (defaultByType[t] || []).slice();
+    }
+  });
+
+  const order = Object.keys(byType);
+  const typeRank = { '지출': 1, '수입': 2, '저축': 3, '대출상환': 4 };
+  order.sort((a, b) => (typeRank[a] || 99) - (typeRank[b] || 99));
+
   return { types: order, byType: byType };
 }
 
@@ -3921,16 +3938,39 @@ function getAssets_() {
   const unknownRows = [];
 
   for (let i = 0; i < vals.length; i++) {
-    let catKey = String(vals[i][0]).trim();
-    let itemName = String(vals[i][1] || '').trim();
-    let amt = numParse_(vals[i][2]);
+    const colA = String(vals[i][0] || '').trim();
+    const colB = String(vals[i][1] || '').trim();
+    const colC = String(vals[i][2] || '').trim();
+    if (!colA && !colB && !colC) continue;
 
-    // Backward compatibility: If Column C is empty/undefined, it's the old format (Col A = label, Col B = amt)
-    if (amt === 0 && (vals[i][2] === undefined || vals[i][2] === '')) {
-      amt = numParse_(vals[i][1]);
-      itemName = '기본 항목';
-      const foundDef = defs.find(d => catKey.indexOf(d.match) > -1);
-      if (foundDef) catKey = foundDef.key;
+    const foundDef = defs.find(d => d.key === colA || colA.indexOf(d.match) > -1 || colA.indexOf(d.label) > -1);
+    const catKey = foundDef ? foundDef.key : colA;
+    let itemName = '';
+    let amt = 0;
+
+    const numC = numParse_(colC);
+    const numB = numParse_(colB);
+
+    // 패턴 판별:
+    // A) 신규 3열 구조: [key, 항목명, 금액] (C열이 유효한 숫자)
+    if (colC !== '' && numC > 0) {
+      itemName = colB || (foundDef ? foundDef.label : '항목');
+      amt = numC;
+    }
+    // B) 기존 2열+메모 구조: [라벨, 금액, 종목명/메모] (B열이 숫자)
+    else if (numB > 0) {
+      amt = numB;
+      // C열에 텍스트가 있으면 종목명으로 우선 사용, 없으면 A열 라벨 활용
+      if (colC && numParse_(colC) === 0) {
+        itemName = colC;
+      } else {
+        itemName = foundDef ? foundDef.label : colA;
+      }
+    }
+    // C) 기타
+    else {
+      itemName = colB || colC || (foundDef ? foundDef.label : colA);
+      amt = numC || numB || 0;
     }
 
     if (items[catKey]) {
@@ -3938,8 +3978,8 @@ function getAssets_() {
         items[catKey].subItems.push({ name: itemName, amount: amt });
         items[catKey].value += amt;
       }
-    } else if (catKey || itemName || amt !== 0) {
-      unknownRows.push([catKey, itemName, amt]);
+    } else if (colA || colB || colC) {
+      unknownRows.push([colA, colB, colC]);
     }
   }
 

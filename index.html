@@ -619,7 +619,7 @@ body.dark-mode #toast{background:rgba(58,58,60,0.92)}
     <div class="field">
       <label>금액</label>
       <div class="amount-wrap"><span class="won">₩</span><input id="fAmount" type="text" inputmode="numeric" placeholder="0"></div>
-      <div class="quick-amt-chips">
+      <div class="quick-amt-chips" id="quickAmtChips">
         <button type="button" onclick="addQuickAmount(10000)">+1만</button>
         <button type="button" onclick="addQuickAmount(50000)">+5만</button>
         <button type="button" onclick="addQuickAmount(100000)">+10만</button>
@@ -627,15 +627,15 @@ body.dark-mode #toast{background:rgba(58,58,60,0.92)}
         <button type="button" class="reset" onclick="clearAmount()">C</button>
       </div>
     </div>
-    <div class="field"><label>내역</label><input class="in-text" id="fDesc" type="text" placeholder="예: 점심, 커피, 마트"><div class="recommend-box" id="recommendBox"></div></div>
+    <div class="field"><label id="descLabel">내역</label><input class="in-text" id="fDesc" type="text" placeholder="예: 점심, 커피, 마트"><div class="recommend-box" id="recommendBox"></div></div>
     <div class="field"><label>분류</label><div class="chips compact-chips" id="typeChips"></div><div class="chips compact-chips" id="catChips"></div></div>
     <details class="extra-fields" id="extraFields">
       <summary>추가 옵션 <span>날짜 · 입력자 · 메모</span></summary>
       <div class="extra-fields-body">
-        <div class="field"><label>소비성격</label><div class="chips" id="moodChips"></div><div class="mood-hint" id="moodHint"></div></div>
+        <div class="field" id="moodFieldWrap"><label>소비성격</label><div class="chips" id="moodChips"></div><div class="mood-hint" id="moodHint"></div></div>
         <div class="row2">
-          <div class="field"><label>입력자</label><div class="chips" id="userChips"></div></div>
-          <div class="field"><label>고정/변동</label><div class="chips" id="fixChips"></div></div>
+          <div class="field"><label id="userChipsLabel">입력자</label><div class="chips" id="userChips"></div></div>
+          <div class="field" id="fixFieldWrap"><label id="fixChipsLabel">고정/변동</label><div class="chips" id="fixChips"></div></div>
         </div>
         <div class="row2">
           <div class="field"><label>날짜</label><input class="in-text" id="fDate" type="date"></div>
@@ -1558,17 +1558,39 @@ function renderHome(){
     </div>`;
   }).join('') : `<div class="dday-chip"><span>남은 고정비가 없어요 🍃</span></div>`;
 
-  // 지수 vs 하콩 부부 분담 계산
+  // 지수 vs 하콩 부부 분담 계산 (지출 & 수입)
   let jisooSpent = 0, hayoungSpent = 0;
+  let jisooIncome = 0, hayoungIncome = 0;
+  const incomeCatsMap = {};
   (monthRows || []).forEach(t => {
     if (t.type === '지출') {
       if (t.user === '지수') jisooSpent += Number(t.amount || 0);
       else if (t.user === '하콩') hayoungSpent += Number(t.amount || 0);
+    } else if (t.type === '수입') {
+      if (t.user === '지수') jisooIncome += Number(t.amount || 0);
+      else if (t.user === '하콩') hayoungIncome += Number(t.amount || 0);
+      const c = t.cat || '기타수입';
+      incomeCatsMap[c] = (incomeCatsMap[c] || 0) + Number(t.amount || 0);
     }
   });
   const totalCoupleSpent = jisooSpent + hayoungSpent;
   const jisooPct = totalCoupleSpent ? Math.round((jisooSpent / totalCoupleSpent) * 100) : 0;
   const hayoungPct = totalCoupleSpent ? 100 - jisooPct : 0;
+
+  const totalCoupleIncome = jisooIncome + hayoungIncome;
+  const jisooIncomePct = totalCoupleIncome ? Math.round((jisooIncome / totalCoupleIncome) * 100) : 0;
+  const hayoungIncomePct = totalCoupleIncome ? 100 - jisooIncomePct : 0;
+
+  const incomeCats = Object.keys(incomeCatsMap).map(k => ({ cat: k, amt: incomeCatsMap[k] })).sort((a,b) => b.amt - a.amt);
+  const maxIncomeCat = incomeCats.length ? incomeCats[0].amt : 1;
+  const incomeBars = incomeCats.length ? incomeCats.map(c => {
+    const pct = Math.max(4, Math.round(c.amt / maxIncomeCat * 100));
+    const sharePct = s.income > 0 ? Math.round(c.amt / s.income * 100) : 0;
+    return `<div class="bar">
+      <div class="head"><div class="nm"><span class="e">${emo(c.cat)}</span>${esc(c.cat)}</div>
+      <div class="amt" style="color:var(--forest);">${fmt(c.amt)}<small>${sharePct}%</small></div></div>
+      <div class="track"><div class="fill" style="width:${pct}%; background:linear-gradient(90deg, #10b981, #059669);"></div></div></div>`;
+  }).join('') : `<div class="empty"><span class="e">🍃</span>이번 달 수입 기록이 아직 없어</div>`;
 
   // 현재까지의 금액을 지난달 전체와 비교한다는 점을 문구에 정확히 표시한다.
   let compareBadgeHtml = '';
@@ -1661,7 +1683,20 @@ function renderHome(){
           <button class="text-action" onclick="switchView('recurring')" style="margin-top:10px">정기거래 관리</button>
         </div>` : ''}
         <div class="insight-block">
-          <div class="insight-title">입력자별 지출</div>
+          <div class="insight-title">입력자별 수입 (총 ${fmt(totalCoupleIncome)})</div>
+          <div class="couple-card">
+            <div class="couple-head">
+              <span>지수 ${fmt(jisooIncome)} (${jisooIncomePct}%)</span>
+              <span>하콩 ${fmt(hayoungIncome)} (${hayoungIncomePct}%)</span>
+            </div>
+            <div class="couple-track">
+              <div class="couple-fill-j" style="width:${jisooIncomePct}%"></div>
+              <div class="couple-fill-h" style="width:${hayoungIncomePct}%"></div>
+            </div>
+          </div>
+        </div>
+        <div class="insight-block">
+          <div class="insight-title">입력자별 지출 (총 ${fmt(totalCoupleSpent)})</div>
           <div class="couple-card">
             <div class="couple-head">
               <span>지수 ${fmt(jisooSpent)} (${jisooPct}%)</span>
@@ -1675,6 +1710,7 @@ function renderHome(){
         </div>
         ${budgetGaugesHtml ? `<div class="insight-block"><div class="insight-title">카테고리 예산</div>${budgetGaugesHtml}</div>` : ''}
         <div class="insight-block"><div class="insight-title">지출 TOP 3</div><div class="bars">${bars}</div></div>
+        <div class="insight-block"><div class="insight-title">수입원 분석</div><div class="bars">${incomeBars}</div></div>
       </div>
     </details>
   `;
@@ -1943,6 +1979,13 @@ function txGroupedRows(list){
   }).join('');
 }
 
+function filterByType(type){
+  STATE.list.type = type;
+  STATE.list.category = '';
+  STATE.list.pageSize = 40;
+  renderList();
+}
+
 function filterByCat(cat){
   STATE.list.category = cat;
   STATE.list.pageSize = 40;
@@ -1961,6 +2004,10 @@ function renderList(){
   if (STATE.userFilter) {
     txs = txs.filter(t => t.user === STATE.userFilter);
   }
+  const selectedType = STATE.list.type || '';
+  if (selectedType) {
+    txs = txs.filter(t => t.type === selectedType);
+  }
   if (STATE.list.category) {
     txs = txs.filter(t => t.cat === STATE.list.category);
   }
@@ -1977,13 +2024,41 @@ function renderList(){
   const totalCount = txs.length;
   const pageSize = Number(STATE.list.pageSize || 40);
   const visibleRows = txs.slice(0, pageSize);
-  const configuredCats = ((STATE.config && STATE.config.byType && STATE.config.byType['지출']) || []);
-  const fallbackCats = ['식비', '교통/차량', '주거/통신', '쇼핑/문화', '경조/이벤트', '건강/의료', '용돈', '기타'];
-  const cats = ['전체'].concat(configuredCats.length ? configuredCats : fallbackCats);
+
+  // 구분 탭 칩: 전체, 지출, 수입, 저축
+  const typeChipsList = ['', '지출', '수입', '저축'];
+  const typeChipsHtml = `
+    <div class="user-switcher-strip" style="margin:4px 0 8px;">
+      ${typeChipsList.map(t => {
+        const isTOn = (selectedType === t);
+        const label = t ? t : '전체 구분';
+        return `<button type="button" class="user-switch-chip ${isTOn?'on':''}" onclick="filterByType('${esc(t)}')">${esc(label)}</button>`;
+      }).join('')}
+    </div>
+  `;
+
+  const defaultCatsByType = {
+    '지출': ['식비', '교통/차량', '주거/통신', '쇼핑/문화', '경조/이벤트', '건강/의료', '용돈'],
+    '수입': ['월급', '부수입', '상여', '금융수입', '기타수입'],
+    '저축': ['적금/예금', '청약', '투자', '비상금']
+  };
+  const cfg = (STATE.config && STATE.config.byType) || {};
+  let targetCats = [];
+  if (selectedType === '수입') {
+    targetCats = (cfg['수입'] && cfg['수입'].length) ? cfg['수입'] : defaultCatsByType['수입'];
+  } else if (selectedType === '저축') {
+    targetCats = (cfg['저축'] && cfg['저축'].length) ? cfg['저축'] : defaultCatsByType['저축'];
+  } else if (selectedType === '지출') {
+    targetCats = (cfg['지출'] && cfg['지출'].length) ? cfg['지출'] : defaultCatsByType['지출'];
+  } else {
+    const exp = (cfg['지출'] && cfg['지출'].length) ? cfg['지출'] : defaultCatsByType['지출'];
+    const inc = (cfg['수입'] && cfg['수입'].length) ? cfg['수입'] : defaultCatsByType['수입'];
+    targetCats = exp.concat(inc.slice(0, 3));
+  }
+  const cats = ['전체'].concat(targetCats);
   const filterChipsHtml = cats.map(c => {
     const isSelected = (!STATE.list.category && c === '전체') || (STATE.list.category === c);
     const catVal = c === '전체' ? '' : c;
-    // 예전에는 따옴표를 지워서(replace) 이름 자체가 변형돼 필터가 안 맞았다.
     return `<button type="button" class="cat-scroll-chip ${isSelected?'on':''}" data-cat="${esc(catVal)}" onclick="filterByCat(this.dataset.cat)">${c==='전체'?'전체':emo(c)+' '+esc(c)}</button>`;
   }).join('');
 
@@ -2018,6 +2093,7 @@ function renderList(){
 
   el.innerHTML = `
     ${searchBarHtml}
+    ${typeChipsHtml}
     <div class="cat-scroll-bar" style="margin-top:4px">${filterChipsHtml}</div>
     ${listHeadHtml}
     <div class="card">${rows}</div>
@@ -2047,9 +2123,22 @@ function renderAsset(){
   const lastSnap = snaps.length > 0 ? snaps[snaps.length - 1] : null;
 
   const walletCardsHtml = assetDefs.map(d=>{
-    const item = items[d.key] || { value:0 };
+    const item = items[d.key] || { value:0, subItems:[] };
     const curVal = item.value || 0;
+    const subs = (item.subItems || []).filter(s => s && (s.name || s.amount));
     
+    let subsHtml = '';
+    if (subs.length > 0) {
+      subsHtml = `<div class="wallet-subitems" style="margin-top:10px; border-top:1px dashed var(--line-soft); padding-top:8px; font-size:12px; text-align:left; width:100%;">
+        ${subs.map(s => `
+          <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:4px;">
+            <span style="color:var(--muted); font-size:11.5px; overflow:hidden; text-overflow:ellipsis; white-space:nowrap; max-width:60%;">${esc(s.name || d.label)}</span>
+            <span style="font-weight:700; color:var(--ink); font-size:12px;">${fmt(s.amount)}</span>
+          </div>
+        `).join('')}
+      </div>`;
+    }
+
     let diffHtml = '';
     if (lastSnap && lastSnap[d.key] !== undefined) {
       const diff = curVal - lastSnap[d.key];
@@ -2062,14 +2151,19 @@ function renderAsset(){
       }
     }
 
-    return `<button type="button" class="wallet-card" onclick="openAssetEditModal('${d.key}', '${d.label}')" aria-label="${d.label} 금액 수정">
-      <div class="wallet-head">
-        <div class="wallet-icon">${d.icon}</div>
-        <div style="font-size:13px;font-weight:800;color:var(--muted)">${d.label}</div>
+    return `<button type="button" class="wallet-card" onclick="openAssetEditModal('${d.key}', '${d.label}')" aria-label="${d.label} 금액 수정" style="display:flex; flex-direction:column; align-items:flex-start;">
+      <div style="width:100%; display:flex; justify-content:space-between; align-items:flex-start;">
+        <div>
+          <div class="wallet-head">
+            <div class="wallet-icon">${d.icon}</div>
+            <div style="font-size:13px;font-weight:800;color:var(--muted)">${d.label}</div>
+          </div>
+          <div class="wallet-val" style="${d.debt?'color:var(--expense)':''}">${fmt(curVal)}</div>
+          ${diffHtml}
+        </div>
+        <div style="font-size:12px; color:var(--muted); opacity:0.6;">✏️ 수정</div>
       </div>
-      <div class="wallet-val" style="${d.debt?'color:var(--expense)':''}">${fmt(curVal)}</div>
-      ${diffHtml}
-      <div style="position:absolute; right:12px; top:12px; font-size:10px; color:var(--muted); opacity:0.5;">✏️</div>
+      ${subsHtml}
     </button>`;
   }).join('');
 
@@ -2695,10 +2789,10 @@ function openQuickEntryModal(){
     const hint = document.getElementById('recommendBox');
     if(hint) hint.innerHTML = '';
     
-    STATE.form.type = '지출';
-    STATE.form.cat = '식비';
+    STATE.form.type = STATE.form.type || '지출';
+    STATE.form.cat = null;
     STATE.form.fixed = '변동';
-    STATE.form.user = STATE.form.user || '하콩';
+    STATE.form.user = STATE.form.user || STATE.sessionUser || '하콩';
     STATE.form.mood = '';
     STATE.form.catManual = false; // 수동 터치 초기화
   }
@@ -2727,7 +2821,13 @@ function openQuickEntryModal(){
 }
 
 function renderFormChips(){
-  const cfg = STATE.config || { types:['지출','수입','저축','대출상환'], byType:{} };
+  const defaultCatsByType = {
+    '지출': ['식비','교통/차량','주거/통신','쇼핑/문화','경조/이벤트','건강/의료','용돈'],
+    '수입': ['월급','부수입','상여','금융수입','기타수입'],
+    '저축': ['적금/예금','청약','투자','비상금'],
+    '대출상환': ['원금상환','이자납입','학자금','기타대출']
+  };
+  const cfg = STATE.config || { types:['지출','수입','저축','대출상환'], byType: defaultCatsByType };
   const types = cfg.types || ['지출','수입','저축','대출상환'];
   const currentType = STATE.form.type || '지출';
   const typeEl = document.getElementById('typeChips');
@@ -2738,14 +2838,71 @@ function renderFormChips(){
   }
 
   const catMap = cfg.byType || {};
-  const cats = catMap[currentType] || ['식비','교통/차량','주거/통신','쇼핑/문화','경조/이벤트','건강/의료','용돈'];
-  const currentCat = STATE.form.cat || cats[0] || '식비';
-  if(!STATE.form.cat) STATE.form.cat = currentCat;
+  const configuredCats = (catMap[currentType] && catMap[currentType].length) ? catMap[currentType] : null;
+  const cats = configuredCats || defaultCatsByType[currentType] || ['기타'];
+  const currentCat = (cats.indexOf(STATE.form.cat) > -1 ? STATE.form.cat : null) || cats[0] || '기타';
+  if(!STATE.form.cat || cats.indexOf(STATE.form.cat) === -1) STATE.form.cat = currentCat;
   const catEl = document.getElementById('catChips');
   if(catEl){
     catEl.innerHTML = cats.map(c=>
       `<button type="button" class="chip ${currentCat===c?'on':''}" data-v="${esc(c)}" onclick="selectFormChip('cat',this.dataset.v)">${emo(c)} ${esc(c)}</button>`
     ).join('');
+  }
+
+  // 금액 퀵 칩 동적 전환 (수입은 십만~백만원 단위, 지출은 만원 단위)
+  const amtWrap = document.getElementById('quickAmtChips');
+  if (amtWrap) {
+    if (currentType === '수입') {
+      amtWrap.innerHTML = `
+        <button type="button" onclick="addQuickAmount(100000)">+10만</button>
+        <button type="button" onclick="addQuickAmount(500000)">+50만</button>
+        <button type="button" onclick="addQuickAmount(1000000)">+100만</button>
+        <button type="button" onclick="addQuickAmount(2000000)">+200만</button>
+        <button type="button" onclick="addQuickAmount(3000000)">+300만</button>
+        <button type="button" class="reset" onclick="clearAmount()">C</button>
+      `;
+    } else if (currentType === '저축' || currentType === '대출상환') {
+      amtWrap.innerHTML = `
+        <button type="button" onclick="addQuickAmount(100000)">+10만</button>
+        <button type="button" onclick="addQuickAmount(300000)">+30만</button>
+        <button type="button" onclick="addQuickAmount(500000)">+50만</button>
+        <button type="button" onclick="addQuickAmount(1000000)">+100만</button>
+        <button type="button" class="reset" onclick="clearAmount()">C</button>
+      `;
+    } else {
+      amtWrap.innerHTML = `
+        <button type="button" onclick="addQuickAmount(10000)">+1만</button>
+        <button type="button" onclick="addQuickAmount(50000)">+5만</button>
+        <button type="button" onclick="addQuickAmount(100000)">+10만</button>
+        <button type="button" onclick="addQuickAmount(500000)">+50만</button>
+        <button type="button" class="reset" onclick="clearAmount()">C</button>
+      `;
+    }
+  }
+
+  // 내역 placeholder 및 라벨 동적 전환
+  const descInp = document.getElementById('fDesc');
+  if (descInp && !STATE.editing) {
+    if (currentType === '수입') descInp.placeholder = '예: 9월 급여, 주식 배당금, 부수입';
+    else if (currentType === '저축') descInp.placeholder = '예: 청약저축, 적금 납입, 비상금';
+    else if (currentType === '대출상환') descInp.placeholder = '예: 전세대출 원리금, 학자금 상환';
+    else descInp.placeholder = '예: 점심, 커피, 마트';
+  }
+
+  // 소비성격(Mood) 필드는 지출일 때만 표시 (수입/저축/대출상환은 숨김)
+  const moodWrap = document.getElementById('moodFieldWrap');
+  if (moodWrap) {
+    moodWrap.style.display = (currentType === '지출') ? '' : 'none';
+  }
+
+  // 라벨 동적 변경 (입력자 -> 수입자)
+  const userLabel = document.getElementById('userChipsLabel');
+  if (userLabel) {
+    userLabel.textContent = (currentType === '수입') ? '수입자 (누구 수입?)' : '입력자';
+  }
+  const fixLabel = document.getElementById('fixChipsLabel');
+  if (fixLabel) {
+    fixLabel.textContent = (currentType === '수입') ? '정기/비정기' : '고정/변동';
   }
 
   const fixEl = document.getElementById('fixChips');
@@ -2767,7 +2924,7 @@ function renderFormChips(){
   }
 
   const moodEl = document.getElementById('moodChips');
-  if(moodEl){
+  if(moodEl && currentType === '지출'){
     const moods = ['필수소비','계획소비','충동소비','감성소비','투자성'];
     const currentMood = STATE.form.mood || '';
     moodEl.innerHTML = moods.map(m=>
@@ -2778,10 +2935,10 @@ function renderFormChips(){
   // 자주 쓰는 거래 템플릿 칩
   const templateEl = document.getElementById('templateChips');
   if(templateEl){
-    const tmpls = STATE.templates || [];
+    const tmpls = (STATE.templates || []).filter(t => !t.type || t.type === currentType);
     if(tmpls.length){
-      templateEl.innerHTML = tmpls.map((t,index)=>
-        `<button type="button" class="chip" onclick="applyTemplateByIndex(${index})">⚡ ${esc(t.name)}</button>`
+      templateEl.innerHTML = tmpls.map(t=>
+        `<button type="button" class="chip" onclick="applyTemplate('${esc(t.name)}')">⚡ ${esc(t.name)}</button>`
       ).join('');
       document.getElementById('templateField').style.display = '';
     } else {
@@ -2794,7 +2951,7 @@ function selectFormChip(field, value){
   if(field === 'type'){
     STATE.form.type = value;
     STATE.form.cat = null;
-    STATE.form.catManual = true; // 수동 조작
+    STATE.form.catManual = false;
     renderFormChips();
   } else if(field === 'cat'){
     STATE.form.cat = value;
@@ -3454,6 +3611,9 @@ function adjustSummaryOptimistic(tx, direction){
     STATE.summary.repay = Math.max(0, Number(STATE.summary.repay || 0) + amount);
     STATE.summary.left = Number(STATE.summary.left || 0) - amount;
   }
+  const inc = Number(STATE.summary.income || 0);
+  const sv = Number(STATE.summary.save || 0);
+  STATE.summary.savingRate = inc > 0 ? Math.round((sv / inc) * 100) : 0;
 }
 
 function setTxSubmitBusy(busy, label){
@@ -4623,8 +4783,15 @@ function bindApp(){
         if (val && !STATE.form.catManual) {
           // 예전에는 무조건 '기타'로 되돌렸는데, ⚙️설정 시트에 '기타'가 없으면
           // 어떤 칩도 선택되지 않은 채 유령 카테고리로 저장됐다.
-          // 설정에 있는 값 중에서만 고르고, 없으면 현재 선택을 그대로 둔다.
-          const cats = ((STATE.config && STATE.config.byType) || {})[STATE.form.type || '지출'] || [];
+          const defaultCatsByType = {
+            '지출': ['식비','교통/차량','주거/통신','쇼핑/문화','경조/이벤트','건강/의료','용돈'],
+            '수입': ['월급','부수입','상여','금융수입','기타수입'],
+            '저축': ['적금/예금','청약','투자','비상금'],
+            '대출상환': ['원금상환','이자납입','학자금','기타대출']
+          };
+          const curT = STATE.form.type || '지출';
+          const cfgCats = ((STATE.config && STATE.config.byType) || {})[curT];
+          const cats = (cfgCats && cfgCats.length) ? cfgCats : (defaultCatsByType[curT] || []);
           const fallback = cats.indexOf('기타') > -1 ? '기타' : (cats.indexOf(STATE.form.cat) > -1 ? STATE.form.cat : cats[0]);
           if (fallback && fallback !== STATE.form.cat) {
             STATE.form.cat = fallback;
