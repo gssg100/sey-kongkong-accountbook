@@ -3,7 +3,7 @@
 <head>
 <base target="_top">
 <meta charset="utf-8">
-<meta name="app-version" content="2026-09-01-settlement-v6">
+<meta name="app-version" content="2.0.0">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, interactive-widget=resizes-content">
 <meta name="description" content="지수와 하콩이의 빠르고 편한 공동 가계부">
 <meta name="theme-color" content="#f5f5f7">
@@ -524,6 +524,39 @@ body.dark-mode #toast{background:rgba(58,58,60,0.92)}
 /* 🔁 정기거래 결제자 배지 */
 .rec-user-badge{display:inline-flex;align-items:center;padding:2px 8px;border-radius:999px;font-size:11px;font-weight:800;background:var(--line-soft);color:var(--ink);margin-left:6px}
 
+/* 🏷️ 버전 표시 · 업데이트 알림 */
+.gate-version{position:absolute;left:0;right:0;bottom:calc(18px + var(--safe-b));font-size:11.5px;font-weight:700;color:var(--muted);opacity:.8;font-variant-numeric:tabular-nums}
+.ver-pill{margin-left:2px;padding:2px 8px;border-radius:999px;background:var(--line-soft);border:1px solid var(--line);color:var(--muted);font-size:11px;font-weight:800;font-variant-numeric:tabular-nums;cursor:pointer}
+.ver-pill:empty{display:none}
+.release-banner{max-width:1120px;margin:12px 16px 0;padding:12px 14px;display:flex;align-items:flex-start;justify-content:space-between;gap:10px;border-radius:16px;background:color-mix(in srgb,var(--forest) 10%,var(--card));border:1px solid color-mix(in srgb,var(--forest) 28%,var(--line));box-shadow:var(--shadow);animation:fade .25s ease}
+.release-banner[hidden]{display:none}
+@media (min-width:1152px){.release-banner{margin-left:auto;margin-right:auto}}
+.rb-main{min-width:0}
+.rb-title{font-size:13.5px;font-weight:800;color:var(--ink);line-height:1.4}
+.rb-title b{color:var(--forest)}
+.rb-title span{margin-left:6px;font-size:11.5px;font-weight:700;color:var(--muted)}
+.rb-notes{margin:6px 0 0 16px;font-size:12px;color:var(--muted);line-height:1.5}
+.rb-actions{display:flex;align-items:center;gap:6px;flex-shrink:0}
+.rb-more{min-height:32px;padding:0 10px;border-radius:10px;background:var(--forest);color:#fff;font-size:12px;font-weight:800}
+.rb-x{width:32px;height:32px;border-radius:10px;background:var(--line-soft);color:var(--muted);font-size:13px}
+.app-info-card{margin-top:16px;padding:16px 18px;border-radius:20px;background:var(--card);border:1px solid var(--line-soft);box-shadow:var(--shadow)}
+.app-info-head{display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap}
+.app-info-title{font-size:15px;font-weight:900;color:var(--ink)}
+.app-info-title b{color:var(--forest);font-variant-numeric:tabular-nums}
+.app-info-sub{margin-top:2px;font-size:12px;font-weight:700;color:var(--muted)}
+.app-info-server{padding:4px 10px;border-radius:999px;font-size:11.5px;font-weight:800;font-variant-numeric:tabular-nums}
+.app-info-server.ok{background:color-mix(in srgb,var(--forest) 14%,transparent);color:var(--forest)}
+.app-info-server.warn{background:var(--gold-soft);color:#b15c00}
+body.dark-mode .app-info-server.warn{color:var(--gold)}
+.app-release-list{margin-top:12px;padding-top:10px;border-top:1px solid var(--line-soft)}
+.app-release-list summary{cursor:pointer;font-size:12.5px;font-weight:800;color:var(--muted)}
+.app-release{margin-top:10px;padding:10px 12px;border-radius:12px;background:var(--bg)}
+.app-release.latest{border:1px solid color-mix(in srgb,var(--forest) 25%,var(--line))}
+.app-release-head{display:flex;justify-content:space-between;gap:8px;font-size:12.5px;color:var(--ink)}
+.app-release-head span{font-size:11.5px;color:var(--muted);font-weight:700}
+.app-release ul{margin:6px 0 0 16px;font-size:12px;color:var(--muted);line-height:1.55}
+.wallet-hint{margin-top:8px;font-size:11px;font-weight:700;color:var(--forest);opacity:.85;text-align:left}
+
 @media (max-width:760px){.settlement-hero{padding:20px;border-radius:20px}.settlement-closed-note{align-items:flex-start;flex-direction:column}.settlement-metrics{grid-template-columns:1fr}.settlement-section-head{align-items:flex-start}.settlement-section-head>div:first-child{align-items:flex-start}.settlement-actions{justify-content:flex-start}.settlement-grid-main{grid-template-columns:repeat(2,minmax(0,1fr))}.settlement-grid-main .settlement-desc{grid-column:span 2}.settlement-savebar{align-items:stretch;flex-direction:column}.settlement-savebar .primary{width:100%}.recon-row{grid-template-columns:1fr 1fr}.recon-row>div:first-child,.recon-row .recon-reason,.recon-diff{grid-column:span 2}.recon-diff{justify-content:flex-start;height:auto;min-height:20px}.investment-row{grid-template-columns:repeat(2,minmax(0,1fr))}.investment-row>input{grid-column:span 2}.investment-row .valuation{justify-content:flex-start}.holding-row{grid-template-columns:repeat(2,minmax(0,1fr))}.holding-row>input:first-child,.holding-row>input:nth-child(3){grid-column:span 2}.holding-row .valuation{justify-content:flex-start}.settlement-close-card{padding:18px}}
 
 </style>
@@ -554,6 +587,7 @@ body.dark-mode #toast{background:rgba(58,58,60,0.92)}
   </div>
   <button id="gateBtn">열기</button>
   <div id="gateMsg" role="alert" aria-live="assertive"></div>
+  <div id="gateVersion" class="gate-version"></div>
 </div>
 
 <!-- 서비스 전체 레이아웃 -->
@@ -562,7 +596,7 @@ body.dark-mode #toast{background:rgba(58,58,60,0.92)}
     <div class="top-inner">
       <div class="header-left">
         <div class="brand">
-          <div class="name"><span class="dot"></span>sey콩콩 가계부</div>
+          <div class="name"><span class="dot"></span>sey콩콩 가계부 <button type="button" class="ver-pill" id="verPill" onclick="openReleaseNotes()" aria-label="앱 버전 · 업데이트 내역 보기"></button></div>
         </div>
       </div>
 
@@ -586,6 +620,8 @@ body.dark-mode #toast{background:rgba(58,58,60,0.92)}
       </div>
     </div>
   </header>
+
+  <div id="releaseBanner" class="release-banner" role="status" hidden></div>
 
   <main>
     <section class="view on" id="v-home"></section>
@@ -753,7 +789,7 @@ body.dark-mode #toast{background:rgba(58,58,60,0.92)}
       </div>
       <div style="display:flex; gap:8px; margin-top:8px;">
         <button type="button" class="btn" id="addAssetSubItemBtn" style="flex:1; background:var(--line); color:var(--text); font-size:13px;">+ 항목 추가</button>
-        <button type="button" class="btn" id="restoreAssetSubItemsBtn" onclick="restoreOriginalAssetItems()" style="flex:1; background:var(--card); border:1px solid var(--line); color:var(--muted); font-size:12px;">🔄 원래 세부항목 복원</button>
+        <button type="button" class="btn" id="restoreAssetSubItemsBtn" onclick="restoreOriginalAssetItems()" style="display:none; flex:1; background:var(--card); border:1px solid var(--line); color:var(--muted); font-size:12px;">📋 원본(8/2) 세부항목 불러오기</button>
       </div>
     </div>
     <div class="total-asset" style="margin-top:16px; background:var(--bg); border-radius:12px; padding:16px; margin-bottom:12px;">
@@ -794,6 +830,11 @@ body.dark-mode #toast{background:rgba(58,58,60,0.92)}
 <!-- 📦 2. 데이터 상태 (Store) 모듈 -->
 <script>
 /* ============ 앱 글로벌 상태 (Store) ============ */
+/* @release:start — pwa-site/scripts/build-static.mjs 가 release.json 을 보고 자동으로 채운다. 손으로 고치지 말 것. */
+const APP_VERSION = '2.0.0';
+const APP_BUILT_AT = '2026-09-26T17:44:51+09:00';
+const APP_RELEASE_NOTES = [{"version":"2.0.0","date":"2026-09-26T17:44:51+09:00","notes":["앱 버전 표시 추가 — 새 버전이 적용되면 화면 위에 알려줘요","자산: 보물창고 '비상금'이 저장 후 0원으로 되돌아가던 문제 수정","자산: 항목을 전부 지워도 옛 금액이 다시 살아나던 문제 수정","자산: 한 줄로 합쳐진 항목은 수정 창에서 원본(8/2) 세부항목을 불러와 확인 후 저장","자주 쓰는 거래 버튼이 이름에 따옴표가 있으면 눌리지 않던 문제 수정","보안: 누구나 볼 수 있던 화면 코드에서 자산 금액 정보 제거"]}];
+/* @release:end */
 const DEFAULT_GAS_URL = 'https://script.google.com/macros/s/AKfycbwjFv7OSDc6T4vD0nUQA5E-W1QazAEU5dowQroEXard5DCMtP0FiMRlwtIjuEfDzo8phA/exec';
 const APP_CACHE_VERSION = 5;
 const BRIDGE_CHANNEL = 'sey-budget-bridge-v1';
@@ -1242,36 +1283,6 @@ function esc(s){ return String(s==null?'':s).replace(/[&<>"']/g,c=>({'&':'&amp;'
 function emo(cat){
   const m={'식비':'🍔','교통/차량':'🚗','주거/통신':'🏠','쇼핑/문화':'🛍️','경조/이벤트':'🎉','건강/의료':'💊','용돈':'🪙','월급':'💰','상여':'💎','금융수입':'📈','기타수입':'💳','기타':'🏷️'};
   return m[cat]||'🏷️';
-}
-
-function getOriginalAssetBreakdown(key) {
-  const map = {
-    stock: [
-      { name: '지수 QQQ', amount: 3699860 },
-      { name: '하영 QQQ', amount: 3699860 },
-      { name: '삼성전자(지수)', amount: 1550000 }
-    ],
-    saving: [
-      { name: '하콩보험적금(연금형태)', amount: 24987040 },
-      { name: '하콩주택청약', amount: 4950000 },
-      { name: '지수주택청약', amount: 4791920 },
-      { name: '하영여행적금', amount: 3000000 }
-    ],
-    debt: [
-      { name: '학자금대출', amount: 8249000 },
-      { name: '교직원공제회', amount: 5847330 }
-    ],
-    estate: [
-      { name: '전세보증금', amount: 48800000 }
-    ],
-    cash: [
-      { name: 'sey콩콩 통장', amount: 5171432 }
-    ],
-    safe: [
-      { name: '비상금', amount: 0 }
-    ]
-  };
-  return map[key] ? JSON.parse(JSON.stringify(map[key])) : [];
 }
 
 let toastT;
@@ -1756,6 +1767,44 @@ function setUserFilter(user){
   toast(user ? `${user}가 입력한 거래만 표시해요` : '전체 거래를 표시해요');
 }
 
+/* ============ 앱 버전 · 업데이트 내역 ============
+ * 버전 값은 Store.html 의 @release 구역(빌드가 자동 기록)에서 온다.
+ */
+function formatReleaseTime(iso){
+  const m = String(iso || '').match(/^(\d{4})-(\d{2})-(\d{2})[T ](\d{2}):(\d{2})/);
+  return m ? `${Number(m[2])}월 ${Number(m[3])}일 ${m[4]}:${m[5]}` : '';
+}
+
+function renderAppInfoCard(){
+  const ver = (typeof APP_VERSION !== 'undefined') ? APP_VERSION : '';
+  if (!ver) return '';
+  const builtAt = formatReleaseTime(typeof APP_BUILT_AT !== 'undefined' ? APP_BUILT_AT : '');
+  const releases = (typeof APP_RELEASE_NOTES !== 'undefined' && Array.isArray(APP_RELEASE_NOTES)) ? APP_RELEASE_NOTES : [];
+  const server = STATE.serverVersion || '';
+  let serverHtml;
+  if (!server) serverHtml = `<span class="app-info-server warn">서버 버전 확인 전</span>`;
+  else if (server === ver) serverHtml = `<span class="app-info-server ok">서버 v${esc(server)} ✓</span>`;
+  else serverHtml = `<span class="app-info-server warn">서버 v${esc(server)} · 화면과 달라요</span>`;
+
+  const releaseHtml = releases.slice(0, 5).map((r, i) => `
+    <div class="app-release${i === 0 ? ' latest' : ''}">
+      <div class="app-release-head"><b>v${esc(r.version)}</b><span>${esc(formatReleaseTime(r.date))}</span></div>
+      <ul>${(r.notes || []).map(n => `<li>${esc(n)}</li>`).join('')}</ul>
+    </div>`).join('');
+
+  return `
+    <div class="app-info-card" id="appInfoCard">
+      <div class="app-info-head">
+        <div>
+          <div class="app-info-title">ℹ️ 앱 버전 <b>v${esc(ver)}</b></div>
+          <div class="app-info-sub">${builtAt ? esc(builtAt) + ' 업데이트' : ''}</div>
+        </div>
+        ${serverHtml}
+      </div>
+      ${releaseHtml ? `<details class="app-release-list"${STATE.releaseNotesOpen ? ' open' : ''}><summary>업데이트 내역 보기</summary>${releaseHtml}</details>` : ''}
+    </div>`;
+}
+
 function renderMore(){
   const el=document.getElementById('v-more');
   if(!el) return;
@@ -1809,6 +1858,8 @@ function renderMore(){
       <button class="more-item" onclick="switchView('recurring')"><span class="more-icon">🔁</span>정기거래</button>
       ${STATE.aiReady ? '<button class="more-item" onclick="switchView(\'ai\')"><span class="more-icon">🤖</span>AI 분석</button>' : ''}
     </div>
+
+    ${renderAppInfoCard()}
 
     <div class="notif-card">
       <div class="notif-head">
@@ -2158,20 +2209,14 @@ function renderAsset(){
   const walletCardsHtml = assetDefs.map(d=>{
     const item = items[d.key] || { value:0, subItems:[] };
     const curVal = item.value || 0;
-    let subs = (item.subItems || []).filter(s => s && (s.name || s.amount));
-    if (subs.length <= 1) {
-      const n = subs[0] ? String(subs[0].name || '').trim() : '';
-      if (!n || n === '기본 항목' || n === '항목' || n === d.label ||
-          n.indexOf('증권사') > -1 || n.indexOf('이미 들어간') > -1 ||
-          n.indexOf('갚을 돈') > -1 || n.indexOf('은행 앱') > -1 ||
-          n.indexOf('전세금/집값') > -1 || n === '비상금') {
-        const defaults = (typeof getOriginalAssetBreakdown === 'function') ? getOriginalAssetBreakdown(d.key) : [];
-        if (defaults && defaults.length) subs = defaults;
-      }
-    }
-    
+    // 시트에 실제로 저장된 항목만 보여준다. 예전에는 한 줄짜리면 옛 원본 금액을 대신 그려서
+    // 카드 합계와 아래 항목 금액이 서로 달랐다(비운 대출도 옛 대출이 보였다).
+    const subs = (item.subItems || []).filter(s => s && (s.name || s.amount));
+    const onlyLabelRow = subs.length === 1 && ['', '기본 항목', '항목', d.label].indexOf(String(subs[0].name || '').trim()) > -1;
+    const canRestore = !!(a.restorable && a.restorable[d.key] && a.restorable[d.key].length);
+
     let subsHtml = '';
-    if (subs.length > 0) {
+    if (subs.length > 0 && !onlyLabelRow) {
       subsHtml = `<div class="wallet-subitems" style="margin-top:10px; border-top:1px dashed var(--line-soft); padding-top:8px; font-size:12px; text-align:left; width:100%;">
         ${subs.map(s => `
           <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:4px;">
@@ -2207,6 +2252,7 @@ function renderAsset(){
         <div style="font-size:12px; color:var(--muted); opacity:0.6;">✏️ 수정</div>
       </div>
       ${subsHtml}
+      ${canRestore ? `<div class="wallet-hint">📋 한 줄로 합쳐져 있어요 · 눌러서 원본 세부항목 불러오기</div>` : ''}
     </button>`;
   }).join('');
 
@@ -2542,6 +2588,62 @@ function showMainApp(){
   if (gate) gate.style.display = 'none';
   const app = document.getElementById('app');
   if (app) app.classList.add('on');
+  showReleaseBannerIfNew();
+}
+
+/* ============ 버전 표시 · 업데이트 알림 ============
+ * 배포할 때마다 build-static.mjs 가 버전을 올려 Store.html 에 기록한다.
+ * 기기에서 처음 보는 버전이면 상단 배너로 한 번 알려준다.
+ */
+const SEEN_VERSION_KEY = 'sey_seen_app_version';
+let RELEASE_BANNER_SHOWN = false;
+
+function renderVersionMarks(){
+  const label = 'v' + APP_VERSION;
+  const when = formatReleaseTime(APP_BUILT_AT);
+  const gateVer = document.getElementById('gateVersion');
+  if (gateVer) gateVer.textContent = label + (when ? ' · ' + when + ' 업데이트' : '');
+  const pill = document.getElementById('verPill');
+  if (pill) { pill.textContent = label; pill.title = when ? when + ' 업데이트' : label; }
+}
+
+function showReleaseBannerIfNew(){
+  if (RELEASE_BANNER_SHOWN) return;
+  RELEASE_BANNER_SHOWN = true;
+  let seen = '';
+  try { seen = localStorage.getItem(SEEN_VERSION_KEY) || ''; } catch(e) {}
+  if (seen === APP_VERSION) return;
+  // 배너를 띄운 순간 본 것으로 기록한다. 닫지 않아도 다음 실행부터는 다시 뜨지 않는다.
+  safeSet(SEEN_VERSION_KEY, APP_VERSION);
+  const box = document.getElementById('releaseBanner');
+  if (!box) return;
+  const latest = (APP_RELEASE_NOTES || [])[0] || {};
+  const notes = (latest.version === APP_VERSION ? (latest.notes || []) : []).slice(0, 3);
+  const when = formatReleaseTime(APP_BUILT_AT);
+  box.innerHTML = `
+    <div class="rb-main">
+      <div class="rb-title">✨ 새 버전 <b>v${esc(APP_VERSION)}</b> 적용됨${when ? `<span>${esc(when)}</span>` : ''}</div>
+      ${notes.length ? `<ul class="rb-notes">${notes.map(n => `<li>${esc(n)}</li>`).join('')}</ul>` : ''}
+    </div>
+    <div class="rb-actions">
+      <button type="button" class="rb-more" onclick="openReleaseNotes()">자세히</button>
+      <button type="button" class="rb-x" onclick="dismissReleaseBanner()" aria-label="업데이트 알림 닫기">✕</button>
+    </div>`;
+  box.hidden = false;
+}
+
+function dismissReleaseBanner(){
+  const box = document.getElementById('releaseBanner');
+  if (box) box.hidden = true;
+}
+
+function openReleaseNotes(){
+  dismissReleaseBanner();
+  STATE.releaseNotesOpen = true;
+  switchView('more');
+  STATE.releaseNotesOpen = false;
+  const card = document.getElementById('appInfoCard');
+  if (card && card.scrollIntoView) setTimeout(() => card.scrollIntoView({ behavior: 'smooth', block: 'start' }), 50);
 }
 
 function showLoginGate(message){
@@ -2598,6 +2700,7 @@ function applyBootData(data){
   STATE.transactions = data.transactions || STATE.transactions || [];
   STATE.settlement = data.settlement || STATE.settlement;
   if (STATE.settlement && STATE.settlement.ym === STATE.ym) hydrateSettlementDraft(STATE.ym, STATE.settlement.sharedDraft);
+  STATE.serverVersion = data.appVersion || STATE.serverVersion || '';
   applyGlobalData(data);
   setTimeout(() => {
     checkAndDispatchDueNotifications();
@@ -2937,6 +3040,8 @@ function renderFormChips(){
   if (moodWrap) {
     moodWrap.style.display = (currentType === '지출') ? '' : 'none';
   }
+  // 숨긴 채로 남은 소비성격이 수입·저축 거래에 같이 저장되지 않게 한다. (기존 거래 수정 시엔 그대로 둔다)
+  if (currentType !== '지출' && !STATE.editing) STATE.form.mood = '';
 
   // 라벨 동적 변경 (입력자 -> 수입자)
   const userLabel = document.getElementById('userChipsLabel');
@@ -2980,8 +3085,9 @@ function renderFormChips(){
   if(templateEl){
     const tmpls = (STATE.templates || []).filter(t => !t.type || t.type === currentType);
     if(tmpls.length){
+      // 이름을 onclick 문자열에 끼워 넣으면 ' 가 든 템플릿이 먹통이 된다. data-* 로 넘긴다.
       templateEl.innerHTML = tmpls.map(t=>
-        `<button type="button" class="chip" onclick="applyTemplate('${esc(t.name)}')">⚡ ${esc(t.name)}</button>`
+        `<button type="button" class="chip" data-name="${esc(t.name)}" onclick="applyTemplate(this.dataset.name)">⚡ ${esc(t.name)}</button>`
       ).join('');
       document.getElementById('templateField').style.display = '';
     } else {
@@ -4063,20 +4169,14 @@ function changeMonth(delta){
     function openAssetEditModal(key, label) {
       rememberDialogTrigger();
       STATE.assetEditKey = key;
-      let items = (STATE.assets && STATE.assets.items && STATE.assets.items[key] || {}).subItems || [];
-      if (items.length <= 1) {
-        const n = items[0] ? String(items[0].name || '').trim() : '';
-        if (!n || n === '기본 항목' || n === '항목' || n === label ||
-            n.indexOf('증권사') > -1 || n.indexOf('이미 들어간') > -1 ||
-            n.indexOf('갚을 돈') > -1 || n.indexOf('은행 앱') > -1 ||
-            n.indexOf('전세금/집값') > -1 || n === '비상금') {
-          const defaults = (typeof getOriginalAssetBreakdown === 'function') ? getOriginalAssetBreakdown(key) : [];
-          if (defaults && defaults.length) items = defaults;
-        }
-      }
+      // 수정 창은 항상 시트에 저장된 실제 값으로 연다. 예전에는 한 줄짜리면 옛 원본 금액으로
+      // 바꿔치기해서, 보물창고 '비상금' 같은 항목이 0원으로 보였다가 그대로 저장될 수 있었다.
+      const items = (STATE.assets && STATE.assets.items && STATE.assets.items[key] || {}).subItems || [];
       STATE.assetEditTemp = JSON.parse(JSON.stringify(items));
       if (STATE.assetEditTemp.length === 0) STATE.assetEditTemp.push({name: '', amount: 0});
-      
+      const restoreBtn = document.getElementById('restoreAssetSubItemsBtn');
+      if (restoreBtn) restoreBtn.style.display = assetRestoreTemplate(key).length ? '' : 'none';
+
       document.getElementById('overlay').classList.add('on');
       document.getElementById('assetEditSheet').classList.add('on');
       
@@ -4089,13 +4189,24 @@ function changeMonth(delta){
       renderAssetEditList();
     }
 
+    // 원본 세부항목은 서버가 "한 줄로 합쳐진 대분류"에 한해서만, 로그인 뒤에 내려준다.
+    // (개인 금융정보라 공개되는 화면 코드에는 넣지 않는다)
+    function assetRestoreTemplate(key) {
+      const r = (STATE.assets && STATE.assets.restorable) || {};
+      return Array.isArray(r[key]) ? r[key] : [];
+    }
+
     window.restoreOriginalAssetItems = function() {
       const key = STATE.assetEditKey;
-      const defaults = (typeof getOriginalAssetBreakdown === 'function') ? getOriginalAssetBreakdown(key) : [];
-      if (!defaults || !defaults.length) return toast('복원할 기본 내역이 없습니다.');
+      const defaults = assetRestoreTemplate(key);
+      if (!defaults.length) return toast('불러올 원본 세부항목이 없어.');
+      const curTotal = STATE.assetEditTemp.reduce((acc, it) => acc + (Number(it.amount) || 0), 0);
       STATE.assetEditTemp = JSON.parse(JSON.stringify(defaults));
       renderAssetEditList();
-      toast('기존 원래 세부 항목을 불러왔습니다.');
+      const tmplTotal = defaults.reduce((acc, it) => acc + (Number(it.amount) || 0), 0);
+      toast(curTotal && curTotal !== tmplTotal
+        ? `8/2 원본 기준이야 (현재 ${fmt(curTotal)} → 원본 ${fmt(tmplTotal)}). 금액 확인 후 저장해줘.`
+        : '8/2 원본 세부항목을 불러왔어. 확인 후 저장해줘.');
     };
     
     function renderAssetEditList() {
@@ -4915,6 +5026,7 @@ function bindApp(){
 }
 
 document.addEventListener('DOMContentLoaded', ()=>{
+  renderVersionMarks();
   bindApp();
   openGate();
 });
