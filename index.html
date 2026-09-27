@@ -3,7 +3,7 @@
 <head>
 <base target="_top">
 <meta charset="utf-8">
-<meta name="app-version" content="2.2.1">
+<meta name="app-version" content="2.3.0">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, interactive-widget=resizes-content">
 <meta name="description" content="지수와 하콩이의 빠르고 편한 공동 가계부">
 <meta name="theme-color" content="#f5f5f7">
@@ -416,6 +416,7 @@ body.dark-mode #toast{background:rgba(58,58,60,0.92)}
   .sheet .sbody{padding-left:18px;padding-right:18px}
   .tx .ico{width:38px;height:38px;border-radius:12px;font-size:18px}
   .tx .amt{font-size:14px}
+  .list-global-filters{grid-template-columns:1fr 1fr}.list-global-filters label:first-child{grid-column:span 2}
 }
 
 /*  Category Color Coding for Transaction Icons */
@@ -506,6 +507,15 @@ body.dark-mode #toast{background:rgba(58,58,60,0.92)}
 /* 🔍 내역 검색창 스타일 */
 .list-search-wrap{position:relative;margin:10px 0 6px;display:flex;align-items:center}
 .list-search-wrap .search-ic{position:absolute;left:14px;font-size:14px;color:var(--muted);pointer-events:none}
+.list-scope-toggle{display:inline-flex;gap:4px;padding:4px;margin:2px 0 4px;border-radius:12px;background:var(--line-soft)}
+.list-scope-toggle button{min-height:36px;padding:0 12px;border-radius:9px;color:var(--muted);font-size:12.5px;font-weight:850}
+.list-scope-toggle button.on{background:var(--card);color:var(--forest);box-shadow:0 2px 8px rgba(0,0,0,.06)}
+.list-global-filters{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin:8px 0 10px}
+.list-global-filters label{display:flex;flex-direction:column;gap:5px;font-size:11px;font-weight:800;color:var(--muted)}
+.list-global-filters input,.list-global-filters select{min-width:0;height:40px;padding:0 10px;border:1px solid var(--line);border-radius:11px;background:var(--card);color:var(--ink);font-size:12.5px;font-weight:700}
+.list-remote-error{display:flex;align-items:center;justify-content:space-between;gap:10px;margin:8px 0;padding:10px 12px;border-radius:12px;background:color-mix(in srgb,var(--expense) 8%,var(--card));color:var(--expense);font-size:12px;font-weight:750}
+.list-remote-error button{flex-shrink:0;padding:7px 10px;border-radius:9px;background:var(--expense);color:#fff;font-size:11.5px;font-weight:850}
+.list-readonly-note{margin:8px 0 10px;padding:9px 11px;border-radius:11px;background:var(--line-soft);color:var(--muted);font-size:11.5px;font-weight:750;line-height:1.45}
 .list-search-inp{width:100%;height:44px;padding:0 38px 0 40px;border-radius:14px;border:1px solid var(--line);background:var(--card);color:var(--ink);font-size:14px;font-weight:650;outline:none;transition:border-color .15s,box-shadow .15s}
 .list-search-inp:focus{border-color:var(--forest);box-shadow:0 0 0 3px color-mix(in srgb,var(--forest) 12%,transparent)}
 .search-clear-btn{position:absolute;right:10px;width:24px;height:24px;border-radius:50%;border:0;background:var(--line-soft);color:var(--muted);font-size:12px;display:flex;align-items:center;justify-content:center;cursor:pointer}
@@ -672,7 +682,7 @@ body.dark-mode .settlement-close-warn{color:var(--gold)}
 
 <!-- 빠른 입력 시트 모달 -->
 <div class="overlay" id="overlay" aria-hidden="true"></div>
-<div class="sheet" id="sheet" role="dialog" aria-modal="true" aria-labelledby="sheetTitle">
+<div class="sheet" id="sheet" role="dialog" aria-modal="true" aria-labelledby="sheetTitle" aria-hidden="true">
   <div class="grip"></div>
   <div class="shead">
     <h2 id="sheetTitle">빠른 입력</h2>
@@ -714,7 +724,7 @@ body.dark-mode .settlement-close-warn{color:var(--gold)}
   </div>
 </div>
 
-<div class="sheet" id="recSheet" role="dialog" aria-modal="true" aria-labelledby="recSheetTitle">
+<div class="sheet" id="recSheet" role="dialog" aria-modal="true" aria-labelledby="recSheetTitle" aria-hidden="true">
   <div class="grip"></div>
   <div class="shead">
     <h2 id="recSheetTitle">새 고정거래 추가</h2>
@@ -786,7 +796,7 @@ body.dark-mode .settlement-close-warn{color:var(--gold)}
 </div>
 <div id="syncStatus" role="status" aria-live="polite"></div>
 
-<div class="sheet" id="bulkCatSheet" role="dialog" aria-modal="true" aria-labelledby="bulkCatSheetTitle">
+<div class="sheet" id="bulkCatSheet" role="dialog" aria-modal="true" aria-labelledby="bulkCatSheetTitle" aria-hidden="true">
   <div class="grip"></div>
   <div class="shead">
     <h2 id="bulkCatSheetTitle">일괄 카테고리 변경</h2>
@@ -803,7 +813,7 @@ body.dark-mode .settlement-close-warn{color:var(--gold)}
   </div>
 </div>
 
-<div class="sheet" id="assetEditSheet" role="dialog" aria-modal="true" aria-labelledby="assetEditSheetTitle">
+<div class="sheet" id="assetEditSheet" role="dialog" aria-modal="true" aria-labelledby="assetEditSheetTitle" aria-hidden="true">
   <div class="grip"></div>
   <div class="shead">
     <h2 id="assetEditSheetTitle">자산 수정</h2>
@@ -830,7 +840,7 @@ body.dark-mode .settlement-close-warn{color:var(--gold)}
   </div>
 </div>
 
-<div class="sheet" id="budgetSheet" role="dialog" aria-modal="true" aria-labelledby="budgetSheetTitle">
+<div class="sheet" id="budgetSheet" role="dialog" aria-modal="true" aria-labelledby="budgetSheetTitle" aria-hidden="true">
   <div class="grip"></div>
   <div class="shead">
     <h2 id="budgetSheetTitle">🎯 예산 관리</h2>
@@ -859,14 +869,15 @@ body.dark-mode .settlement-close-warn{color:var(--gold)}
 <script>
 /* ============ 앱 글로벌 상태 (Store) ============ */
 /* @release:start — pwa-site/scripts/build-static.mjs 가 release.json 을 보고 자동으로 채운다. 손으로 고치지 말 것. */
-const APP_VERSION = '2.2.1';
-const APP_BUILT_AT = '2026-09-27T22:04:26+09:00';
-const APP_RELEASE_NOTES = [{"version":"2.2.1","date":"2026-09-27T22:04:26+09:00","notes":["대용량 정산: 한 달 거래가 1,000건을 넘어도 대사·정산 합계·정산 배치가 전체 거래 기준으로 계산","저장 재시도: 연결 오류만 5초→15초→1분→5분 백오프로 자동 재시도하고 검증·마감 오류는 '확인 필요'로 중단","동기화 성능: 변경이 없는 달은 revision으로 확인해 거래 전체 목록을 다시 내려받지 않는 경량 새로고침 적용","시트 안전: 기존 헤더가 예상과 다르면 자동 덮어쓰지 않고 중단하며, 정상 legacy 시트는 뒤쪽 새 컬럼만 안전하게 확장","배포 안전: Apps Script 배포 뒤 생성된 정적 사이트 파일만 GitHub에 자동 게시하도록 릴리스 절차 보강"]},{"version":"2.2.0","date":"2026-09-27T20:57:19+09:00","notes":["데이터 안전: 월마감과 월 회고를 분리해 회고 저장·정산 다시 열기로 마감 기록이 손상되지 않게 개선","정산 안전: 마감된 달은 다시 열기 전까지 거래 추가·수정·삭제를 서버에서 차단","동기화 안전: 정산 공유초안에 revision을 추가하고 저장 중 추가 편집·다중 기기 충돌 시 최신 내용을 보존","오프라인 안전: 기기 저장에 실패한 입력을 저장 완료로 표시하지 않도록 개선","화면 보안: 거래 설명의 inline 이벤트 삽입과 자동분류 raw HTML 렌더링 제거"]},{"version":"2.1.0","date":"2026-09-26T18:01:20+09:00","notes":["정산 마감이 안 되던 문제 수정 — 응답 대기 20초 → 3분, 늦어져도 실제 마감 여부를 다시 확인","앱이 항상 이번 달로 열려요 — 지난달 정산은 홈 맨 위 '정산하기' 카드와 더보기 > 월 정산에서","내역: 지출·수입·저축 탭에 합계 금액 표시, 분류를 고르면 분류 합계와 비중까지","정산: 저장 안 한 대사·투자값을 마감 전에 자동 저장, 체크 항목이 화면 갱신에도 유지","정산: 빈 초안 행은 자동 정리, 다음 달 예산 덮어쓰기를 거절해도 마감은 진행"]},{"version":"2.0.0","date":"2026-09-26T17:44:51+09:00","notes":["앱 버전 표시 추가 — 새 버전이 적용되면 화면 위에 알려줘요","자산: 보물창고 '비상금'이 저장 후 0원으로 되돌아가던 문제 수정","자산: 항목을 전부 지워도 옛 금액이 다시 살아나던 문제 수정","자산: 한 줄로 합쳐진 항목은 수정 창에서 원본(8/2) 세부항목을 불러와 확인 후 저장","자주 쓰는 거래 버튼이 이름에 따옴표가 있으면 눌리지 않던 문제 수정","보안: 누구나 볼 수 있던 화면 코드에서 자산 금액 정보 제거"]}];
+const APP_VERSION = '2.3.0';
+const APP_BUILT_AT = '2026-09-27T22:26:29+09:00';
+const APP_RELEASE_NOTES = [{"version":"2.3.0","date":"2026-09-27T22:26:29+09:00","notes":["로그인 보안: v3 세션 registry와 현재 세션·모든 기기 원격 로그아웃을 추가하고, 구 v2 세션도 전체 로그아웃 시 함께 폐기","PIN 보호: 기기별 로그인 실패 제한으로 다른 기기의 오입력 때문에 함께 잠기는 문제를 줄이고 전역 abuse guard를 보조 안전망으로 분리","내역 검색: 현재 월/전체 기간 검색을 전환할 수 있고 소비성격·최소/최대 금액 필터와 서버 검색을 연결","알림 정리: 실제 서버 Web Push처럼 보이던 표현을 제거하고 앱 실행 중 기기 알림으로 명확히 표시, 예산 초과·빠른 소진 경고를 실제 동작으로 연결","접근성·안전: 모달 배경 inert·초기 포커스·포커스 트랩을 보강하고 전체기간 검색은 조회 전용, 마감월 일괄변경은 서버에서 사전 차단"]},{"version":"2.2.1","date":"2026-09-27T22:04:26+09:00","notes":["대용량 정산: 한 달 거래가 1,000건을 넘어도 대사·정산 합계·정산 배치가 전체 거래 기준으로 계산","저장 재시도: 연결 오류만 5초→15초→1분→5분 백오프로 자동 재시도하고 검증·마감 오류는 '확인 필요'로 중단","동기화 성능: 변경이 없는 달은 revision으로 확인해 거래 전체 목록을 다시 내려받지 않는 경량 새로고침 적용","시트 안전: 기존 헤더가 예상과 다르면 자동 덮어쓰지 않고 중단하며, 정상 legacy 시트는 뒤쪽 새 컬럼만 안전하게 확장","배포 안전: Apps Script 배포 뒤 생성된 정적 사이트 파일만 GitHub에 자동 게시하도록 릴리스 절차 보강"]},{"version":"2.2.0","date":"2026-09-27T20:57:19+09:00","notes":["데이터 안전: 월마감과 월 회고를 분리해 회고 저장·정산 다시 열기로 마감 기록이 손상되지 않게 개선","정산 안전: 마감된 달은 다시 열기 전까지 거래 추가·수정·삭제를 서버에서 차단","동기화 안전: 정산 공유초안에 revision을 추가하고 저장 중 추가 편집·다중 기기 충돌 시 최신 내용을 보존","오프라인 안전: 기기 저장에 실패한 입력을 저장 완료로 표시하지 않도록 개선","화면 보안: 거래 설명의 inline 이벤트 삽입과 자동분류 raw HTML 렌더링 제거"]},{"version":"2.1.0","date":"2026-09-26T18:01:20+09:00","notes":["정산 마감이 안 되던 문제 수정 — 응답 대기 20초 → 3분, 늦어져도 실제 마감 여부를 다시 확인","앱이 항상 이번 달로 열려요 — 지난달 정산은 홈 맨 위 '정산하기' 카드와 더보기 > 월 정산에서","내역: 지출·수입·저축 탭에 합계 금액 표시, 분류를 고르면 분류 합계와 비중까지","정산: 저장 안 한 대사·투자값을 마감 전에 자동 저장, 체크 항목이 화면 갱신에도 유지","정산: 빈 초안 행은 자동 정리, 다음 달 예산 덮어쓰기를 거절해도 마감은 진행"]},{"version":"2.0.0","date":"2026-09-26T17:44:51+09:00","notes":["앱 버전 표시 추가 — 새 버전이 적용되면 화면 위에 알려줘요","자산: 보물창고 '비상금'이 저장 후 0원으로 되돌아가던 문제 수정","자산: 항목을 전부 지워도 옛 금액이 다시 살아나던 문제 수정","자산: 한 줄로 합쳐진 항목은 수정 창에서 원본(8/2) 세부항목을 불러와 확인 후 저장","자주 쓰는 거래 버튼이 이름에 따옴표가 있으면 눌리지 않던 문제 수정","보안: 누구나 볼 수 있던 화면 코드에서 자산 금액 정보 제거"]}];
 /* @release:end */
 const DEFAULT_GAS_URL = 'https://script.google.com/macros/s/AKfycbwjFv7OSDc6T4vD0nUQA5E-W1QazAEU5dowQroEXard5DCMtP0FiMRlwtIjuEfDzo8phA/exec';
 const APP_CACHE_VERSION = 5;
 const BRIDGE_CHANNEL = 'sey-budget-bridge-v1';
 const AUTH_STORAGE_KEY = 'sey_session_auth_v2';
+const DEVICE_ID_KEY = 'sey_device_id_v1';
 const BOOT_CACHE_KEY = 'sey_boot_cache_v5';
 const MONTH_CACHE_PREFIX = 'sey_month_cache_v5_';
 const PENDING_QUEUE_KEY = 'sey_pending_tx_v2';
@@ -883,7 +894,10 @@ const STATE = {
   templates: [], recurrings: [], recurringStatus: null, assetSnapshots: [], pending: [],
   aiReady: false, aiHistory: [], closeHistory: [], insight: null, descDict: {},
   editing: null, form: { type: null, cat: null, fixed: '변동', user: '', catManual: false },
-  list: { mode: 'month', query: '', writer: '', type: '', category: '', rows: [], count: 0, pageSize: 40 },
+  list: {
+    mode: 'month', scope: 'month', query: '', writer: '', type: '', category: '', meaning: '', minAmount: '', maxAmount: '',
+    rows: [], count: 0, pageSize: 40, remoteRows: [], remoteCount: 0, remoteLoading: false, remoteError: '', remoteRequestSeq: 0
+  },
   settlement: null, settlementDraft: null, settlementDraftSync: { state:'idle', updatedAt:0 },
   sync: { status: 'idle', message: '', inFlight: false },
   notifSettings: { enabled: false, dday: true, settlement: true, budgetAlert: true },
@@ -1189,6 +1203,22 @@ function persistPendingQueue(){
   const saved = safeSet(PENDING_QUEUE_KEY, JSON.stringify(STATE.pending || []), { critical: true });
   renderSyncStatus();
   return saved;
+}
+
+function getDeviceId(){
+  let current = '';
+  try { current = String(localStorage.getItem(DEVICE_ID_KEY) || '').trim(); } catch(e) {}
+  if (/^[A-Za-z0-9_-]{16,128}$/.test(current)) return current;
+  let randomPart = '';
+  try {
+    randomPart = (window.crypto && crypto.randomUUID)
+      ? crypto.randomUUID().replace(/[^A-Za-z0-9]/g,'')
+      : '';
+  } catch(e) {}
+  if (randomPart.length < 12) randomPart += Date.now().toString(36) + Math.random().toString(36).slice(2) + Math.random().toString(36).slice(2);
+  const generated = 'dev_' + randomPart.replace(/[^A-Za-z0-9_-]/g,'').slice(0, 80);
+  safeSet(DEVICE_ID_KEY, generated);
+  return generated;
 }
 
 function pendingRetryDelay(attempts){
@@ -2009,7 +2039,8 @@ function renderHome(){
 function setUserFilter(user){
   STATE.userFilter = user;
   renderHome();
-  renderList();
+  if (typeof refreshTransactionList === 'function') refreshTransactionList();
+  else renderList();
   toast(user ? `${user}가 입력한 거래만 표시해요` : '전체 거래를 표시해요');
 }
 
@@ -2111,12 +2142,12 @@ function renderMore(){
     <div class="notif-card">
       <div class="notif-head">
         <div class="notif-title">
-          <span>🔔</span> 스마트 알림 & 웹 푸시
+          <span>🔔</span> 이 기기 알림
         </div>
         <span class="notif-status-badge ${badgeClass}">${badgeText}</span>
       </div>
       <p class="notif-desc">
-        고정비 결제 D-Day, 월초 정산 시작, 예산 경고를 기기 알림으로 받아보세요.
+        앱을 열거나 다시 활성화할 때 고정비 결제일, 월초 정산, 예산 사용 속도를 확인해 이 기기에 알림을 표시해요. 백그라운드 웹 푸시는 사용하지 않아요.
       </p>
       <div class="notif-action-row">
         <button type="button" class="notif-btn-main" onclick="toggleMainNotification()">
@@ -2159,6 +2190,9 @@ function renderMore(){
     <div class="card" style="padding:12px;">
       <button onclick="logout()" style="width:100%; padding:12px; font-size:14px; font-weight:800; color:var(--expense); display:flex; align-items:center; justify-content:center; gap:8px;">
         <span>🚪</span> 로그아웃 (자동 로그인 해제)
+      </button>
+      <button type="button" onclick="logoutAllDevices()" style="width:100%; margin-top:6px; padding:12px; font-size:13px; font-weight:800; color:var(--muted); display:flex; align-items:center; justify-content:center; gap:8px; border-top:1px solid var(--line-soft);">
+        <span>🔐</span> 모든 기기 로그아웃
       </button>
     </div>
   `;
@@ -2255,15 +2289,17 @@ function txRow(t){
   const sign = t.type==='수입' ? '+' : '-';
   const cls = t.type==='수입' ? 'in' : 'out';
   const icoColor = catColorClass(t.cat);
+  const readOnlyHistory = STATE.list && STATE.list.scope === 'all';
   const safeRow = String(t.row || '').replace(/['\\]/g, '');
   const txRef = String(t.txId || safeRow).replace(/['\\]/g, '');
   const isTemp = t.syncState === 'pending' || t.syncState === 'error' || t.syncState === 'attention' || String(t.row).startsWith('temp_');
-  const editBtn = isTemp ? '' : `<button type="button" class="edit-tx-btn" title="수정" onclick="event.stopPropagation(); editTx('${t.row}')">✏️</button>`;
-  const delBtn  = `<button type="button" class="del-tx-btn" data-delete-row="${esc(safeRow)}" title="${isTemp?'저장 대기 취소':'삭제'}" aria-label="${isTemp?'저장 대기 취소':'거래 삭제'}">${isTemp?'✕':'🗑️'}</button>`;
+  const editBtn = readOnlyHistory || isTemp ? '' : `<button type="button" class="edit-tx-btn" title="수정" onclick="event.stopPropagation(); editTx('${t.row}')">✏️</button>`;
+  const delBtn  = readOnlyHistory ? '' : `<button type="button" class="del-tx-btn" data-delete-row="${esc(safeRow)}" title="${isTemp?'저장 대기 취소':'삭제'}" aria-label="${isTemp?'저장 대기 취소':'거래 삭제'}">${isTemp?'✕':'🗑️'}</button>`;
   const pendingLabel = t.syncState === 'attention' ? '확인 필요' : (t.syncState === 'error' ? '재시도 대기' : '저장 중');
   const pendingBadge = isTemp ? `<span class="sync-badge ${t.syncState==='pending'?'':'error'}">${pendingLabel}</span>` : '';
+  const bulkActive = STATE.bulkMode && !readOnlyHistory;
   let actionHtml = '';
-  if (STATE.bulkMode) {
+  if (bulkActive) {
     if (isTemp) actionHtml = pendingBadge;
     else {
       const isChecked = STATE.bulkSelection && STATE.bulkSelection.has(txRef);
@@ -2277,15 +2313,15 @@ function txRow(t){
     ${editBtn}${delBtn}`;
   }
 
-  return `<div class="tx" data-row="${safeRow}" ${STATE.bulkMode && !isTemp ? `onclick="const cb=this.querySelector('input[type=checkbox]'); if(cb) { cb.checked=!cb.checked; toggleBulkSelect('${txRef}', cb.checked); }"` : ''}>
-    ${STATE.bulkMode ? actionHtml : ''}
+  return `<div class="tx" data-row="${safeRow}" ${bulkActive && !isTemp ? `onclick="const cb=this.querySelector('input[type=checkbox]'); if(cb) { cb.checked=!cb.checked; toggleBulkSelect('${txRef}', cb.checked); }"` : ''}>
+    ${bulkActive ? actionHtml : ''}
     <div class="ico ${icoColor}">${emo(t.cat)}</div>
     <div class="mid"><div class="d">${esc(t.desc||t.cat||'(내역없음)')}</div>
       <div class="s">
         <span class="tag">${esc(t.cat)}</span>${t.source ? `<span class="tag source-tag">${esc(t.source)}</span>` : ''}
       </div>
     </div>
-    ${STATE.bulkMode ? '' : actionHtml}
+    ${bulkActive ? '' : actionHtml}
   </div>`;
 }
 
@@ -2316,29 +2352,33 @@ function filterByType(type){
   STATE.list.type = type;
   STATE.list.category = '';
   STATE.list.pageSize = 40;
-  renderList();
+  if (typeof refreshTransactionList === 'function') refreshTransactionList();
+  else renderList();
 }
 
 function filterByCat(cat){
   STATE.list.category = cat;
   STATE.list.pageSize = 40;
-  renderList();
+  if (typeof refreshTransactionList === 'function') refreshTransactionList();
+  else renderList();
 }
 
 function loadMoreTransactions(){
   STATE.list.pageSize = Number(STATE.list.pageSize || 40) + 40;
-  renderList();
+  if (STATE.list.scope === 'all' && typeof requestWholeHistoryTransactions === 'function') requestWholeHistoryTransactions();
+  else renderList();
 }
 
 function renderList(){
   const el=document.getElementById('v-list');
   if(!el) return;
-  let txs = STATE.transactions || [];
-  if (STATE.userFilter) {
+  const wholeHistory = STATE.list.scope === 'all';
+  let txs = wholeHistory ? (STATE.list.remoteRows || []) : (STATE.transactions || []);
+  if (!wholeHistory && STATE.userFilter) {
     txs = txs.filter(t => t.user === STATE.userFilter);
   }
   const query = String(STATE.list.query || '').trim().toLowerCase();
-  if (query) {
+  if (!wholeHistory && query) {
     txs = txs.filter(t => {
       const desc = String(t.desc || '').toLowerCase();
       const cat = String(t.cat || '').toLowerCase();
@@ -2355,7 +2395,7 @@ function renderList(){
     typeTotals[k].amount += Number(t.amount || 0);
     typeTotals[k].count++;
   });
-  const allCount = txs.length;
+  const allCount = wholeHistory ? Number(STATE.list.remoteCount || 0) : txs.length;
   const selectedType = STATE.list.type || '';
   if (selectedType) {
     txs = txs.filter(t => t.type === selectedType);
@@ -2365,9 +2405,9 @@ function renderList(){
   if (STATE.list.category) {
     txs = txs.filter(t => t.cat === STATE.list.category);
   }
-  const totalCount = txs.length;
+  const totalCount = wholeHistory ? Number(STATE.list.remoteCount || 0) : txs.length;
   const pageSize = Number(STATE.list.pageSize || 40);
-  const visibleRows = txs.slice(0, pageSize);
+  const visibleRows = wholeHistory ? txs : txs.slice(0, pageSize);
 
   // 구분 요약 탭: 누르면 그 구분만 보이고, 금액 합계가 탭 안에 바로 보인다.
   const typeTabs = [
@@ -2419,29 +2459,45 @@ function renderList(){
     return `<button type="button" class="cat-scroll-chip ${isSelected?'on':''}" data-cat="${esc(catVal)}" onclick="filterByCat(this.dataset.cat)">${c==='전체'?'전체':emo(c)+' '+esc(c)}</button>`;
   }).join('');
 
-  const rows = visibleRows.length ? txGroupedRows(visibleRows, selectedType) : `<div class="empty"><span class="e">📭</span>조건에 맞는 거래가 없어</div>`;
-  const loadMore = visibleRows.length < totalCount
+  const rows = STATE.list.remoteLoading && wholeHistory && !visibleRows.length
+    ? `<div class="empty"><span class="e">⏳</span>전체 기간 거래를 찾는 중…</div>`
+    : (visibleRows.length ? txGroupedRows(visibleRows, selectedType) : `<div class="empty"><span class="e">📭</span>조건에 맞는 거래가 없어</div>`);
+  const loadMore = visibleRows.length < totalCount && !(wholeHistory && STATE.list.remoteLoading)
     ? `<button type="button" class="list-more-btn" onclick="loadMoreTransactions()">다음 40건 보기 <span>${visibleRows.length}/${totalCount}</span></button>`
     : '';
 
   const listHeadHtml = `
     <div class="list-head" style="display:flex;align-items:center;justify-content:space-between;margin:16px 4px 12px">
-      <div class="sec-title" style="margin:0; display:flex; align-items:center; gap:8px;">${STATE.userFilter ? STATE.userFilter + ' 거래' : '거래 내역'}
-        <button class="user-switch-chip ${STATE.bulkMode?'on':''}" style="font-size:11px; padding:4px 8px; margin:0;" onclick="toggleBulkMode()">☑️ 일괄 편집</button>
+      <div class="sec-title" style="margin:0; display:flex; align-items:center; gap:8px;">${wholeHistory ? '전체 기간 거래' : (STATE.userFilter ? STATE.userFilter + ' 거래' : '거래 내역')}
+        ${wholeHistory ? '' : `<button class="user-switch-chip ${STATE.bulkMode?'on':''}" style="font-size:11px; padding:4px 8px; margin:0;" onclick="toggleBulkMode()">☑️ 일괄 편집</button>`}
       </div>
       <div class="list-count" style="font-size:13px;font-weight:800;color:var(--muted);background:var(--line-soft);padding:3px 10px;border-radius:999px">${totalCount}건</div>
     </div>
   `;
 
   const searchBarHtml = `
+    <div class="list-scope-toggle" role="group" aria-label="검색 기간">
+      <button type="button" class="${wholeHistory?'':'on'}" onclick="setListScope('month')">${esc(STATE.ym || '')} 이달</button>
+      <button type="button" class="${wholeHistory?'on':''}" onclick="setListScope('all')">전체 기간</button>
+    </div>
     <div class="list-search-wrap">
       <span class="search-ic">🔍</span>
-      <input type="text" id="listSearchInput" class="list-search-inp" placeholder="내역, 카테고리, 메모 검색" value="${esc(STATE.list.query || '')}" oninput="handleListSearch(this.value)">
+      <input type="text" id="listSearchInput" class="list-search-inp" placeholder="${wholeHistory?'전체 기간에서 내역, 카테고리, 메모 검색':'이달 내역, 카테고리, 메모 검색'}" value="${esc(STATE.list.query || '')}" oninput="handleListSearch(this.value)">
       ${query ? `<button type="button" class="search-clear-btn" onclick="clearListSearch()" aria-label="검색어 지우기">✕</button>` : ''}
     </div>
+    ${wholeHistory ? `<div class="list-global-filters">
+      <label>소비성격
+        <select onchange="updateWholeHistoryFilter('meaning',this.value)">
+          ${['','필수소비','계획소비','충동소비','감성소비','투자성'].map(v=>`<option value="${esc(v)}" ${STATE.list.meaning===v?'selected':''}>${v||'전체'}</option>`).join('')}
+        </select>
+      </label>
+      <label>최소 금액<input type="text" inputmode="numeric" placeholder="0" value="${esc(STATE.list.minAmount || '')}" oninput="updateWholeHistoryFilter('minAmount',this.value)"></label>
+      <label>최대 금액<input type="text" inputmode="numeric" placeholder="제한 없음" value="${esc(STATE.list.maxAmount || '')}" oninput="updateWholeHistoryFilter('maxAmount',this.value)"></label>
+    </div>` : ''}
+    ${wholeHistory && STATE.list.remoteError ? `<div class="list-remote-error" role="alert">${esc(STATE.list.remoteError)} <button type="button" onclick="requestWholeHistoryTransactions()">다시 시도</button></div>` : ''}
   `;
 
-  const bulkBarHtml = STATE.bulkMode ? `
+  const bulkBarHtml = !wholeHistory && STATE.bulkMode ? `
     <div style="position:fixed; bottom:80px; left:20px; right:20px; background:var(--ink); color:#fff; border-radius:16px; padding:16px; display:flex; justify-content:space-between; align-items:center; z-index:9000; box-shadow:0 8px 30px rgba(0,0,0,0.3);">
       <div style="font-weight:700;">${STATE.bulkSelection ? STATE.bulkSelection.size : 0}건 선택됨</div>
       <button style="background:var(--forest); color:#fff; border:none; padding:8px 16px; border-radius:8px; font-weight:700;" onclick="openBulkCatModal()">카테고리 변경</button>
@@ -2450,6 +2506,7 @@ function renderList(){
 
   el.innerHTML = `
     ${searchBarHtml}
+    ${wholeHistory ? '<div class="list-readonly-note">전체 기간 결과는 조회 전용이에요 · 수정/삭제는 해당 월로 이동해서 해주세요.</div>' : ''}
     ${typeChipsHtml}
     <div class="cat-scroll-bar" style="margin-top:4px">${filterChipsHtml}</div>
     ${catTotalHtml}
@@ -2773,6 +2830,7 @@ function renderBudgetItems(items){
 /* ============ 비즈니스 로직 & 이벤트 바인딩 (App) ============ */
 
 let LAST_DIALOG_TRIGGER = null;
+let DIALOG_APP_WAS_INERT = false;
 function rememberDialogTrigger(){
   if (document.activeElement && document.activeElement !== document.body) LAST_DIALOG_TRIGGER = document.activeElement;
 }
@@ -2780,6 +2838,49 @@ function restoreDialogTrigger(){
   const target = LAST_DIALOG_TRIGGER;
   LAST_DIALOG_TRIGGER = null;
   if (target && document.contains(target) && typeof target.focus === 'function') setTimeout(() => target.focus(), 0);
+}
+function setBackgroundInert(inert){
+  const app=document.getElementById('app');
+  if(!app) return;
+  if(inert){
+    DIALOG_APP_WAS_INERT=!!app.inert;
+    app.inert=true;
+    app.setAttribute('inert','');
+    app.setAttribute('aria-hidden','true');
+  } else {
+    if(!DIALOG_APP_WAS_INERT){ app.inert=false; app.removeAttribute('inert'); }
+    app.removeAttribute('aria-hidden');
+    DIALOG_APP_WAS_INERT=false;
+  }
+}
+function focusDialogControl(sheet, preferredSelector){
+  if(!sheet) return;
+  setTimeout(()=>{
+    let target=preferredSelector ? sheet.querySelector(preferredSelector) : null;
+    if(!target) target=sheet.querySelector('input:not([type="hidden"]):not(:disabled),select:not(:disabled),textarea:not(:disabled),button:not(:disabled),[tabindex]:not([tabindex="-1"])');
+    if(target && typeof target.focus==='function') target.focus();
+  },0);
+}
+function openDialogSheet(sheetId, preferredSelector){
+  rememberDialogTrigger();
+  const overlay=document.getElementById('overlay');
+  const sheet=document.getElementById(sheetId);
+  if(overlay) overlay.classList.add('on');
+  if(sheet) sheet.classList.add('on');
+  setBackgroundInert(true);
+  focusDialogControl(sheet,preferredSelector);
+  return sheet;
+}
+function closeDialogSheet(sheetId){
+  const sheet=document.getElementById(sheetId);
+  if(sheet) sheet.classList.remove('on');
+  const anyOpen=document.querySelector('.sheet.on');
+  if(!anyOpen){
+    const overlay=document.getElementById('overlay');
+    if(overlay) overlay.classList.remove('on');
+    setBackgroundInert(false);
+    restoreDialogTrigger();
+  }
 }
 
 function openGate(){
@@ -2830,7 +2931,7 @@ function openGate(){
     const userEl = document.querySelector('input[name="gateUser"]:checked');
     const user = userEl ? userEl.value : '하콩';
     const remember = autoLoginChk ? autoLoginChk.checked : true;
-    srv('createSessionAndGetBoot')(val, user, remember).then(result => {
+    srv('createSessionAndGetBoot')(val, user, remember, getDeviceId()).then(result => {
       const session = result.session;
       STATE.authToken = session.token;
       STATE.sessionUser = session.user || user;
@@ -2952,10 +3053,33 @@ function logout(){
     return;
   }
   if(!confirm('로그아웃하고 자동 로그인을 해제할까요?')) return;
+  const revokePromise = STATE.authToken
+    ? api('revokeCurrentSession').catch(() => null)
+    : Promise.resolve(null);
   clearSession();
   clearCachedViews();
   toast('👋 로그아웃되었습니다.');
-  setTimeout(() => location.reload(), 500);
+  revokePromise.finally(() => setTimeout(() => location.reload(), 300));
+}
+
+function logoutAllDevices(){
+  if ((STATE.pending || []).length) {
+    toast('저장 대기 중인 입력을 먼저 동기화해줘.', true);
+    flushPendingQueue();
+    return;
+  }
+  if (!STATE.authToken) return showLoginGate('다시 로그인한 뒤 모든 기기 로그아웃을 실행해줘.');
+  if (!confirm('이 계정으로 로그인된 모든 기기의 세션을 해제할까요?\n\n다른 기기에서도 다시 PIN 로그인이 필요해요.')) return;
+  toast('🔐 모든 기기 로그인 해제 중...');
+  api('revokeAllSessions').then(res => {
+    clearSession();
+    clearCachedViews();
+    const count=Number((res && res.revokedCount) || 0);
+    toast('✅ 모든 기기 로그인을 해제했어' + (count ? ' · ' + count + '개 세션' : ''));
+    setTimeout(() => location.reload(), 450);
+  }).catch(err => {
+    toast('모든 기기 로그아웃 실패: ' + ((err && err.message) || '다시 시도해줘.'), true);
+  });
 }
 
 function applyBootData(data){
@@ -2979,7 +3103,6 @@ function applyBootData(data){
   applyGlobalData(data);
   setTimeout(() => {
     checkAndDispatchDueNotifications();
-    subscribePushManager();
   }, 1200);
 }
 
@@ -3321,9 +3444,7 @@ function closeActiveSheet(){
 
 function openQuickEntryModal(){
   if(!STATE.authToken){ toast('로그인이 필요해'); return; }
-  rememberDialogTrigger();
-  document.getElementById('overlay').classList.add('on');
-  document.getElementById('sheet').classList.add('on');
+  openDialogSheet('sheet','#fAmount');
   
   const titleEl = document.getElementById('sheetTitle');
   const isSettlementMonth = STATE.settlement && !STATE.settlement.isClosed && STATE.settlement.ym === STATE.ym && STATE.ym !== todayStr().slice(0,7);
@@ -3541,8 +3662,7 @@ function applyTemplateByIndex(index){
 }
 
 function closeQuickEntryModal(){
-  document.getElementById('sheet').classList.remove('on');
-  document.getElementById('overlay').classList.remove('on');
+  closeDialogSheet('sheet');
   // 폼 상태 완전 초기화 (편집 모드 포함)
   STATE.form = { type: null, cat: null, fixed: '변동', user: STATE.form.user || '하콩', catManual: false, mood: '' };
   STATE.editing = null;
@@ -3561,7 +3681,6 @@ function closeQuickEntryModal(){
   // 수정 모드에서 숨긴 버튼 복원
   const continueBtn = document.getElementById('continueBtn');
   if(continueBtn) continueBtn.style.display = '';
-  restoreDialogTrigger();
 }
 
 /* ============ 월초 일괄정산 작업대 ============ */
@@ -4390,9 +4509,7 @@ function editTx(row){
   STATE.form.mood  = tx.spendingMood || '';
 
   // 모달 열기 (날짜/금액/내역/메모 프리필)
-  rememberDialogTrigger();
-  document.getElementById('overlay').classList.add('on');
-  document.getElementById('sheet').classList.add('on');
+  openDialogSheet('sheet','#fAmount');
 
   const titleEl = document.getElementById('sheetTitle');
   if(titleEl) titleEl.textContent = '거래 수정';
@@ -4513,9 +4630,7 @@ function changeMonth(delta){
     }
 
     function openRecurringModal() {
-      rememberDialogTrigger();
-      document.getElementById('overlay').classList.add('on');
-      document.getElementById('recSheet').classList.add('on');
+      openDialogSheet('recSheet','#rDay');
       document.getElementById('recSheetTitle').textContent = STATE.editingRecurring ? '고정거래 수정' : '새 고정거래 추가';
       
       if (!STATE.editingRecurring) {
@@ -4537,10 +4652,8 @@ function changeMonth(delta){
     }
 
     function closeRecurringModal() {
-      document.getElementById('overlay').classList.remove('on');
-      document.getElementById('recSheet').classList.remove('on');
+      closeDialogSheet('recSheet');
       STATE.editingRecurring = null;
-      restoreDialogTrigger();
     }
 
     function renderRecurringFormChips() {
@@ -4675,7 +4788,6 @@ function changeMonth(delta){
     STATE.assetEditTemp = [];
     
     function openAssetEditModal(key, label) {
-      rememberDialogTrigger();
       STATE.assetEditKey = key;
       // 수정 창은 항상 시트에 저장된 실제 값으로 연다. 예전에는 한 줄짜리면 옛 원본 금액으로
       // 바꿔치기해서, 보물창고 '비상금' 같은 항목이 0원으로 보였다가 그대로 저장될 수 있었다.
@@ -4685,8 +4797,7 @@ function changeMonth(delta){
       const restoreBtn = document.getElementById('restoreAssetSubItemsBtn');
       if (restoreBtn) restoreBtn.style.display = assetRestoreTemplate(key).length ? '' : 'none';
 
-      document.getElementById('overlay').classList.add('on');
-      document.getElementById('assetEditSheet').classList.add('on');
+      openDialogSheet('assetEditSheet','#assetSubItemsContainer input');
       
       const labelEl = document.getElementById('assetEditSheetLabel');
       if(labelEl) labelEl.textContent = label + ' 세부 항목';
@@ -4695,6 +4806,7 @@ function changeMonth(delta){
       if(titleEl) titleEl.textContent = '자산 금액 변경';
       
       renderAssetEditList();
+      focusDialogControl(document.getElementById('assetEditSheet'),'#assetSubItemsContainer input');
     }
 
     // 원본 세부항목은 서버가 "한 줄로 합쳐진 대분류"에 한해서만, 로그인 뒤에 내려준다.
@@ -4767,9 +4879,7 @@ function changeMonth(delta){
     };
 
     function closeAssetEditModal() {
-      document.getElementById('overlay').classList.remove('on');
-      document.getElementById('assetEditSheet').classList.remove('on');
-      restoreDialogTrigger();
+      closeDialogSheet('assetEditSheet');
     }
 
     function submitAssetEdit() {
@@ -4795,9 +4905,7 @@ function changeMonth(delta){
 
     function openBulkCatModal() {
       if (!STATE.bulkSelection || STATE.bulkSelection.size === 0) return toast('선택된 항목이 없습니다.');
-      rememberDialogTrigger();
-      document.getElementById('overlay').classList.add('on');
-      document.getElementById('bulkCatSheet').classList.add('on');
+      openDialogSheet('bulkCatSheet','#bulkCatChips button');
       
       // ⚙️설정 시트를 단일 출처로 쓴다. 하드코딩 목록을 쓰던 예전에는
       // 설정에 없는 '부수입'·'기타' 같은 유령 카테고리가 만들어졌다.
@@ -4826,12 +4934,11 @@ function changeMonth(delta){
         ).join('');
       };
       selectBulkCat(STATE.bulkTargetCat);
+      focusDialogControl(document.getElementById('bulkCatSheet'),'#bulkCatChips button');
     }
 
     function closeBulkCatModal() {
-      document.getElementById('overlay').classList.remove('on');
-      document.getElementById('bulkCatSheet').classList.remove('on');
-      restoreDialogTrigger();
+      closeDialogSheet('bulkCatSheet');
     }
 
     function submitBulkCat() {
@@ -4922,20 +5029,17 @@ function changeMonth(delta){
 
     // ===== 🎯 예산 관리 제어 로직 =====
     function openBudgetModal() {
-      rememberDialogTrigger();
-      document.getElementById('overlay').classList.add('on');
-      document.getElementById('budgetSheet').classList.add('on');
+      openDialogSheet('budgetSheet','#budgetItemsContainer input');
 
       // 이전에 표시해둔 삭제 예약은 창을 다시 열 때 초기화한다.
       STATE.budgetRemoved = new Set();
       const rows = (STATE.budget && (STATE.budget.rows || STATE.budget.items)) || [];
       renderBudgetItems(rows);
+      focusDialogControl(document.getElementById('budgetSheet'),'#budgetItemsContainer input');
     }
 
     function closeBudgetModal() {
-      document.getElementById('overlay').classList.remove('on');
-      document.getElementById('budgetSheet').classList.remove('on');
-      restoreDialogTrigger();
+      closeDialogSheet('budgetSheet');
     }
 
     window.handleBudgetInput = function(inp) {
@@ -5056,27 +5160,97 @@ function changeMonth(delta){
 
 /* ============ 🔍 거래 내역 실시간 검색 컨트롤러 ============ */
 let listSearchTimer = null;
+function listUsesWholeHistory(){ return STATE.list && STATE.list.scope === 'all'; }
+function listServerSearchOptions(){
+  const list=STATE.list || {};
+  const opt={
+    mode:'search', allMonths:true, limit:Number(list.pageSize || 40),
+    query:String(list.query || '').trim(),
+    writer:STATE.userFilter || list.writer || '',
+    type:list.type || '', category:list.category || '', meaning:list.meaning || ''
+  };
+  if(String(list.minAmount || '').trim() !== '') {
+    const min=Number(String(list.minAmount).replace(/,/g,''));
+    if(isFinite(min)) opt.minAmount=min;
+  }
+  if(String(list.maxAmount || '').trim() !== '') {
+    const max=Number(String(list.maxAmount).replace(/,/g,''));
+    if(isFinite(max)) opt.maxAmount=max;
+  }
+  return opt;
+}
+function requestWholeHistoryTransactions(options){
+  if(!listUsesWholeHistory() || !STATE.authToken) return Promise.resolve(null);
+  const opt=options || {};
+  const seq=Number(STATE.list.remoteRequestSeq || 0)+1;
+  STATE.list.remoteRequestSeq=seq;
+  STATE.list.remoteLoading=true;
+  STATE.list.remoteError='';
+  if(!opt.skipRender) renderList();
+  return api('getTransactions',listServerSearchOptions()).then(res=>{
+    if(!listUsesWholeHistory() || seq !== STATE.list.remoteRequestSeq) return res;
+    STATE.list.remoteRows=Array.isArray(res && res.rows) ? res.rows : [];
+    STATE.list.remoteCount=Math.max(STATE.list.remoteRows.length,Math.max(0,Number((res && res.count) || 0)));
+    STATE.list.remoteLoading=false;
+    STATE.list.remoteError='';
+    renderList();
+    return res;
+  }).catch(err=>{
+    if(seq !== STATE.list.remoteRequestSeq) return null;
+    STATE.list.remoteLoading=false;
+    STATE.list.remoteError=(err && err.message) || '전체 기간 거래를 불러오지 못했어.';
+    renderList();
+    return null;
+  });
+}
+function refreshTransactionList(options){
+  if(listUsesWholeHistory()) return requestWholeHistoryTransactions(options);
+  renderList();
+  return Promise.resolve(null);
+}
+function setListScope(scope){
+  const next=scope === 'all' ? 'all' : 'month';
+  if(STATE.list.scope === next) return;
+  STATE.list.scope=next;
+  STATE.list.pageSize=40;
+  STATE.list.remoteError='';
+  STATE.list.remoteLoading=false;
+  STATE.list.remoteRequestSeq=Number(STATE.list.remoteRequestSeq || 0)+1;
+  if(next === 'all'){
+    STATE.bulkMode=false;
+    STATE.bulkSelection=new Set();
+  }
+  if(next === 'all') requestWholeHistoryTransactions();
+  else renderList();
+}
 function handleListSearch(query) {
   STATE.list.query = query;
   STATE.list.pageSize = 40;
   clearTimeout(listSearchTimer);
   listSearchTimer = setTimeout(() => {
-    renderList();
+    refreshTransactionList();
     const inp = document.getElementById('listSearchInput');
     if (inp) {
       inp.focus();
       const len = inp.value.length;
       if (inp.setSelectionRange) inp.setSelectionRange(len, len);
     }
-  }, 80);
+  }, listUsesWholeHistory() ? 320 : 80);
 }
 
 function clearListSearch() {
   STATE.list.query = '';
   STATE.list.pageSize = 40;
-  renderList();
+  refreshTransactionList();
   const inp = document.getElementById('listSearchInput');
   if (inp) inp.focus();
+}
+function updateWholeHistoryFilter(key,value){
+  if(['meaning','minAmount','maxAmount'].indexOf(key) < 0) return;
+  STATE.list[key]=value;
+  STATE.list.pageSize=40;
+  clearTimeout(listSearchTimer);
+  listSearchTimer=setTimeout(()=>requestWholeHistoryTransactions(),220);
 }
 
 /* ============ 💎 자산 스냅샷 및 맞춤 목표 컨트롤러 ============ */
@@ -5125,7 +5299,7 @@ function triggerManualBackup() {
   });
 }
 
-/* ============ 🔔 웹 푸시 및 스마트 알림 컨트롤러 ============ */
+/* ============ 🔔 이 기기 알림 컨트롤러 ============ */
 
 function dispatchNotification(title, options) {
   options = options || {};
@@ -5177,10 +5351,9 @@ function requestNotificationPermission() {
     if (permission === 'granted') {
       STATE.notifSettings.enabled = true;
       saveNotifSettings(STATE.notifSettings);
-      toast('🔔 알림이 정상적으로 켜졌어요!');
-      subscribePushManager();
+      toast('🔔 이 기기 알림을 켰어요.');
       dispatchNotification('🔔 sey콩콩 가계부 알림 켜짐', {
-        body: '고정비 결제일과 월초 정산 알림을 기기에서 알려드릴게요.',
+        body: '앱을 열거나 다시 활성화할 때 고정비·정산·예산 상태를 확인해 이 기기에 알려드릴게요.',
         tag: 'welcome_notif'
       });
       renderMore();
@@ -5192,20 +5365,6 @@ function requestNotificationPermission() {
     }
     return permission;
   });
-}
-
-function subscribePushManager() {
-  if (!('serviceWorker' in navigator) || !navigator.serviceWorker.ready) return;
-  navigator.serviceWorker.ready.then(reg => {
-    if (!reg.pushManager) return;
-    return reg.pushManager.getSubscription().then(existing => {
-      if (existing) {
-        if (STATE.authToken) {
-          api('savePushSubscription', existing.toJSON ? existing.toJSON() : existing, STATE.sessionUser || '하콩').catch(()=>{});
-        }
-      }
-    });
-  }).catch(()=>{});
 }
 
 function toggleMainNotification() {
@@ -5224,6 +5383,7 @@ function updateNotifOption(key, val) {
   STATE.notifSettings[key] = val;
   saveNotifSettings(STATE.notifSettings);
   toast('알림 옵션이 저장되었어요.');
+  if (val && STATE.notifSettings.enabled) checkAndDispatchDueNotifications();
 }
 
 function sendTestNotificationNow() {
@@ -5232,7 +5392,7 @@ function sendTestNotificationNow() {
     requestNotificationPermission().then(p => {
       if (p === 'granted') {
         dispatchNotification('🔔 sey콩콩 가계부 테스트 알림', {
-          body: '알림 기능이 성공적으로 연결되었습니다!',
+          body: '이 브라우저에서 기기 알림 표시가 정상적으로 동작해요.',
           tag: 'test_notif_' + Date.now()
         });
       }
@@ -5240,13 +5400,28 @@ function sendTestNotificationNow() {
     return;
   }
   dispatchNotification('🔔 sey콩콩 가계부 테스트 알림', {
-    body: '알림 기능이 완벽하게 작동 중입니다!',
+    body: '이 브라우저에서 기기 알림 표시가 정상적으로 동작해요.',
     tag: 'test_notif_' + Date.now()
   });
-  if (STATE.authToken) {
-    api('sendNotificationTest', STATE.sessionUser || '하콩').catch(()=>{});
-  }
-  toast('테스트 알림을 보냈어요.');
+  toast('이 기기에 테스트 알림을 표시했어요.');
+}
+
+function budgetNotificationCandidates(day, daysInMonth){
+  if (!STATE.notifSettings || STATE.notifSettings.budgetAlert === false) return [];
+  const items=(STATE.budget && (STATE.budget.items || STATE.budget.rows)) || [];
+  const elapsedPct=Math.max(1,Math.min(100,Math.round((Number(day || 1)/Math.max(1,Number(daysInMonth || 30)))*100)));
+  return items.filter(item => {
+    const budget=Number(item.budget || item.target || 0);
+    const spent=Number(item.spent || 0);
+    if (!(budget > 0) || spent <= 0) return false;
+    const pct=Number(item.percent != null ? item.percent : Math.round(spent/budget*100));
+    return pct >= 100 || (pct >= 60 && pct >= elapsedPct + 20);
+  }).map(item => ({
+    category:String(item.category || item.cat || '예산'),
+    budget:Number(item.budget || item.target || 0),
+    spent:Number(item.spent || 0),
+    percent:Number(item.percent != null ? item.percent : Math.round(Number(item.spent || 0)/Number(item.budget || item.target || 1)*100))
+  }));
 }
 
 function checkAndDispatchDueNotifications() {
@@ -5303,6 +5478,23 @@ function checkAndDispatchDueNotifications() {
         markAsNotified(settlementKey, todayDateStr);
       }
     }
+  }
+
+  // 3. 예산 사용 속도 경고 — 앱을 열거나 다시 활성화했을 때만 이 기기에서 계산한다.
+  if (STATE.notifSettings.budgetAlert !== false) {
+    const parts=String(ym).split('-').map(Number);
+    const daysInMonth=new Date(parts[0],parts[1],0).getDate();
+    budgetNotificationCandidates(currentDay,daysInMonth).slice(0,3).forEach(item => {
+      const band=item.percent >= 100 ? 'over' : 'fast';
+      const key='budget_'+band+'_'+ym+'_'+item.category+'_'+todayDateStr;
+      if (isAlreadyNotified(key,todayDateStr)) return;
+      dispatchNotification(item.percent >= 100 ? '⚠️ '+item.category+' 예산 초과' : '⚠️ '+item.category+' 예산 사용 속도 빠름', {
+        body:item.percent+'% 사용 · '+fmt(item.spent)+' / '+fmt(item.budget),
+        tag:key,
+        url:'/app.html?tab=home'
+      });
+      markAsNotified(key,todayDateStr);
+    });
   }
 }
 
@@ -5388,7 +5580,7 @@ function bindApp(){
   });
 
   if ('serviceWorker' in navigator && location.protocol.indexOf('http') === 0 && !/google(?:usercontent)?\.com$/.test(location.hostname)) {
-    navigator.serviceWorker.register('/sw.js').then(() => subscribePushManager()).catch(()=>{});
+    navigator.serviceWorker.register('/sw.js').catch(()=>{});
     // 새 서비스워커가 올라오면 화면을 한 번만 새로고침한다.
     // 서비스워커가 옛 셸을 캐시에서 내주는 바람에, 고쳐서 배포해도 계속
     // 옛 화면이 보이던 문제가 있었다. 사용자가 직접 캐시를 지우지 않아도 되게 한다.
@@ -5531,6 +5723,7 @@ function bindApp(){
       .filter(el => el.offsetParent !== null);
     if (!focusable.length) return;
     const first = focusable[0], last = focusable[focusable.length - 1];
+    if (!active.contains(document.activeElement)) { event.preventDefault(); first.focus(); return; }
     if (event.shiftKey && document.activeElement === first) { event.preventDefault(); last.focus(); }
     else if (!event.shiftKey && document.activeElement === last) { event.preventDefault(); first.focus(); }
   });
