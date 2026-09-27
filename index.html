@@ -3,7 +3,7 @@
 <head>
 <base target="_top">
 <meta charset="utf-8">
-<meta name="app-version" content="2.1.0">
+<meta name="app-version" content="2.2.0">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, interactive-widget=resizes-content">
 <meta name="description" content="지수와 하콩이의 빠르고 편한 공동 가계부">
 <meta name="theme-color" content="#f5f5f7">
@@ -859,9 +859,9 @@ body.dark-mode .settlement-close-warn{color:var(--gold)}
 <script>
 /* ============ 앱 글로벌 상태 (Store) ============ */
 /* @release:start — pwa-site/scripts/build-static.mjs 가 release.json 을 보고 자동으로 채운다. 손으로 고치지 말 것. */
-const APP_VERSION = '2.1.0';
-const APP_BUILT_AT = '2026-09-26T18:01:20+09:00';
-const APP_RELEASE_NOTES = [{"version":"2.1.0","date":"2026-09-26T18:01:20+09:00","notes":["정산 마감이 안 되던 문제 수정 — 응답 대기 20초 → 3분, 늦어져도 실제 마감 여부를 다시 확인","앱이 항상 이번 달로 열려요 — 지난달 정산은 홈 맨 위 '정산하기' 카드와 더보기 > 월 정산에서","내역: 지출·수입·저축 탭에 합계 금액 표시, 분류를 고르면 분류 합계와 비중까지","정산: 저장 안 한 대사·투자값을 마감 전에 자동 저장, 체크 항목이 화면 갱신에도 유지","정산: 빈 초안 행은 자동 정리, 다음 달 예산 덮어쓰기를 거절해도 마감은 진행"]},{"version":"2.0.0","date":"2026-09-26T17:44:51+09:00","notes":["앱 버전 표시 추가 — 새 버전이 적용되면 화면 위에 알려줘요","자산: 보물창고 '비상금'이 저장 후 0원으로 되돌아가던 문제 수정","자산: 항목을 전부 지워도 옛 금액이 다시 살아나던 문제 수정","자산: 한 줄로 합쳐진 항목은 수정 창에서 원본(8/2) 세부항목을 불러와 확인 후 저장","자주 쓰는 거래 버튼이 이름에 따옴표가 있으면 눌리지 않던 문제 수정","보안: 누구나 볼 수 있던 화면 코드에서 자산 금액 정보 제거"]}];
+const APP_VERSION = '2.2.0';
+const APP_BUILT_AT = '2026-09-27T20:57:19+09:00';
+const APP_RELEASE_NOTES = [{"version":"2.2.0","date":"2026-09-27T20:57:19+09:00","notes":["데이터 안전: 월마감과 월 회고를 분리해 회고 저장·정산 다시 열기로 마감 기록이 손상되지 않게 개선","정산 안전: 마감된 달은 다시 열기 전까지 거래 추가·수정·삭제를 서버에서 차단","동기화 안전: 정산 공유초안에 revision을 추가하고 저장 중 추가 편집·다중 기기 충돌 시 최신 내용을 보존","오프라인 안전: 기기 저장에 실패한 입력을 저장 완료로 표시하지 않도록 개선","화면 보안: 거래 설명의 inline 이벤트 삽입과 자동분류 raw HTML 렌더링 제거"]},{"version":"2.1.0","date":"2026-09-26T18:01:20+09:00","notes":["정산 마감이 안 되던 문제 수정 — 응답 대기 20초 → 3분, 늦어져도 실제 마감 여부를 다시 확인","앱이 항상 이번 달로 열려요 — 지난달 정산은 홈 맨 위 '정산하기' 카드와 더보기 > 월 정산에서","내역: 지출·수입·저축 탭에 합계 금액 표시, 분류를 고르면 분류 합계와 비중까지","정산: 저장 안 한 대사·투자값을 마감 전에 자동 저장, 체크 항목이 화면 갱신에도 유지","정산: 빈 초안 행은 자동 정리, 다음 달 예산 덮어쓰기를 거절해도 마감은 진행"]},{"version":"2.0.0","date":"2026-09-26T17:44:51+09:00","notes":["앱 버전 표시 추가 — 새 버전이 적용되면 화면 위에 알려줘요","자산: 보물창고 '비상금'이 저장 후 0원으로 되돌아가던 문제 수정","자산: 항목을 전부 지워도 옛 금액이 다시 살아나던 문제 수정","자산: 한 줄로 합쳐진 항목은 수정 창에서 원본(8/2) 세부항목을 불러와 확인 후 저장","자주 쓰는 거래 버튼이 이름에 따옴표가 있으면 눌리지 않던 문제 수정","보안: 누구나 볼 수 있던 화면 코드에서 자산 금액 정보 제거"]}];
 /* @release:end */
 const DEFAULT_GAS_URL = 'https://script.google.com/macros/s/AKfycbwjFv7OSDc6T4vD0nUQA5E-W1QazAEU5dowQroEXard5DCMtP0FiMRlwtIjuEfDzo8phA/exec';
 const APP_CACHE_VERSION = 5;
@@ -1185,8 +1185,9 @@ function loadPendingQueue(){
 }
 
 function persistPendingQueue(){
-  safeSet(PENDING_QUEUE_KEY, JSON.stringify(STATE.pending || []), { critical: true });
+  const saved = safeSet(PENDING_QUEUE_KEY, JSON.stringify(STATE.pending || []), { critical: true });
   renderSyncStatus();
+  return saved;
 }
 
 function createClientId(){
@@ -1225,9 +1226,18 @@ function lastDateOfYm(ym){
   return d.getFullYear()+'-'+pad(d.getMonth()+1)+'-'+pad(d.getDate());
 }
 function settlementDraftKey(ym){ return SETTLEMENT_DRAFT_PREFIX + String(ym || ''); }
-let SETTLEMENT_DRAFT_SYNC_TIMER = null;
-let SETTLEMENT_DRAFT_SYNCING = false;
-function emptySettlementDraft(ym){ return { ym:ym, rows:[], reconciliations:[], investments:[], holdings:[], pasteText:'', importPreview:null, updatedAt:0, updatedBy:'', cleared:false }; }
+const SETTLEMENT_DRAFT_SYNC_META = Object.create(null);
+function emptySettlementDraft(ym){ return { ym:ym, rows:[], reconciliations:[], investments:[], holdings:[], pasteText:'', importPreview:null, revision:0, updatedAt:0, updatedBy:'', cleared:false }; }
+function cloneSettlementDraft(ym, draft){
+  return Object.assign(emptySettlementDraft(ym), JSON.parse(JSON.stringify(draft || {})));
+}
+function settlementDraftSyncMeta(ym){
+  const key = String(ym || '');
+  if (!SETTLEMENT_DRAFT_SYNC_META[key]) {
+    SETTLEMENT_DRAFT_SYNC_META[key] = { generation:0, dirty:false, timer:null, inFlight:null, serverBase:null };
+  }
+  return SETTLEMENT_DRAFT_SYNC_META[key];
+}
 function loadSettlementDraft(ym){
   try {
     const data = JSON.parse(localStorage.getItem(settlementDraftKey(ym)) || 'null');
@@ -1241,7 +1251,9 @@ function settlementDraftRowKey(row){
 function mergeSettlementDrafts(ym, sharedDraft, localDraft){
   const shared = Object.assign(emptySettlementDraft(ym), sharedDraft || {});
   const local = Object.assign(emptySettlementDraft(ym), localDraft || {});
-  if (local.cleared && Number(local.updatedAt || 0) >= Number(shared.updatedAt || 0)) return local;
+  if (local.cleared && Number(local.updatedAt || 0) >= Number(shared.updatedAt || 0)) {
+    return Object.assign(local, { revision:Number(shared.revision || 0) });
+  }
   if (shared.cleared && Number(shared.updatedAt || 0) >= Number(local.updatedAt || 0)) return shared;
   const localWins = Number(local.updatedAt || 0) >= Number(shared.updatedAt || 0);
   const mergeByKey = (serverRows, deviceRows, getKey) => {
@@ -1261,62 +1273,198 @@ function mergeSettlementDrafts(ym, sharedDraft, localDraft){
     cleared:false
   });
 }
+function sameSettlementDraftValue(a, b){
+  return JSON.stringify(a === undefined ? null : a) === JSON.stringify(b === undefined ? null : b);
+}
+function sameSettlementDraftContent(a, b){
+  const left=a || {}, right=b || {};
+  // pasteText/importPreview 는 서버 normalizeSettlementDraft_가 저장하지 않는 기기 로컬 UI 상태다.
+  return ['rows','reconciliations','investments','holdings','cleared']
+    .every(field => sameSettlementDraftValue(left[field],right[field]));
+}
+function mergeSettlementDraftCollection(baseRows, serverRows, localRows, getKey){
+  const toMap = rows => {
+    const map = new Map();
+    (rows || []).forEach(row => { const key=getKey(row); if(key) map.set(key,row); });
+    return map;
+  };
+  const base=toMap(baseRows), server=toMap(serverRows), local=toMap(localRows);
+  const keys=[];
+  const seen=new Set();
+  [localRows || [], serverRows || [], baseRows || []].forEach(rows => rows.forEach(row => {
+    const key=getKey(row); if(key && !seen.has(key)){ seen.add(key); keys.push(key); }
+  }));
+  const merged=[];
+  keys.forEach(key => {
+    const before=base.get(key), remote=server.get(key), device=local.get(key);
+    const localChanged=!sameSettlementDraftValue(device,before);
+    const chosen=localChanged ? device : remote;
+    if(chosen !== undefined) merged.push(chosen);
+  });
+  return merged;
+}
+/**
+ * 서버 conflict 는 마지막으로 확인한 서버 초안을 공통 조상으로 삼아 3-way merge 한다.
+ * 같은 항목을 양쪽에서 고쳤다면 이 기기의 최신 편집을 우선하고, 다른 기기에서 새로 추가한 항목은 보존한다.
+ * 특히 in-flight 중 삭제한 행이 구응답 때문에 되살아나지 않게 base 대비 삭제도 변경으로 취급한다.
+ */
+function mergeSettlementDraftConflict(ym, serverDraft, localDraft, baseDraft){
+  const base=cloneSettlementDraft(ym, baseDraft || emptySettlementDraft(ym));
+  const server=cloneSettlementDraft(ym, serverDraft);
+  const local=cloneSettlementDraft(ym, localDraft);
+  const pick = field => !sameSettlementDraftValue(local[field],base[field]) ? local[field] : server[field];
+  const localClearedChanged = local.cleared !== base.cleared;
+  const cleared = localClearedChanged ? local.cleared : server.cleared;
+  if (cleared) {
+    const winner = localClearedChanged ? local : server;
+    return Object.assign(emptySettlementDraft(ym), winner, {
+      ym:ym, cleared:true,
+      revision:Number(server.revision || 0),
+      updatedAt:Math.max(Number(server.updatedAt || 0),Number(local.updatedAt || 0)),
+      updatedBy:localClearedChanged ? (local.updatedBy || '') : (server.updatedBy || '')
+    });
+  }
+  const merged=Object.assign(emptySettlementDraft(ym), server, {
+    ym:ym,
+    rows:mergeSettlementDraftCollection(base.rows,server.rows,local.rows,settlementDraftRowKey),
+    reconciliations:mergeSettlementDraftCollection(base.reconciliations,server.reconciliations,local.reconciliations,row=>row && row.source),
+    investments:mergeSettlementDraftCollection(base.investments,server.investments,local.investments,row=>row && row.account),
+    holdings:mergeSettlementDraftCollection(base.holdings,server.holdings,local.holdings,row=>row && [row.account,row.ticker,row.name].join('|')),
+    pasteText:pick('pasteText'),
+    importPreview:pick('importPreview'),
+    cleared:false,
+    updatedAt:Math.max(Number(server.updatedAt || 0),Number(local.updatedAt || 0)),
+    updatedBy:local.updatedBy || server.updatedBy || ''
+  });
+  return merged;
+}
+function settlementDraftForSync(ym){
+  return (STATE.settlementDraft && STATE.settlementDraft.ym === ym) ? STATE.settlementDraft : loadSettlementDraft(ym);
+}
+function storeSettlementDraftLocal(ym, draft){
+  const normalized=cloneSettlementDraft(ym,draft);
+  if (STATE.ym === ym || (STATE.settlementDraft && STATE.settlementDraft.ym === ym)) STATE.settlementDraft=normalized;
+  safeSet(settlementDraftKey(ym),JSON.stringify(normalized),{ keepYm:ym, critical:true });
+  return normalized;
+}
 function hydrateSettlementDraft(ym, sharedDraft){
-  const local = loadSettlementDraft(ym);
-  const merged = mergeSettlementDrafts(ym, sharedDraft, local);
+  const meta=settlementDraftSyncMeta(ym);
+  const previousBase=meta.serverBase;
+  const shared=cloneSettlementDraft(ym,sharedDraft);
+  const local = (STATE.settlementDraft && STATE.settlementDraft.ym === ym)
+    ? cloneSettlementDraft(ym,STATE.settlementDraft)
+    : loadSettlementDraft(ym);
+  const hasLocalWork=meta.dirty || !!meta.inFlight;
+  const merged = hasLocalWork
+    ? mergeSettlementDraftConflict(ym, shared, local, previousBase)
+    : mergeSettlementDrafts(ym, shared, local);
+  meta.serverBase=shared;
+  const needsServerSync=!sameSettlementDraftContent(merged,shared);
+  if ((hasLocalWork && !sameSettlementDraftValue(merged,local)) || (!hasLocalWork && needsServerSync)) {
+    meta.generation++;
+    meta.dirty=true;
+  }
   STATE.settlementDraft = merged;
   safeSet(settlementDraftKey(ym), JSON.stringify(merged), { keepYm: ym });
+  if (needsServerSync) {
+    STATE.settlementDraftSync={ state:'pending', updatedAt:Number(merged.updatedAt || 0), generation:meta.generation };
+    if (STATE.authToken) scheduleSettlementDraftSync(merged);
+  }
   return merged;
 }
 function scheduleSettlementDraftSync(draft){
   if (!draft || !draft.ym || !STATE.authToken) return;
-  clearTimeout(SETTLEMENT_DRAFT_SYNC_TIMER);
-  SETTLEMENT_DRAFT_SYNC_TIMER = setTimeout(() => syncSettlementDraftNow(draft.ym), 700);
+  const meta=settlementDraftSyncMeta(draft.ym);
+  clearTimeout(meta.timer);
+  meta.timer = setTimeout(() => { meta.timer=null; syncSettlementDraftNow(draft.ym); }, 700);
 }
 function syncSettlementDraftNow(ym){
-  if (SETTLEMENT_DRAFT_SYNCING || !STATE.authToken) return Promise.resolve();
-  const draft = (STATE.settlementDraft && STATE.settlementDraft.ym === ym) ? STATE.settlementDraft : loadSettlementDraft(ym);
-  SETTLEMENT_DRAFT_SYNCING = true;
-  STATE.settlementDraftSync = { state:'syncing', updatedAt:Number(draft.updatedAt || 0) };
-  return api('saveSettlementDraft', ym, draft, STATE.sessionUser || '하콩').then(res => {
-    const serverDraft = res && res.draft;
-    if (serverDraft) {
-      if (res.conflict) hydrateSettlementDraft(ym, serverDraft);
-      else {
-        STATE.settlementDraft = Object.assign(emptySettlementDraft(ym), serverDraft);
-        safeSet(settlementDraftKey(ym), JSON.stringify(STATE.settlementDraft), { keepYm: ym });
-      }
+  if (!STATE.authToken || !ym) return Promise.resolve(null);
+  const meta=settlementDraftSyncMeta(ym);
+  clearTimeout(meta.timer); meta.timer=null;
+  if (meta.inFlight) return meta.inFlight;
+  const drain = () => {
+    const latest=settlementDraftForSync(ym);
+    const sentGeneration=meta.generation;
+    meta.dirty=false;
+    const snapshot=cloneSettlementDraft(ym,latest);
+    if (meta.serverBase) snapshot.revision=Number(meta.serverBase.revision || 0);
+    if (meta.serverBase && Number(snapshot.updatedAt || 0) <= Number(meta.serverBase.updatedAt || 0)) {
+      snapshot.updatedAt=Number(meta.serverBase.updatedAt || 0)+1;
     }
-    STATE.settlementDraftSync = { state:'saved', updatedAt:Date.now() };
-    return res;
-  }).catch(err => {
-    STATE.settlementDraftSync = { state:'pending', updatedAt:Number(draft.updatedAt || 0), error:(err && err.message) || '' };
-    return null;
-  }).finally(() => { SETTLEMENT_DRAFT_SYNCING = false; });
+    STATE.settlementDraftSync = { state:'syncing', updatedAt:Number(snapshot.updatedAt || 0), generation:sentGeneration };
+    return api('saveSettlementDraft',ym,snapshot,STATE.sessionUser || '하콩').then(res => {
+      const serverDraft=res && res.draft;
+      const current=settlementDraftForSync(ym);
+      const changedWhileSaving=meta.generation !== sentGeneration || meta.dirty;
+      if (serverDraft) {
+        if (res.conflict) {
+          const merged=mergeSettlementDraftConflict(ym,serverDraft,current,meta.serverBase);
+          meta.serverBase=cloneSettlementDraft(ym,serverDraft);
+          merged.updatedAt=Math.max(Date.now(),Number(serverDraft.updatedAt || 0)+1,Number(current.updatedAt || 0)+1);
+          merged.updatedBy=STATE.sessionUser || merged.updatedBy || '';
+          storeSettlementDraftLocal(ym,merged);
+          meta.generation++;
+          meta.dirty=true;
+        } else {
+          meta.serverBase=cloneSettlementDraft(ym,serverDraft);
+          // 요청 뒤에 새 편집이 생겼다면 구응답을 화면/로컬 저장소에 절대 덮어쓰지 않는다.
+          if (!changedWhileSaving) {
+            const accepted=cloneSettlementDraft(ym,serverDraft);
+            accepted.pasteText=current.pasteText || '';
+            accepted.importPreview=current.importPreview || null;
+            storeSettlementDraftLocal(ym,accepted);
+          }
+        }
+      }
+      if (changedWhileSaving || meta.dirty || (res && res.conflict)) return drain();
+      STATE.settlementDraftSync = { state:'saved', updatedAt:Date.now(), generation:meta.generation };
+      return res;
+    }).catch(err => {
+      meta.dirty=true;
+      STATE.settlementDraftSync = { state:'pending', updatedAt:Number(snapshot.updatedAt || 0), generation:meta.generation, error:(err && err.message) || '' };
+      return null;
+    });
+  };
+  meta.inFlight=drain().finally(() => { meta.inFlight=null; });
+  return meta.inFlight;
 }
 function refreshSharedSettlementDraft(){
   if (!STATE.authToken || !STATE.ym) return Promise.resolve();
   return api('getSettlementDraft', STATE.ym).then(res => {
     hydrateSettlementDraft(STATE.ym, res && res.draft);
-    STATE.settlementDraftSync = { state:'saved', updatedAt:Date.now() };
+    const meta=settlementDraftSyncMeta(STATE.ym);
+    if (!meta.dirty) STATE.settlementDraftSync = { state:'saved', updatedAt:Date.now(), generation:meta.generation };
     return STATE.settlementDraft;
   });
 }
 function saveSettlementDraft(draft, options){
-  if (!draft || !draft.ym) return;
+  if (!draft || !draft.ym) return false;
   const opt = options || {};
   if (!opt.keepTime) draft.updatedAt = Date.now();
   draft.cleared = false;
   STATE.settlementDraft = draft;
-  safeSet(settlementDraftKey(draft.ym), JSON.stringify(draft), { keepYm: draft.ym, critical: true });
+  const saved=safeSet(settlementDraftKey(draft.ym), JSON.stringify(draft), { keepYm: draft.ym, critical: true });
+  const meta=settlementDraftSyncMeta(draft.ym);
+  meta.generation++;
+  meta.dirty=true;
   if (opt.remote !== false) scheduleSettlementDraftSync(draft);
+  return saved;
 }
 function clearSettlementDraft(ym){
-  clearTimeout(SETTLEMENT_DRAFT_SYNC_TIMER);
+  const meta=settlementDraftSyncMeta(ym);
+  clearTimeout(meta.timer); meta.timer=null;
   localStorage.removeItem(settlementDraftKey(ym));
   const cleared = Object.assign(emptySettlementDraft(ym), { cleared:true, updatedAt:Date.now(), updatedBy:STATE.sessionUser || '' });
   if (STATE.settlementDraft && STATE.settlementDraft.ym === ym) STATE.settlementDraft = cleared;
-  if (STATE.authToken) api('clearSettlementDraft', ym, STATE.sessionUser || '하콩').catch(() => {});
+  meta.generation++;
+  meta.dirty=true;
+  if (STATE.authToken) {
+    api('clearSettlementDraft', ym, STATE.sessionUser || '하콩').then(res => {
+      if (res && res.draft) meta.serverBase=cloneSettlementDraft(ym,res.draft);
+      if (!meta.inFlight) meta.dirty=false;
+    }).catch(() => {});
+  }
 }
 // 홑따옴표까지 반드시 막는다. 예전에는 ' 가 빠져 있어서
 // 카테고리명에 홑따옴표가 들어가면 onclick 문자열이 깨져 칩이 먹통이 됐다.
@@ -2087,12 +2235,11 @@ function txRow(t){
   const sign = t.type==='수입' ? '+' : '-';
   const cls = t.type==='수입' ? 'in' : 'out';
   const icoColor = catColorClass(t.cat);
-  const safeDesc = esc(t.desc||t.cat||'거래').replace(/'/g, "\\'");
   const safeRow = String(t.row || '').replace(/['\\]/g, '');
   const txRef = String(t.txId || safeRow).replace(/['\\]/g, '');
   const isTemp = t.syncState === 'pending' || t.syncState === 'error' || String(t.row).startsWith('temp_');
   const editBtn = isTemp ? '' : `<button type="button" class="edit-tx-btn" title="수정" onclick="event.stopPropagation(); editTx('${t.row}')">✏️</button>`;
-  const delBtn  = `<button type="button" class="del-tx-btn" title="${isTemp?'저장 대기 취소':'삭제'}" aria-label="${isTemp?'저장 대기 취소':'거래 삭제'}" onclick="event.stopPropagation(); deleteTxPrompt('${safeRow}', '${safeDesc}', ${Number(t.amount || 0)}, '${esc(t.type)}')">${isTemp?'✕':'🗑️'}</button>`;
+  const delBtn  = `<button type="button" class="del-tx-btn" data-delete-row="${esc(safeRow)}" title="${isTemp?'저장 대기 취소':'삭제'}" aria-label="${isTemp?'저장 대기 취소':'거래 삭제'}">${isTemp?'✕':'🗑️'}</button>`;
   const pendingBadge = isTemp ? `<span class="sync-badge ${t.syncState==='error'?'error':''}">${t.syncState==='error'?'재시도 대기':'저장 중'}</span>` : '';
   let actionHtml = '';
   if (STATE.bulkMode) {
@@ -2893,10 +3040,16 @@ function replacePendingTransaction(result){
   });
 }
 
-function queueTransaction(data){
-  const entry = { clientId: createClientId(), data: data, createdAt: Date.now(), attempts: 0, lastError: '' };
+function queueTransaction(data, clientId){
+  const entry = { clientId: clientId || createClientId(), data: data, createdAt: Date.now(), attempts: 0, lastError: '' };
   STATE.pending.push(entry);
-  persistPendingQueue();
+  if (!persistPendingQueue()) {
+    STATE.pending = STATE.pending.filter(row => row !== entry);
+    entry.durable = false;
+    renderSyncStatus('기기 저장 실패 · 입력 유지됨', 'pending');
+    return entry;
+  }
+  entry.durable = true;
   return entry;
 }
 
@@ -3067,7 +3220,7 @@ function openQuickEntryModal(){
     document.getElementById('fDesc').value = '';
     document.getElementById('fMemo').value = '';
     const hint = document.getElementById('recommendBox');
-    if(hint) hint.innerHTML = '';
+    if(hint) hint.textContent = '';
     
     STATE.form.type = STATE.form.type || '지출';
     STATE.form.cat = null;
@@ -3990,6 +4143,53 @@ function setTxSubmitBusy(busy, label){
   });
 }
 
+function quickTxSameData(a, b){
+  try { return JSON.stringify(a || {}) === JSON.stringify(b || {}); }
+  catch(e) { return false; }
+}
+
+function finishQuickTxInputs(closeAfter, amtInp, descInp){
+  if (closeAfter) closeQuickEntryModal();
+  else {
+    if (amtInp) { amtInp.value = ''; amtInp.focus(); }
+    if (descInp) descInp.value = '';
+  }
+}
+
+function saveUndurableQuickTx(entry, closeAfter, amtInp, descInp){
+  STATE.undurableQuickTx = entry;
+  if (navigator.onLine === false) {
+    renderSyncStatus('기기 저장 실패 · 입력 유지됨', 'pending');
+    toast('기기에 저장할 수 없어 오프라인 입력을 완료하지 못했어. 입력은 그대로 두었어.', true);
+    return;
+  }
+  setTxSubmitBusy(true, '장부에 직접 저장 중…');
+  renderSyncStatus('기기 저장 실패 · 장부에 직접 저장 중', 'syncing');
+  api('addTransactionsFast', [{ clientId:entry.clientId, data:entry.data }]).then(res => {
+    const result=(res && res.results && res.results[0]) || null;
+    if (!result || !result.ok) throw new Error((result && result.error) || '장부 저장을 확인하지 못했어.');
+    STATE.undurableQuickTx = null;
+    const tx=result.transaction;
+    if (tx && String(tx.date || '').slice(0,7) === STATE.ym) {
+      const exists=(STATE.transactions || []).some(item => String(item.txId || item.clientId || '') === String(result.clientId));
+      if (!exists) {
+        STATE.transactions.unshift(tx);
+        STATE.recent.unshift(tx);
+        STATE.recent=STATE.recent.slice(0,20);
+        adjustSummaryOptimistic(tx,1);
+      }
+    }
+    renderAll();
+    renderSyncStatus('장부 직접 저장 완료', 'saved');
+    toast('✅ 장부에 안전하게 저장했어.');
+    finishQuickTxInputs(closeAfter,amtInp,descInp);
+    refreshVisibleMonth(true).catch(()=>{});
+  }).catch(err => {
+    renderSyncStatus('기기 저장 실패 · 입력 유지됨', 'pending');
+    toast((err && err.message ? err.message + ' · ' : '') + '입력은 그대로 두었어. 다시 저장해줘.', true);
+  }).finally(() => setTxSubmitBusy(false));
+}
+
 function submitQuickTx(closeAfter){
   const amtInp = document.getElementById('fAmount');
   const descInp = document.getElementById('fDesc');
@@ -4036,7 +4236,14 @@ function submitQuickTx(closeAfter){
     return;
   }
 
-  const entry = queueTransaction(data);
+  const retry=STATE.undurableQuickTx;
+  const retryId=retry && quickTxSameData(retry.data,data) ? retry.clientId : '';
+  const entry = queueTransaction(data,retryId);
+  if (!entry.durable) {
+    saveUndurableQuickTx(entry,closeAfter,amtInp,descInp);
+    return;
+  }
+  STATE.undurableQuickTx = null;
   const tx = pendingAsTransaction(entry);
   if (String(date).slice(0, 7) === STATE.ym) {
     STATE.transactions.unshift(tx);
@@ -4048,11 +4255,7 @@ function submitQuickTx(closeAfter){
   renderSyncStatus('기기에 저장됨 · 장부 동기화 중', 'syncing');
   toast(navigator.onLine === false ? '📥 오프라인 저장 완료' : '⚡ 입력 완료 · 장부 저장 중');
 
-  if (closeAfter) closeQuickEntryModal();
-  else {
-    if (amtInp) { amtInp.value = ''; amtInp.focus(); }
-    if (descInp) descInp.value = '';
-  }
+  finishQuickTxInputs(closeAfter,amtInp,descInp);
   flushPendingQueue();
 }
 
@@ -4100,51 +4303,25 @@ function editTx(row){
   setTimeout(()=>{ if(amtInp){ amtInp.focus(); amtInp.select(); } }, 100);
 }
 
-function deleteTxPromptLegacy(row, desc, amount, type){
-  if(!confirm(`'${desc}' (${fmt(amount)}) 거래를 삭제할까요?`)) return;
-
-  const amtNum = Number(amount || 0);
-
-  // 1. 0.001초 낙관적 UI 즉시 삭제 (Wait Time = 0ms)
-  STATE.recent = (STATE.recent || []).filter(t => String(t.row) !== String(row));
-  STATE.transactions = (STATE.transactions || []).filter(t => String(t.row) !== String(row));
-
-  if (STATE.summary) {
-    if (type === '지출') {
-      STATE.summary.expense = Math.max(0, (STATE.summary.expense || 0) - amtNum);
-      STATE.summary.left = (STATE.summary.left || 0) + amtNum;
-    } else if (type === '수입') {
-      STATE.summary.income = Math.max(0, (STATE.summary.income || 0) - amtNum);
-      STATE.summary.left = Math.max(0, (STATE.summary.left || 0) - amtNum);
-    } else if (type === '저축') {
-      STATE.summary.save = Math.max(0, (STATE.summary.save || 0) - amtNum);
-      STATE.summary.left = (STATE.summary.left || 0) + amtNum;
-    } else if (type === '대출상환') {
-      STATE.summary.repay = Math.max(0, (STATE.summary.repay || 0) - amtNum);
-      STATE.summary.left = (STATE.summary.left || 0) + amtNum;
-    }
-  }
-
-  renderAll();
-  toast('⚡ 0.001초 빠른 거래 삭제 완료!');
-
-  // 2. 백그라운드 구글 시트 비동기 삭제 (Background Sync)
-  api('deleteTransaction', row, STATE.ym).then(data => {
-    if (data && data.summary) {
-      STATE.summary = data.summary;
-      if (data.recent) STATE.recent = data.recent;
-      if (data.transactions) STATE.transactions = data.transactions;
-      renderAll();
-    }
-  }).catch(err => {
-    toast((err && err.message) || '⚠️ 삭제 동기화 실패', true);
-  });
+function transactionForDelete(row){
+  return (STATE.transactions || []).find(item => String(item.row) === String(row))
+    || (STATE.recent || []).find(item => String(item.row) === String(row));
 }
 
-function deleteTxPrompt(row, desc, amount, type){
+function handleTransactionListClick(event){
+  const target=event && event.target;
+  const button=target && typeof target.closest === 'function' ? target.closest('.del-tx-btn[data-delete-row]') : null;
+  if (!button) return;
+  event.stopPropagation();
+  deleteTxPrompt(button.dataset.deleteRow);
+}
+
+function deleteTxPrompt(row){
+  const tx = transactionForDelete(row);
+  if (!tx) return toast('거래 정보를 찾을 수 없어.', true);
+  const desc=tx.desc || tx.cat || '거래';
+  const amount=Number(tx.amount || 0);
   if(!confirm(`'${desc}' (${fmt(amount)}) 거래를 삭제할까요?`)) return;
-  const tx = (STATE.transactions || []).find(item => String(item.row) === String(row))
-    || (STATE.recent || []).find(item => String(item.row) === String(row));
   if (String(row).indexOf('temp_') === 0 && tx) {
     const clientId = tx.clientId || String(row).replace(/^temp_/, '');
     STATE.pending = (STATE.pending || []).filter(item => item.clientId !== clientId);
@@ -5017,6 +5194,9 @@ function bindApp(){
   document.querySelectorAll('.tab[data-view]').forEach(t=>
     t.addEventListener('click', ()=>switchView(t.dataset.view)));
 
+  const listView = document.getElementById('v-list');
+  if(listView) listView.addEventListener('click', handleTransactionListClick);
+
   const recSheetX = document.getElementById('recSheetX');
   if(recSheetX) recSheetX.addEventListener('click', closeRecurringModal);
   const recCancelBtn = document.getElementById('recCancelBtn');
@@ -5164,10 +5344,10 @@ function bindApp(){
           STATE.form.cat = dict.cat;
           STATE.form.fixed = dict.fixed || '변동';
           renderFormChips();
-          if (hint) hint.innerHTML = `<span style="color:var(--forest); font-size:12px; margin-top:4px; display:inline-block;">💡 <b>${val}</b> ➔ <b>${dict.cat}</b> 자동 분류</span>`;
+          if (hint) hint.textContent = `💡 ${val} ➔ ${dict.cat} 자동 분류`;
         }
       } else {
-        if (hint) hint.innerHTML = '';
+        if (hint) hint.textContent = '';
         if (val && !STATE.form.catManual) {
           // 예전에는 무조건 '기타'로 되돌렸는데, ⚙️설정 시트에 '기타'가 없으면
           // 어떤 칩도 선택되지 않은 채 유령 카테고리로 저장됐다.
