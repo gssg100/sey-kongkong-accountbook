@@ -1,4 +1,4 @@
-const CACHE_NAME = 'sey-budget-shell-v2.2.0';
+const CACHE_NAME = 'sey-budget-shell-v2.2.1';
 const APP_SHELL = ['/app.html', '/manifest.json', '/icons/icon-192.png', '/icons/icon-512.png'];
 const NAVIGATION_ENTRY = '/app.html';
 // 네트워크가 이만큼 안 오면 캐시된 화면이라도 먼저 보여준다.
