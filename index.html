@@ -3,7 +3,7 @@
 <head>
 <base target="_top">
 <meta charset="utf-8">
-<meta name="app-version" content="2.3.0">
+<meta name="app-version" content="2.3.1">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, interactive-widget=resizes-content">
 <meta name="description" content="지수와 하콩이의 빠르고 편한 공동 가계부">
 <meta name="theme-color" content="#f5f5f7">
@@ -352,6 +352,24 @@ body.dark-mode .tabbar{background:rgba(28,28,30,0.85);border-top-color:rgba(255,
     width:500px;border-radius:28px;box-shadow:0 24px 70px rgba(0,0,0,.2);opacity:0;visibility:hidden;transition:all .25s ease}
   .sheet.on{transform:translate(-50%,-50%) scale(1);opacity:1;visibility:visible}
   .sheet .grip{display:none}
+  .brand .name,.desktop-nav .tab,.desktop-add,.monthnav .mlabel{white-space:nowrap}
+}
+/* 768~1139px(작은 노트북·창 모드): 헤더가 한 줄에 안 들어가 '내 / 역'처럼 글자가 세로로 쪼개지던 문제 */
+@media (min-width:768px) and (max-width:1139px){
+  header.top{padding:14px 18px}
+  .who{display:none}
+  .brand .name{font-size:17px}
+  .desktop-nav{gap:4px}
+  .desktop-nav .tab{padding:8px 10px}
+  .desktop-add{padding:0 14px}
+  .monthnav{gap:4px}
+  .monthnav button,.theme-btn{width:38px;min-width:38px;height:38px;min-height:38px}
+  .monthnav .mlabel{min-width:78px;font-size:16px}
+  main{padding:22px 20px 0}
+}
+@media (min-width:768px) and (max-width:959px){
+  .ver-pill{display:none}
+  .desktop-nav .tab .ic{display:none}
 }
 
 /*  Apple Dynamic Island Toast Snackbar */
@@ -401,6 +419,8 @@ body.dark-mode #toast{background:rgba(58,58,60,0.92)}
 /* Template strip */
 .template-strip{display:flex;gap:6px;overflow-x:auto;padding-bottom:4px;-webkit-overflow-scrolling:touch}
 .template-strip::-webkit-scrollbar{display:none}
+/* 템플릿이 많으면 칩이 줄어들며 '자/주/쓰/는…'처럼 글자가 세로로 쌓였다. 칩 폭은 유지하고 줄을 옆으로 넘긴다. */
+.template-strip .chip{flex:0 0 auto;white-space:nowrap}
 
 /* Recommend box */
 .recommend-box{margin-top:6px;display:flex;flex-wrap:wrap;gap:6px}
@@ -596,6 +616,19 @@ body.dark-mode .settlement-close-warn{color:var(--gold)}
 
 @media (max-width:760px){.settlement-hero{padding:20px;border-radius:20px}.settlement-closed-note{align-items:flex-start;flex-direction:column}.settlement-metrics{grid-template-columns:1fr}.settlement-section-head{align-items:flex-start}.settlement-section-head>div:first-child{align-items:flex-start}.settlement-actions{justify-content:flex-start}.settlement-grid-main{grid-template-columns:repeat(2,minmax(0,1fr))}.settlement-grid-main .settlement-desc{grid-column:span 2}.settlement-savebar{align-items:stretch;flex-direction:column}.settlement-savebar .primary{width:100%}.recon-row{grid-template-columns:1fr 1fr}.recon-row>div:first-child,.recon-row .recon-reason,.recon-diff{grid-column:span 2}.recon-diff{justify-content:flex-start;height:auto;min-height:20px}.investment-row{grid-template-columns:repeat(2,minmax(0,1fr))}.investment-row>input{grid-column:span 2}.investment-row .valuation{justify-content:flex-start}.holding-row{grid-template-columns:repeat(2,minmax(0,1fr))}.holding-row>input:first-child,.holding-row>input:nth-child(3){grid-column:span 2}.holding-row .valuation{justify-content:flex-start}.settlement-close-card{padding:18px}}
 
+/* 🖱️ PC(마우스)는 손가락으로 밀 수 없어서, 스크롤바를 숨긴 가로 줄은 '기타' 뒤 칩까지 갈 방법이 없었다.
+   분류 칩·구분 탭은 줄바꿈해 전부 보이게 하고, 나머지 가로 줄은 얇은 스크롤바 + 휠/드래그(App.html bindDesktopHScroll)로 넘긴다.
+   위쪽 기본 규칙을 덮어써야 하므로 이 블록은 파일 맨 끝에 둔다. */
+@media (hover:hover) and (pointer:fine){
+  .cat-scroll-bar{flex-wrap:wrap;overflow-x:visible;padding-bottom:0}
+  .cat-scroll-chip:not(.on):hover{color:var(--ink);border-color:color-mix(in srgb,var(--forest) 45%,var(--line))}
+  .list-type-summary{flex-wrap:wrap;overflow-x:visible}
+  .dday-strip,.template-strip{scrollbar-width:thin;scrollbar-color:var(--line) transparent;cursor:grab;user-select:none;-webkit-user-select:none}
+  .dday-strip::-webkit-scrollbar,.template-strip::-webkit-scrollbar{display:block;height:6px}
+  .dday-strip::-webkit-scrollbar-thumb,.template-strip::-webkit-scrollbar-thumb{background:var(--line);border-radius:999px}
+  .dday-strip.dragging,.template-strip.dragging{cursor:grabbing}
+}
+
 </style>
 
   <link rel="manifest" href="/manifest.json">
@@ -638,10 +671,10 @@ body.dark-mode .settlement-close-warn{color:var(--gold)}
       </div>
 
       <div class="desktop-nav">
-        <button class="tab active" data-view="home">🏠 홈</button>
-        <button class="tab" data-view="list">🧾 내역</button>
-        <button class="tab" data-view="asset">💎 자산</button>
-        <button class="tab" data-view="more">📋 더보기</button>
+        <button class="tab active" data-view="home"><span class="ic" aria-hidden="true">🏠</span>홈</button>
+        <button class="tab" data-view="list"><span class="ic" aria-hidden="true">🧾</span>내역</button>
+        <button class="tab" data-view="asset"><span class="ic" aria-hidden="true">💎</span>자산</button>
+        <button class="tab" data-view="more"><span class="ic" aria-hidden="true">📋</span>더보기</button>
         <button class="desktop-add" id="desktopAddBtn">+ 빠른 입력</button>
       </div>
 
@@ -869,9 +902,9 @@ body.dark-mode .settlement-close-warn{color:var(--gold)}
 <script>
 /* ============ 앱 글로벌 상태 (Store) ============ */
 /* @release:start — pwa-site/scripts/build-static.mjs 가 release.json 을 보고 자동으로 채운다. 손으로 고치지 말 것. */
-const APP_VERSION = '2.3.0';
-const APP_BUILT_AT = '2026-09-27T22:26:29+09:00';
-const APP_RELEASE_NOTES = [{"version":"2.3.0","date":"2026-09-27T22:26:29+09:00","notes":["로그인 보안: v3 세션 registry와 현재 세션·모든 기기 원격 로그아웃을 추가하고, 구 v2 세션도 전체 로그아웃 시 함께 폐기","PIN 보호: 기기별 로그인 실패 제한으로 다른 기기의 오입력 때문에 함께 잠기는 문제를 줄이고 전역 abuse guard를 보조 안전망으로 분리","내역 검색: 현재 월/전체 기간 검색을 전환할 수 있고 소비성격·최소/최대 금액 필터와 서버 검색을 연결","알림 정리: 실제 서버 Web Push처럼 보이던 표현을 제거하고 앱 실행 중 기기 알림으로 명확히 표시, 예산 초과·빠른 소진 경고를 실제 동작으로 연결","접근성·안전: 모달 배경 inert·초기 포커스·포커스 트랩을 보강하고 전체기간 검색은 조회 전용, 마감월 일괄변경은 서버에서 사전 차단"]},{"version":"2.2.1","date":"2026-09-27T22:04:26+09:00","notes":["대용량 정산: 한 달 거래가 1,000건을 넘어도 대사·정산 합계·정산 배치가 전체 거래 기준으로 계산","저장 재시도: 연결 오류만 5초→15초→1분→5분 백오프로 자동 재시도하고 검증·마감 오류는 '확인 필요'로 중단","동기화 성능: 변경이 없는 달은 revision으로 확인해 거래 전체 목록을 다시 내려받지 않는 경량 새로고침 적용","시트 안전: 기존 헤더가 예상과 다르면 자동 덮어쓰지 않고 중단하며, 정상 legacy 시트는 뒤쪽 새 컬럼만 안전하게 확장","배포 안전: Apps Script 배포 뒤 생성된 정적 사이트 파일만 GitHub에 자동 게시하도록 릴리스 절차 보강"]},{"version":"2.2.0","date":"2026-09-27T20:57:19+09:00","notes":["데이터 안전: 월마감과 월 회고를 분리해 회고 저장·정산 다시 열기로 마감 기록이 손상되지 않게 개선","정산 안전: 마감된 달은 다시 열기 전까지 거래 추가·수정·삭제를 서버에서 차단","동기화 안전: 정산 공유초안에 revision을 추가하고 저장 중 추가 편집·다중 기기 충돌 시 최신 내용을 보존","오프라인 안전: 기기 저장에 실패한 입력을 저장 완료로 표시하지 않도록 개선","화면 보안: 거래 설명의 inline 이벤트 삽입과 자동분류 raw HTML 렌더링 제거"]},{"version":"2.1.0","date":"2026-09-26T18:01:20+09:00","notes":["정산 마감이 안 되던 문제 수정 — 응답 대기 20초 → 3분, 늦어져도 실제 마감 여부를 다시 확인","앱이 항상 이번 달로 열려요 — 지난달 정산은 홈 맨 위 '정산하기' 카드와 더보기 > 월 정산에서","내역: 지출·수입·저축 탭에 합계 금액 표시, 분류를 고르면 분류 합계와 비중까지","정산: 저장 안 한 대사·투자값을 마감 전에 자동 저장, 체크 항목이 화면 갱신에도 유지","정산: 빈 초안 행은 자동 정리, 다음 달 예산 덮어쓰기를 거절해도 마감은 진행"]},{"version":"2.0.0","date":"2026-09-26T17:44:51+09:00","notes":["앱 버전 표시 추가 — 새 버전이 적용되면 화면 위에 알려줘요","자산: 보물창고 '비상금'이 저장 후 0원으로 되돌아가던 문제 수정","자산: 항목을 전부 지워도 옛 금액이 다시 살아나던 문제 수정","자산: 한 줄로 합쳐진 항목은 수정 창에서 원본(8/2) 세부항목을 불러와 확인 후 저장","자주 쓰는 거래 버튼이 이름에 따옴표가 있으면 눌리지 않던 문제 수정","보안: 누구나 볼 수 있던 화면 코드에서 자산 금액 정보 제거"]}];
+const APP_VERSION = '2.3.1';
+const APP_BUILT_AT = '2026-09-29T08:53:56+09:00';
+const APP_RELEASE_NOTES = [{"version":"2.3.1","date":"2026-09-29T08:53:56+09:00","notes":["보안(중요): 기기 ID를 바꿔 가며 PIN을 무제한으로 추측할 수 있던 문제 수정 — 처음 보는 기기는 공용 잠금, 쓰던 기기는 기기별 잠금","PC: 내역의 분류 칩(식비·교통/차량…기타 뒤)이 옆으로 안 넘어가던 문제 수정 — PC에서는 모든 분류가 한눈에 보이게 줄바꿈","PC: 자주 쓰는 거래·D-Day 줄은 마우스 휠이나 끌어서 옆으로 넘길 수 있어요","PC: 창 폭이 좁을 때 상단 메뉴 글자가 '내 / 역'처럼 세로로 쪼개지던 문제 수정","빠른 입력: 자주 쓰는 거래가 많으면 버튼 글자가 세로로 쌓이던 문제 수정","안정성: 창 위에 창이 열렸다 닫히면 앱 전체가 눌리지 않던 문제 수정","동기화: 지난달을 보다가 동기화하면 그 달 최신 내용을 못 받아오던 문제 수정","정산 공유초안: 다른 기기에서 지운 행이 이 기기의 옛 사본 때문에 되살아나던 문제 수정"]},{"version":"2.3.0","date":"2026-09-27T22:26:29+09:00","notes":["로그인 보안: v3 세션 registry와 현재 세션·모든 기기 원격 로그아웃을 추가하고, 구 v2 세션도 전체 로그아웃 시 함께 폐기","PIN 보호: 기기별 로그인 실패 제한으로 다른 기기의 오입력 때문에 함께 잠기는 문제를 줄이고 전역 abuse guard를 보조 안전망으로 분리","내역 검색: 현재 월/전체 기간 검색을 전환할 수 있고 소비성격·최소/최대 금액 필터와 서버 검색을 연결","알림 정리: 실제 서버 Web Push처럼 보이던 표현을 제거하고 앱 실행 중 기기 알림으로 명확히 표시, 예산 초과·빠른 소진 경고를 실제 동작으로 연결","접근성·안전: 모달 배경 inert·초기 포커스·포커스 트랩을 보강하고 전체기간 검색은 조회 전용, 마감월 일괄변경은 서버에서 사전 차단"]},{"version":"2.2.1","date":"2026-09-27T22:04:26+09:00","notes":["대용량 정산: 한 달 거래가 1,000건을 넘어도 대사·정산 합계·정산 배치가 전체 거래 기준으로 계산","저장 재시도: 연결 오류만 5초→15초→1분→5분 백오프로 자동 재시도하고 검증·마감 오류는 '확인 필요'로 중단","동기화 성능: 변경이 없는 달은 revision으로 확인해 거래 전체 목록을 다시 내려받지 않는 경량 새로고침 적용","시트 안전: 기존 헤더가 예상과 다르면 자동 덮어쓰지 않고 중단하며, 정상 legacy 시트는 뒤쪽 새 컬럼만 안전하게 확장","배포 안전: Apps Script 배포 뒤 생성된 정적 사이트 파일만 GitHub에 자동 게시하도록 릴리스 절차 보강"]},{"version":"2.2.0","date":"2026-09-27T20:57:19+09:00","notes":["데이터 안전: 월마감과 월 회고를 분리해 회고 저장·정산 다시 열기로 마감 기록이 손상되지 않게 개선","정산 안전: 마감된 달은 다시 열기 전까지 거래 추가·수정·삭제를 서버에서 차단","동기화 안전: 정산 공유초안에 revision을 추가하고 저장 중 추가 편집·다중 기기 충돌 시 최신 내용을 보존","오프라인 안전: 기기 저장에 실패한 입력을 저장 완료로 표시하지 않도록 개선","화면 보안: 거래 설명의 inline 이벤트 삽입과 자동분류 raw HTML 렌더링 제거"]},{"version":"2.1.0","date":"2026-09-26T18:01:20+09:00","notes":["정산 마감이 안 되던 문제 수정 — 응답 대기 20초 → 3분, 늦어져도 실제 마감 여부를 다시 확인","앱이 항상 이번 달로 열려요 — 지난달 정산은 홈 맨 위 '정산하기' 카드와 더보기 > 월 정산에서","내역: 지출·수입·저축 탭에 합계 금액 표시, 분류를 고르면 분류 합계와 비중까지","정산: 저장 안 한 대사·투자값을 마감 전에 자동 저장, 체크 항목이 화면 갱신에도 유지","정산: 빈 초안 행은 자동 정리, 다음 달 예산 덮어쓰기를 거절해도 마감은 진행"]},{"version":"2.0.0","date":"2026-09-26T17:44:51+09:00","notes":["앱 버전 표시 추가 — 새 버전이 적용되면 화면 위에 알려줘요","자산: 보물창고 '비상금'이 저장 후 0원으로 되돌아가던 문제 수정","자산: 항목을 전부 지워도 옛 금액이 다시 살아나던 문제 수정","자산: 한 줄로 합쳐진 항목은 수정 창에서 원본(8/2) 세부항목을 불러와 확인 후 저장","자주 쓰는 거래 버튼이 이름에 따옴표가 있으면 눌리지 않던 문제 수정","보안: 누구나 볼 수 있던 화면 코드에서 자산 금액 정보 제거"]}];
 /* @release:end */
 const DEFAULT_GAS_URL = 'https://script.google.com/macros/s/AKfycbwjFv7OSDc6T4vD0nUQA5E-W1QazAEU5dowQroEXard5DCMtP0FiMRlwtIjuEfDzo8phA/exec';
 const APP_CACHE_VERSION = 5;
@@ -1405,15 +1438,23 @@ function hydrateSettlementDraft(ym, sharedDraft){
     ? cloneSettlementDraft(ym,STATE.settlementDraft)
     : loadSettlementDraft(ym);
   const hasLocalWork=meta.dirty || !!meta.inFlight;
+  // 이 기기에 서버로 못 보낸 편집이 남아 있을 때만 합친다. 이미 동기화된 옛 사본까지 합치면
+  // 다른 기기에서 지운 행(이미 확정 저장한 행 포함)이 되살아나 서버로 다시 올라갔다.
+  // unsynced 표시가 없는 예전 사본은 서버보다 새로울 때만 미동기화로 본다.
+  const localUnsynced = local.unsynced === true
+    || (local.unsynced == null && Number(local.updatedAt || 0) > Number(shared.updatedAt || 0));
   const merged = hasLocalWork
     ? mergeSettlementDraftConflict(ym, shared, local, previousBase)
-    : mergeSettlementDrafts(ym, shared, local);
+    : (localUnsynced
+      ? mergeSettlementDrafts(ym, shared, local)
+      : Object.assign(cloneSettlementDraft(ym, shared), { pasteText:local.pasteText || '', importPreview:local.importPreview || null }));
   meta.serverBase=shared;
   const needsServerSync=!sameSettlementDraftContent(merged,shared);
   if ((hasLocalWork && !sameSettlementDraftValue(merged,local)) || (!hasLocalWork && needsServerSync)) {
     meta.generation++;
     meta.dirty=true;
   }
+  merged.unsynced = needsServerSync;
   STATE.settlementDraft = merged;
   safeSet(settlementDraftKey(ym), JSON.stringify(merged), { keepYm: ym });
   if (needsServerSync) {
@@ -1453,6 +1494,7 @@ function syncSettlementDraftNow(ym){
           meta.serverBase=cloneSettlementDraft(ym,serverDraft);
           merged.updatedAt=Math.max(Date.now(),Number(serverDraft.updatedAt || 0)+1,Number(current.updatedAt || 0)+1);
           merged.updatedBy=STATE.sessionUser || merged.updatedBy || '';
+          merged.unsynced=true;
           storeSettlementDraftLocal(ym,merged);
           meta.generation++;
           meta.dirty=true;
@@ -1463,6 +1505,7 @@ function syncSettlementDraftNow(ym){
             const accepted=cloneSettlementDraft(ym,serverDraft);
             accepted.pasteText=current.pasteText || '';
             accepted.importPreview=current.importPreview || null;
+            accepted.unsynced=false;
             storeSettlementDraftLocal(ym,accepted);
           }
         }
@@ -1493,6 +1536,7 @@ function saveSettlementDraft(draft, options){
   const opt = options || {};
   if (!opt.keepTime) draft.updatedAt = Date.now();
   draft.cleared = false;
+  draft.unsynced = true;
   STATE.settlementDraft = draft;
   const saved=safeSet(settlementDraftKey(draft.ym), JSON.stringify(draft), { keepYm: draft.ym, critical: true });
   const meta=settlementDraftSyncMeta(draft.ym);
@@ -2839,11 +2883,15 @@ function restoreDialogTrigger(){
   LAST_DIALOG_TRIGGER = null;
   if (target && document.contains(target) && typeof target.focus === 'function') setTimeout(() => target.focus(), 0);
 }
+let DIALOG_INERT_ACTIVE = false;
 function setBackgroundInert(inert){
   const app=document.getElementById('app');
   if(!app) return;
   if(inert){
-    DIALOG_APP_WAS_INERT=!!app.inert;
+    // 창이 열린 상태에서 또 열면(창 위에 창, 같은 창 재호출) 이미 우리가 건 inert 를 '원래 상태'로
+    // 기억해 버려서, 전부 닫아도 앱 전체가 클릭되지 않는 채로 남았다. 처음 열 때만 원래 상태를 기억한다.
+    if(!DIALOG_INERT_ACTIVE) DIALOG_APP_WAS_INERT=!!app.inert;
+    DIALOG_INERT_ACTIVE=true;
     app.inert=true;
     app.setAttribute('inert','');
     app.setAttribute('aria-hidden','true');
@@ -2851,6 +2899,7 @@ function setBackgroundInert(inert){
     if(!DIALOG_APP_WAS_INERT){ app.inert=false; app.removeAttribute('inert'); }
     app.removeAttribute('aria-hidden');
     DIALOG_APP_WAS_INERT=false;
+    DIALOG_INERT_ACTIVE=false;
   }
 }
 function focusDialogControl(sheet, preferredSelector){
@@ -2862,7 +2911,8 @@ function focusDialogControl(sheet, preferredSelector){
   },0);
 }
 function openDialogSheet(sheetId, preferredSelector){
-  rememberDialogTrigger();
+  // 이미 열린 창 위에서 다시 열 때는 처음 창을 연 버튼을 그대로 기억해 둔다(닫은 뒤 그 버튼으로 포커스 복귀).
+  if (!document.querySelector('.sheet.on')) rememberDialogTrigger();
   const overlay=document.getElementById('overlay');
   const sheet=document.getElementById(sheetId);
   if(overlay) overlay.classList.add('on');
@@ -3108,8 +3158,8 @@ function applyBootData(data){
 
 function applyGlobalData(data){
   if (!data) return;
-  STATE.revision = Number(data.revision || STATE.revision || 0);
-  STATE.lastSyncAt = Number(data.serverTime || Date.now());
+  // STATE.revision 은 "지금 화면에 있는 달 데이터가 어느 revision 기준인가"를 뜻한다(refreshVisibleMonth 의 notModified 판단).
+  // 다른 달 부트 데이터로 올려버리면, 지난달을 보다가 동기화한 뒤 그 달이 바뀌어도 '이미 최신'으로 착각했다.
   STATE.sessionUser = data.sessionUser || STATE.sessionUser;
   STATE.form.user = STATE.form.user || STATE.sessionUser || '하콩';
   STATE.config = data.config || STATE.config;
@@ -3300,7 +3350,8 @@ function flushPendingQueue(options){
         markPendingFailure(row,'서버 응답을 확인하지 못했어.',{ retryable:true });
       }
     });
-    STATE.revision = Number(res.revision || STATE.revision || 0);
+    // res.revision 은 여기서 STATE.revision 으로 올리지 않는다. 그 사이 다른 기기가 바꾼 내용까지
+    // '이미 받은 것'으로 취급하게 된다. 성공 건이 있으면 아래 full refresh 가 revision 을 맞춘다.
     persistPendingQueue();
     renderAll();
     renderSyncStatus(pendingQueueStatusMessage(),STATE.pending.length ? 'pending' : 'saved');
@@ -3328,13 +3379,16 @@ function refreshBootData(silent){
   const startedYm = STATE.ym;
   STATE.sync.bootPromise = api('getBoot').then(data => {
     saveBootCache(data);
+    const otherMonth = STATE.monthMode === 'manual' && data.ym !== startedYm;
     if (STATE.monthMode !== 'manual') applyBootData(data);
-    else if (data.ym === startedYm) applyMonthData(data);
+    else if (!otherMonth) applyMonthData(data);
     else applyGlobalData(data);
     mergePendingTransactions();
     renderAll();
     if (!silent) toast('✅ 최신 장부로 동기화 완료');
     renderSyncStatus();
+    // 지난달 등 다른 달을 보고 있으면 부트 데이터에는 그 달 거래가 없다. 보고 있는 달도 새로 받아온다.
+    if (otherMonth && STATE.ym === startedYm) refreshVisibleMonth(true, { forceFull:true }).catch(()=>{});
     return data;
   }).catch(err => {
     const text = (err && err.message) || '동기화 실패';
@@ -5498,9 +5552,69 @@ function checkAndDispatchDueNotifications() {
   }
 }
 
+/**
+ * PC(마우스)에서 가로로 넘기는 줄(분류 칩·자주 쓰는 거래·D-Day 등)을 넘길 수 있게 한다.
+ * 휴대폰은 손가락으로 밀면 되지만 PC 는 스크롤바가 숨겨져 있어 '기타' 뒤 칩을 누를 방법이 없었다.
+ * - 세로 휠 → 가로 이동(줄 끝에 닿으면 원래대로 페이지가 내려간다)
+ * - 마우스로 끌어서 넘기기(끈 뒤에는 칩이 눌리지 않게 클릭 한 번을 막는다)
+ */
+const HSCROLL_STRIP_SELECTOR = '.cat-scroll-bar,.template-strip,.dday-strip,.list-type-summary';
+function horizontalScrollStrip(target){
+  const strip = target && typeof target.closest === 'function' ? target.closest(HSCROLL_STRIP_SELECTOR) : null;
+  return strip && strip.scrollWidth > strip.clientWidth + 1 ? strip : null;
+}
+function bindDesktopHScroll(){
+  document.addEventListener('wheel', event => {
+    if (event.ctrlKey || Math.abs(event.deltaX) >= Math.abs(event.deltaY)) return;
+    const strip = horizontalScrollStrip(event.target);
+    if (!strip) return;
+    const unit = event.deltaMode === 1 ? 16 : event.deltaMode === 2 ? strip.clientWidth : 1;
+    const max = strip.scrollWidth - strip.clientWidth;
+    const next = Math.max(0, Math.min(max, strip.scrollLeft + event.deltaY * unit));
+    if (Math.abs(next - strip.scrollLeft) < 1) return;
+    strip.scrollLeft = next;
+    event.preventDefault();
+  }, { passive:false });
+
+  let drag = null;
+  let swallowClick = false;
+  document.addEventListener('pointerdown', event => {
+    if (event.pointerType !== 'mouse' || event.button !== 0) return;
+    const strip = horizontalScrollStrip(event.target);
+    if (strip) drag = { strip:strip, id:event.pointerId, x:event.clientX, left:strip.scrollLeft, moved:false };
+  });
+  document.addEventListener('pointermove', event => {
+    if (!drag || event.pointerId !== drag.id) return;
+    const dx = event.clientX - drag.x;
+    if (!drag.moved && Math.abs(dx) < 6) return;
+    drag.moved = true;
+    drag.strip.classList.add('dragging');
+    drag.strip.scrollLeft = drag.left - dx;
+  });
+  const endDrag = event => {
+    if (!drag || (event && event.pointerId !== drag.id)) return;
+    if (drag.moved) {
+      swallowClick = true;
+      setTimeout(() => { swallowClick = false; }, 0);
+    }
+    drag.strip.classList.remove('dragging');
+    drag = null;
+  };
+  document.addEventListener('pointerup', endDrag);
+  document.addEventListener('pointercancel', endDrag);
+  document.addEventListener('click', event => {
+    if (!swallowClick) return;
+    swallowClick = false;
+    event.preventDefault();
+    event.stopPropagation();
+  }, true);
+}
+
 function bindApp(){
   document.querySelectorAll('.tab[data-view]').forEach(t=>
     t.addEventListener('click', ()=>switchView(t.dataset.view)));
+
+  bindDesktopHScroll();
 
   const listView = document.getElementById('v-list');
   if(listView) listView.addEventListener('click', handleTransactionListClick);
