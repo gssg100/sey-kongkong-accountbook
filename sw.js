@@ -1,4 +1,4 @@
-const CACHE_NAME = 'sey-budget-shell-v2.3.9';
+const CACHE_NAME = 'sey-budget-shell-v2.3.11';
 const APP_SHELL = ['/app.html', '/manifest.json', '/icons/icon-192.png', '/icons/icon-512.png'];
 const NAVIGATION_ENTRY = '/app.html';
 // 네트워크가 이만큼 안 오면 캐시된 화면이라도 먼저 보여준다.
@@ -29,6 +29,9 @@ self.addEventListener('activate', (event) => {
  * 오프라인이거나 느릴 때만 캐시된 화면으로 떨어진다.
  */
 function navigationResponse(request) {
+  const url = new URL(request.url);
+  // 다른 same-origin 경로가 manifest/JSON/에러문서를 돌려줘도 앱 셸을 덮어쓰지 않는다.
+  const shellPath = url.pathname === '/' || url.pathname === '/index.html' || url.pathname === NAVIGATION_ENTRY;
   return new Promise((resolve) => {
     let settled = false;
     const done = (res) => { if (!settled && res) { settled = true; resolve(res); } };
@@ -39,8 +42,12 @@ function navigationResponse(request) {
     fetch(request).then((response) => {
       clearTimeout(timer);
       if (response && response.ok) {
-        const clone = response.clone();
-        caches.open(CACHE_NAME).then((cache) => cache.put(NAVIGATION_ENTRY, clone)).catch(() => {});
+        const type = String(response.headers && response.headers.get('content-type') || '').toLowerCase();
+        // HTML 앱의 예상 진입 주소/Content-Type/비리다이렉트 응답만 오프라인 셸로 저장.
+        if (shellPath && !response.redirected && type.includes('text/html')) {
+          const clone = response.clone();
+          caches.open(CACHE_NAME).then((cache) => cache.put(NAVIGATION_ENTRY, clone)).catch(() => {});
+        }
         done(response);
       } else {
         caches.match(NAVIGATION_ENTRY).then((cached) => done(cached || response));
