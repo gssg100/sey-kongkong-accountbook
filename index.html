@@ -3,7 +3,7 @@
 <head>
 <base target="_top">
 <meta charset="utf-8">
-<meta name="app-version" content="2.3.8">
+<meta name="app-version" content="2.3.9">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, interactive-widget=resizes-content">
 <meta name="description" content="지수와 하콩이의 빠르고 편한 공동 가계부">
 <meta name="theme-color" content="#f5f5f7">
@@ -771,6 +771,66 @@ body.dark-mode .settlement-close-warn{color:var(--gold)}
 .list-cat-total strong{font-size:15px;font-variant-numeric:tabular-nums}
 .list-cat-total span{font-size:11.5px;color:var(--muted);font-weight:700}
 
+/* ↔ 계좌간 이체: 일반 거래·월 정산과 독립된 원장 */
+.transfer-header{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:12px}
+.transfer-header h1{font-size:23px;font-weight:900;letter-spacing:-.03em}
+.transfer-header p{font-size:12.5px;color:var(--muted);font-weight:700;margin-top:3px}
+.transfer-refresh{padding:10px 14px;min-height:42px;flex-shrink:0;border-radius:12px;background:var(--line-soft);font-weight:800;font-size:13px}
+.transfer-refresh:disabled,.transfer-form :disabled,.transfer-remove:disabled{opacity:.48;cursor:not-allowed}
+.transfer-disclaimer,.transfer-note{font-size:12px;color:var(--muted);line-height:1.6;margin:0 0 14px}
+.transfer-disclaimer{padding:12px 14px;border:1px solid var(--line);background:var(--card);border-radius:14px}
+.transfer-card{background:var(--card);border:1px solid var(--line);box-shadow:var(--shadow);border-radius:20px;margin:16px 0;padding:18px}
+.transfer-card h2{font-size:16px;font-weight:850;margin:0 0 12px}
+.transfer-form{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+.transfer-form label{display:flex;flex-direction:column;gap:5px;font-size:12.5px;font-weight:750;color:var(--ink);min-width:0}
+.transfer-form input{width:100%;min-height:44px;border:1px solid var(--line);background:var(--bg);color:var(--ink);padding:10px 12px;border-radius:12px;outline-offset:2px}
+.transfer-form input:focus{border-color:var(--forest)}
+.transfer-wide,.transfer-submit-row{grid-column:1/-1}
+.transfer-submit-row{display:flex;align-items:center;justify-content:space-between;gap:14px;padding-top:6px}
+.transfer-submit-row span{font-size:11.5px;color:var(--muted)}
+.transfer-submit{background:var(--forest);color:#fff;border-radius:12px;min-height:44px;padding:12px 18px;font-weight:850;font-size:13px;flex-shrink:0}
+.transfer-section-title{display:flex;align-items:baseline;justify-content:space-between;gap:12px}
+.transfer-section-title span{font-size:11.5px;font-weight:750;color:var(--muted);text-align:right}
+.transfer-total{display:flex;align-items:baseline;gap:7px 14px;flex-wrap:wrap;background:var(--line-soft);border-radius:14px;padding:16px;margin:0 0 10px}
+.transfer-total span{font-size:13px;font-weight:800;color:var(--muted)}
+.transfer-total strong{font-size:23px;font-weight:900;color:var(--forest)}
+.transfer-total small{flex-basis:100%;font-size:11px;color:var(--muted)}
+.transfer-entry{display:flex;justify-content:space-between;align-items:center;gap:15px;padding:14px 2px;border-bottom:1px solid var(--line-soft)}
+.transfer-entry:last-child{border-bottom:0}
+.transfer-entry-main{min-width:0;overflow-wrap:anywhere}
+.transfer-entry-date,.transfer-entry-created{display:block;color:var(--muted);font-size:11.5px;margin-bottom:3px}
+.transfer-entry-main strong{display:block;font-size:14px;font-weight:800}
+.transfer-entry-memo{font-size:12px;color:var(--muted);margin-top:4px;white-space:pre-wrap;overflow-wrap:anywhere}
+.transfer-entry-action{text-align:right;flex-shrink:0;display:flex;flex-direction:column;align-items:flex-end;gap:6px}
+.transfer-entry-action>strong{font-size:15px;color:var(--ink)}
+.transfer-remove{font-size:12px;font-weight:850;color:var(--expense);min-height:32px;padding:6px 10px;border:1px solid var(--line);border-radius:10px}
+.transfer-empty{font-size:13px;color:var(--muted);padding:12px 0}
+.transfer-status{padding:11px 12px;margin:10px 0;border-radius:12px;background:var(--line-soft);font-size:12px;font-weight:700;overflow-wrap:anywhere}
+.transfer-status.error{background:var(--gold-soft);color:#935400}
+body.dark-mode .transfer-status.error{color:var(--gold)}
+.transfer-account-list{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+.transfer-account{padding:14px;border:1px solid var(--line);background:var(--bg);border-radius:15px;min-width:0}
+.transfer-account-title{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin-bottom:10px;overflow-wrap:anywhere}
+.transfer-account-title strong{font-size:14px;font-weight:850}
+.transfer-chip{font-size:10px;color:var(--muted);padding:2px 7px;background:var(--line);border-radius:999px}
+.transfer-account-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}
+.transfer-account-grid>div{display:flex;flex-direction:column;gap:3px;min-width:0}
+.transfer-account-grid span{font-size:11px;color:var(--muted)}
+.transfer-account-grid strong{font-size:13px;overflow-wrap:anywhere;font-variant-numeric:tabular-nums}
+.transfer-account-total{display:flex;justify-content:space-between;flex-wrap:wrap;gap:4px;margin-top:13px;border-top:1px solid var(--line);padding-top:10px;font-size:11px;color:var(--muted)}
+.transfer-account-total strong{font-size:12px;color:var(--ink)}
+@media(max-width:760px){
+  .transfer-card{padding:14px;border-radius:16px}
+  .transfer-account-list{grid-template-columns:1fr}
+  .transfer-header h1{font-size:21px}
+}
+@media(max-width:480px){
+  .transfer-form{grid-template-columns:1fr}
+  .transfer-submit-row{align-items:stretch;flex-direction:column}
+  .transfer-submit{width:100%}
+  .transfer-entry{align-items:flex-start}
+}
+
 @media (max-width:760px){.settlement-hero{padding:20px;border-radius:20px}.settlement-closed-note{align-items:flex-start;flex-direction:column}.settlement-metrics{grid-template-columns:1fr}.settlement-section-head{align-items:flex-start}.settlement-section-head>div:first-child{align-items:flex-start}.settlement-actions{justify-content:flex-start}.settlement-grid-main{grid-template-columns:repeat(2,minmax(0,1fr))}.settlement-grid-main .settlement-desc{grid-column:span 2}.settlement-savebar{align-items:stretch;flex-direction:column}.settlement-savebar .primary{width:100%}.recon-row{grid-template-columns:1fr 1fr}.recon-row>div:first-child,.recon-row .recon-reason,.recon-diff{grid-column:span 2}.recon-diff{justify-content:flex-start;height:auto;min-height:20px}.investment-row{grid-template-columns:repeat(2,minmax(0,1fr))}.investment-row>input{grid-column:span 2}.investment-row .valuation{justify-content:flex-start}.holding-row{grid-template-columns:repeat(2,minmax(0,1fr))}.holding-row>input:first-child,.holding-row>input:nth-child(3){grid-column:span 2}.holding-row .valuation{justify-content:flex-start}.settlement-close-card{padding:18px}}
 
 /* 🖱️ PC(마우스)는 손가락으로 밀 수 없어서, 스크롤바를 숨긴 가로 줄은 '기타' 뒤 칩까지 갈 방법이 없었다.
@@ -859,6 +919,7 @@ body.dark-mode .settlement-close-warn{color:var(--gold)}
     <section class="view" id="v-review"></section>
     <section class="view" id="v-more"></section>
     <section class="view" id="v-settlement"></section>
+    <section class="view" id="v-transfers" aria-label="계좌간 이체"></section>
   </main>
 
   <nav class="tabbar" aria-label="주요 메뉴">
@@ -1076,9 +1137,9 @@ body.dark-mode .settlement-close-warn{color:var(--gold)}
 <script>
 /* ============ 앱 글로벌 상태 (Store) ============ */
 /* @release:start — pwa-site/scripts/build-static.mjs 가 release.json 을 보고 자동으로 채운다. 손으로 고치지 말 것. */
-const APP_VERSION = '2.3.8';
-const APP_BUILT_AT = '2026-10-11T14:41:36+09:00';
-const APP_RELEASE_NOTES = [{"version":"2.3.8","date":"2026-10-11T14:41:36+09:00","notes":["4차 공동생활비: 거래 입력자와 실제 결제자를 분리하고 개인·공동 지출 및 지수·하콩 부담비율을 기록","부부 정산: 월별 확정 공동지출에 따른 개인별 부담과 차액 송금 제안을 읽기 전용으로 표시","결제수단 기록: 기존 출처/계좌를 빠른 입력·수정에 연결하되 실제 계좌이체나 카드 잔액은 연동하지 않음","금융 데이터 보호: 기존 거래 분담비율 자동 추정 금지, 미확정 거래 제외, 닫힌 월 쓰기 차단·오프라인 동기화 보호 및 신규 회귀 테스트"]},{"version":"2.3.7","date":"2026-10-11T14:27:37+09:00","notes":["소비 달력 정합성: 서버 txId와 오프라인 clientId가 뒤늦게 연결되는 거래를 하나로 합산해 중복 지출 방지","릴리스 안전: 게시 HTML과 원본 코드·소스 해시를 직접 검증하고 불일치하면 정적 배포 중단"]},{"version":"2.3.6","date":"2026-10-11T14:02:04+09:00","notes":["생활형 화면 3차: 내역에서 월별 소비 달력과 날짜별 지출 히트맵을 확인하고 하루 거래를 바로 펼쳐 보기","주간 소비 요약: 월요일 시작 주간 지출·수입·저축/상환 흐름 및 많이 지출한 날·카테고리 비교","이용 편의: 모바일 내역 목록과 달력 전환, 날짜 선택·접근성·월 이동에 따른 안전한 초기화","집계 안전성: 오프라인 대기 내역 중복 계산 방지, 거래 1000건 제한 등 데이터 일부 누락시 추정임을 명시"]},{"version":"2.3.5","date":"2026-10-11T13:48:38+09:00","notes":["생활비 개편 2차: 현재 입력된 금액에서 아직 기록되지 않은 예정 정기지출·저축·상환을 제외한 생활비 여유액 추정","생활비 개편 2차: 오늘부터 월말까지의 하루·일주일 사용 가능액과 예약 고정비 내역을 구분해 표시","고정비 관리: 월간 지출·정기수입과 연간 환산 규모를 한눈에 비교하는 대시보드","계산 안전성: 이미 기록된 정기거래 중복 차감 방지, 예정 정기수입 선반영 금지, 미입력·불확실한 항목 명시"]},{"version":"2.3.4","date":"2026-10-11T13:30:40+09:00","notes":["편의 개선 1차: 한 줄 문장에서 금액과 내역을 추출해 빠른 입력 칸에 미리 채우기","편의 개선 1차: 사용자가 붙여넣은 카드 승인 문자의 금액·가맹점·날짜를 확인 후 적용","편의 개선 1차: 기존 거래의 분류를 활용한 가맹점 추천과 거래 다시 입력","입력 안전성: 취소 알림·모호한 금액·중복 저장 위험을 자동 등록 없이 검토하고 기존 오프라인 대기열 보호 유지"]},{"version":"2.3.3","date":"2026-10-11T12:53:57+09:00","notes":["월마감 무결성: 마감 상태·활성 마감 이력을 함께 확인해 우회 저장과 중복 마감을 차단","정산 안정성: 월마감과 거래 동시 처리를 보호하고 실패·재시도 상태를 명확히 개선","거래 동기화: 서버 전송 중인 대기 거래를 취소 완료로 잘못 안내하던 문제 개선","오프라인 가계부: 재실행 후 대기 거래 합계와 월 전환 화면의 정확성 개선"]},{"version":"2.3.2","date":"2026-10-09T10:34:14+09:00","notes":["데이터 보호: 예산·자산·투자 종목을 저장할 때 기존 시트를 먼저 비우지 않고 입력 검증 후 한 번에 반영","서버 보안: 설치용 설정 함수의 원격 호출 차단","화면 보안: 정산 묶음 ID의 HTML 이벤트 삽입 가능성 제거","연결 보안: 기기별 임의 확인값으로 Google Apps Script 브리지 위조 연결·오래된 응답 차단"]},{"version":"2.3.1","date":"2026-09-29T08:53:56+09:00","notes":["보안(중요): 기기 ID를 바꿔 가며 PIN을 무제한으로 추측할 수 있던 문제 수정 — 처음 보는 기기는 공용 잠금, 쓰던 기기는 기기별 잠금","PC: 내역의 분류 칩(식비·교통/차량…기타 뒤)이 옆으로 안 넘어가던 문제 수정 — PC에서는 모든 분류가 한눈에 보이게 줄바꿈","PC: 자주 쓰는 거래·D-Day 줄은 마우스 휠이나 끌어서 옆으로 넘길 수 있어요","PC: 창 폭이 좁을 때 상단 메뉴 글자가 '내 / 역'처럼 세로로 쪼개지던 문제 수정","빠른 입력: 자주 쓰는 거래가 많으면 버튼 글자가 세로로 쌓이던 문제 수정","안정성: 창 위에 창이 열렸다 닫히면 앱 전체가 눌리지 않던 문제 수정","동기화: 지난달을 보다가 동기화하면 그 달 최신 내용을 못 받아오던 문제 수정","정산 공유초안: 다른 기기에서 지운 행이 이 기기의 옛 사본 때문에 되살아나던 문제 수정"]}];
+const APP_VERSION = '2.3.9';
+const APP_BUILT_AT = '2026-10-11T15:10:36+09:00';
+const APP_RELEASE_NOTES = [{"version":"2.3.9","date":"2026-10-11T15:10:36+09:00","notes":["5차 내부이체: 기존 지출·수입 원장과 분리된 계좌 간 이체 전용 기록, 출금계좌·입금계좌·금액·날짜·메모 입력 및 이력 조회","결제수단별 월 흐름: 거래 출처/계좌와 내부이체 입출금 흐름을 별도로 보고, 확인되지 않은 실제 잔액이나 카드 청구금액으로 오인하지 않게 안내","금융 안정성: 이체는 소비·수입·부부 공동부담 계산에 섞지 않고, 반복 요청 ID 멱등 처리·월마감 쓰기 차단·삭제기록 보존","안전한 도입: 기존 거래·자산 시트 값은 변경하지 않고 신규 이체 전용 장부만 사용, 오프라인 상태에서는 이체를 조용히 큐에 넣지 않음"]},{"version":"2.3.8","date":"2026-10-11T14:41:36+09:00","notes":["4차 공동생활비: 거래 입력자와 실제 결제자를 분리하고 개인·공동 지출 및 지수·하콩 부담비율을 기록","부부 정산: 월별 확정 공동지출에 따른 개인별 부담과 차액 송금 제안을 읽기 전용으로 표시","결제수단 기록: 기존 출처/계좌를 빠른 입력·수정에 연결하되 실제 계좌이체나 카드 잔액은 연동하지 않음","금융 데이터 보호: 기존 거래 분담비율 자동 추정 금지, 미확정 거래 제외, 닫힌 월 쓰기 차단·오프라인 동기화 보호 및 신규 회귀 테스트"]},{"version":"2.3.7","date":"2026-10-11T14:27:37+09:00","notes":["소비 달력 정합성: 서버 txId와 오프라인 clientId가 뒤늦게 연결되는 거래를 하나로 합산해 중복 지출 방지","릴리스 안전: 게시 HTML과 원본 코드·소스 해시를 직접 검증하고 불일치하면 정적 배포 중단"]},{"version":"2.3.6","date":"2026-10-11T14:02:04+09:00","notes":["생활형 화면 3차: 내역에서 월별 소비 달력과 날짜별 지출 히트맵을 확인하고 하루 거래를 바로 펼쳐 보기","주간 소비 요약: 월요일 시작 주간 지출·수입·저축/상환 흐름 및 많이 지출한 날·카테고리 비교","이용 편의: 모바일 내역 목록과 달력 전환, 날짜 선택·접근성·월 이동에 따른 안전한 초기화","집계 안전성: 오프라인 대기 내역 중복 계산 방지, 거래 1000건 제한 등 데이터 일부 누락시 추정임을 명시"]},{"version":"2.3.5","date":"2026-10-11T13:48:38+09:00","notes":["생활비 개편 2차: 현재 입력된 금액에서 아직 기록되지 않은 예정 정기지출·저축·상환을 제외한 생활비 여유액 추정","생활비 개편 2차: 오늘부터 월말까지의 하루·일주일 사용 가능액과 예약 고정비 내역을 구분해 표시","고정비 관리: 월간 지출·정기수입과 연간 환산 규모를 한눈에 비교하는 대시보드","계산 안전성: 이미 기록된 정기거래 중복 차감 방지, 예정 정기수입 선반영 금지, 미입력·불확실한 항목 명시"]},{"version":"2.3.4","date":"2026-10-11T13:30:40+09:00","notes":["편의 개선 1차: 한 줄 문장에서 금액과 내역을 추출해 빠른 입력 칸에 미리 채우기","편의 개선 1차: 사용자가 붙여넣은 카드 승인 문자의 금액·가맹점·날짜를 확인 후 적용","편의 개선 1차: 기존 거래의 분류를 활용한 가맹점 추천과 거래 다시 입력","입력 안전성: 취소 알림·모호한 금액·중복 저장 위험을 자동 등록 없이 검토하고 기존 오프라인 대기열 보호 유지"]},{"version":"2.3.3","date":"2026-10-11T12:53:57+09:00","notes":["월마감 무결성: 마감 상태·활성 마감 이력을 함께 확인해 우회 저장과 중복 마감을 차단","정산 안정성: 월마감과 거래 동시 처리를 보호하고 실패·재시도 상태를 명확히 개선","거래 동기화: 서버 전송 중인 대기 거래를 취소 완료로 잘못 안내하던 문제 개선","오프라인 가계부: 재실행 후 대기 거래 합계와 월 전환 화면의 정확성 개선"]},{"version":"2.3.2","date":"2026-10-09T10:34:14+09:00","notes":["데이터 보호: 예산·자산·투자 종목을 저장할 때 기존 시트를 먼저 비우지 않고 입력 검증 후 한 번에 반영","서버 보안: 설치용 설정 함수의 원격 호출 차단","화면 보안: 정산 묶음 ID의 HTML 이벤트 삽입 가능성 제거","연결 보안: 기기별 임의 확인값으로 Google Apps Script 브리지 위조 연결·오래된 응답 차단"]}];
 /* @release:end */
 const DEFAULT_GAS_URL = 'https://script.google.com/macros/s/AKfycbwjFv7OSDc6T4vD0nUQA5E-W1QazAEU5dowQroEXard5DCMtP0FiMRlwtIjuEfDzo8phA/exec';
 const APP_CACHE_VERSION = 5;
@@ -1107,6 +1168,11 @@ const STATE = {
     rows: [], count: 0, pageSize: 40, remoteRows: [], remoteCount: 0, remoteLoading: false, remoteError: '', remoteRequestSeq: 0
   },
   settlement: null, settlementDraft: null, settlementDraftSync: { state:'idle', updatedAt:0 },
+  internalTransfers: {
+    ym:'', rows:[], count:0, partial:true, loading:false, error:'', requestSeq:0,
+    busy:false, draftYm:'',draft:{date:'',fromAccount:'',toAccount:'',amount:'',memo:''},
+    pendingSave:null, notice:'', byMonth:{},draftsByMonth:{}
+  },
   sync: { status: 'idle', message: '', inFlight: false },
   notifSettings: { enabled: false, dday: true, settlement: true, budgetAlert: true },
   notifPermission: 'default',
@@ -1377,6 +1443,11 @@ function clearSession(){
   localStorage.removeItem(AUTH_STORAGE_KEY);
   sessionStorage.removeItem(AUTH_STORAGE_KEY);
   STATE.authToken = '';
+  STATE.internalTransfers = {
+    ym:'',rows:[],count:0,partial:true,loading:false,error:'',requestSeq:0,
+    busy:false,draftYm:'',draft:{date:'',fromAccount:'',toAccount:'',amount:'',memo:''},
+    pendingSave:null,notice:'',byMonth:{},draftsByMonth:{}
+  };
 }
 
 function cacheEnvelope(data){
@@ -2309,6 +2380,130 @@ function clearSettlementDraft(ym){
 }
 // 홑따옴표까지 반드시 막는다. 예전에는 ' 가 빠져 있어서
 // 카테고리명에 홑따옴표가 들어가면 onclick 문자열이 깨져 칩이 먹통이 됐다.
+/**
+ * 월간 결제수단별 확정 기록의 입출 방향. 순변동은 해당 월 기록의 차액이지
+ * 현재 계좌 잔고가 아니다. 서버 확정 거래와 별도 내부이체만 입력받는다.
+ * DOM, STATE, clock, storage, API 의존성이 없는 계산 함수.
+ */
+function calculateAccountMovement(input){
+  const opt=input || {};
+  const ym=String(opt.ym || '').trim();
+  const warnings=[];
+  const totals={income:0,expense:0,saving:0,repayment:0,transferIn:0,
+    transferOut:0,internalMoved:0,unclassifiedIn:0,unclassifiedOut:0};
+  const result={ym,accounts:[],totals,transferCount:0,transactionCount:0,
+    partial:false,uncertain:false,warnings,
+    note:'확정 기록의 월간 입출 흐름이에요. 현재 잔액·카드 청구액을 계산하거나 은행과 자동 연동하지 않아요.'};
+  const validYm=/^[1-9]\d{3}-(0[1-9]|1[0-2])$/.test(ym);
+  if(!validYm){ result.partial=true;result.uncertain=true;warnings.push('조회 월 형식 오류');return result; }
+  const transactions=Array.isArray(opt.transactions)?opt.transactions:[];
+  const transfers=Array.isArray(opt.transfers)?opt.transfers:[];
+  if(!Array.isArray(opt.transactions) || !opt.summary || typeof opt.summary!=='object'){
+    result.partial=true;warnings.push('서버 확정 거래나 월별 거래 건수가 없어 전체 흐름을 확인할 수 없어요.');
+  }
+  if(!Array.isArray(opt.transfers) || opt.transferPartial===true){
+    result.partial=true;warnings.push('내부이체 목록이 일부 누락됐거나 확인되지 않았어요.');
+  }
+  const dateInMonth=date=>{
+    const match=String(date || '').match(/^([1-9]\d{3})-(0[1-9]|1[0-2])-(0[1-9]|[12]\d|3[01])$/);
+    return !!match && String(date).slice(0,7)===ym &&
+      Number(match[3])<=new Date(Date.UTC(Number(match[1]),Number(match[2]),0)).getUTCDate();
+  };
+  const confirmed=tx=>tx && typeof tx==='object' &&
+    !String(tx.syncState || '').trim() && !String(tx.row || '').startsWith('temp_') &&
+    tx.deleted!==true && tx.deleted!==1 && String(tx.deleted).toUpperCase()!=='TRUE';
+  const monthRows=transactions.filter(tx=>tx && String(tx.date || '').slice(0,7)===ym && confirmed(tx));
+  if(transactions.length>=1000){result.partial=true;warnings.push('월 거래 조회가 1,000건에 도달했어요.');}
+  const count=opt.summary && opt.summary.count;
+  if(count==null || String(count).trim()==='' || !Number.isSafeInteger(Number(count)) || Number(count)<0 ||
+      Number(count)>monthRows.length){
+    result.partial=true;warnings.push('월 전체 거래 건수와 표시된 확정 거래를 대조할 수 없어요.');
+  }
+  const map=new Map();
+  const getAccount=(source,missing)=>{
+    const name=String(source == null ? '' : source).trim();
+    const key=missing ? '\u0000unspecified' : name;
+    if(!map.has(key))map.set(key,{account:missing?'미분류/출처 없음':name,
+      unclassified:!!missing,income:0,expense:0,saving:0,repayment:0,
+      transferIn:0,transferOut:0,inflow:0,outflow:0,net:0,
+      transactionCount:0,transferCount:0});
+    return map.get(key);
+  };
+  const safeAmount=value=>{
+    const raw=String(value == null ? '' : value).trim();
+    if(!/^\d+$/.test(raw))return null;
+    const amount=Number(raw);
+    return Number.isSafeInteger(amount) && amount>0 ? amount : null;
+  };
+  const add=(target,key,amount)=>{
+    const next=target[key]+amount;
+    if(!Number.isSafeInteger(next)){
+      result.partial=true;warnings.push('합계가 표현 가능한 금액 범위를 초과했어요.');
+    }else target[key]=next;
+  };
+  // txId/clientId 가 같은 서버 확정 거래는 한 번만 센다. 내용 일치만으로 병합하지 않는다.
+  const distinct=[],indices=new Map();
+  monthRows.forEach(tx=>{
+    const ids=[tx.txId,tx.clientId].map(s=>String(s == null ? '' : s).trim()).filter(Boolean);
+    const found=[...new Set(ids.filter(id=>indices.has(id)).map(id=>indices.get(id)))];
+    if(!found.length){
+      const index=distinct.length;distinct.push(tx);ids.forEach(id=>indices.set(id,index));return;
+    }
+    const winner=found[0];
+    found.slice(1).forEach(other=>{
+      distinct[other]=null;
+      indices.forEach((index,id)=>{if(index===other)indices.set(id,winner);});
+    });
+    ids.forEach(id=>indices.set(id,winner));
+  });
+  distinct.filter(Boolean).forEach(tx=>{
+    if(!dateInMonth(tx.date)){result.partial=true;return;}
+    const kind={ '수입':'income','지출':'expense','저축':'saving','대출상환':'repayment' }[tx.type];
+    if(!kind)return;
+    const amount=safeAmount(tx.amount);
+    if(amount===null){result.partial=true;return;}
+    const source=String(tx.source == null ? '' : tx.source).trim();
+    const account=getAccount(source,!source);
+    add(account,kind,amount);add(totals,kind,amount);
+    account.transactionCount++;result.transactionCount++;
+    if(!source)add(totals,kind==='income'?'unclassifiedIn':'unclassifiedOut',amount);
+  });
+  const transferIds=new Set();
+  transfers.forEach(tx=>{
+    if(!tx || typeof tx!=='object')return;
+    if(tx.deleted===true || tx.deleted===1 || String(tx.deleted).toUpperCase()==='TRUE')return;
+    const date=String(tx.date||'');
+    if(date.slice(0,7)!==ym)return;
+    const id=String(tx.id || tx.clientId || '').trim();
+    if(id && transferIds.has(id))return;
+    const amount=safeAmount(tx.amount);
+    const from=String(tx.fromAccount == null ? '' : tx.fromAccount).trim();
+    const to=String(tx.toAccount == null ? '' : tx.toAccount).trim();
+    if(!dateInMonth(date) || !amount || !from || !to || from===to){
+      result.partial=true;warnings.push('확인할 수 없는 내부이체 기록이 있어요.');return;
+    }
+    // 잘못된 중복 ID가 앞에 있어도 뒤의 정상 서버 행을 지우지 않는다.
+    if(id)transferIds.add(id);
+    const source=getAccount(from,false),destination=getAccount(to,false);
+    add(source,'transferOut',amount);add(destination,'transferIn',amount);
+    source.transferCount++;destination.transferCount++;
+    add(totals,'transferIn',amount);add(totals,'transferOut',amount);
+    add(totals,'internalMoved',amount);result.transferCount++;
+  });
+  result.accounts=Array.from(map.values()).sort((a,b)=>
+    (a.unclassified===b.unclassified ? a.account.localeCompare(b.account,'ko') : a.unclassified?1:-1));
+  result.accounts.forEach(a=>{
+    a.inflow=a.income+a.transferIn;
+    a.outflow=a.expense+a.saving+a.repayment+a.transferOut;
+    a.net=a.inflow-a.outflow;
+    if(!Number.isSafeInteger(a.inflow) || !Number.isSafeInteger(a.outflow) || !Number.isSafeInteger(a.net)){
+      result.partial=true;warnings.push('일부 결제수단의 순변동이 표현 가능한 금액 범위를 초과했어요.');
+    }
+  });
+  result.uncertain=result.partial;
+  return result;
+}
+
 function esc(s){ return String(s==null?'':s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])); }
 function emo(cat){
   const m={'식비':'🍔','교통/차량':'🚗','주거/통신':'🏠','쇼핑/문화':'🛍️','경조/이벤트':'🎉','건강/의료':'💊','용돈':'🪙','월급':'💰','상여':'💎','금융수입':'📈','기타수입':'💳','기타':'🏷️'};
@@ -2923,6 +3118,107 @@ function renderAppInfoCard(){
     </div>`;
 }
 
+function renderTransfers(){
+  const el=document.getElementById('v-transfers');
+  if(!el)return;
+  const ym=STATE.ym || todayStr().slice(0,7);
+  const store=STATE.internalTransfers;
+  const draft=ensureInternalTransferDraft(ym);
+  const sameMonth=store.ym===ym;
+  const rows=sameMonth ? store.rows : [];
+  const offline=!internalTransferOnline();
+  const closed=!!(STATE.settlement && STATE.settlement.ym===ym && STATE.settlement.isClosed);
+  const confirmed=STATE.serverMonth && STATE.serverMonth.ym===ym ? STATE.serverMonth : null;
+  const flow=calculateAccountMovement({ym,
+    transactions:confirmed?confirmed.transactions:null,
+    summary:confirmed?confirmed.summary:null,
+    transfers:rows,
+    transferPartial:!sameMonth || store.partial || !!store.error || store.loading || offline
+  });
+  const getSourceNames=()=>{
+    const names=new Set();
+    (confirmed && Array.isArray(confirmed.transactions) ? confirmed.transactions : []).forEach(tx=>{
+      const source=String(tx && tx.source || '').trim();
+      if(source)names.add(source);
+    });
+    rows.forEach(t=>{
+      if(t && t.fromAccount)names.add(String(t.fromAccount).trim());
+      if(t && t.toAccount)names.add(String(t.toAccount).trim());
+    });
+    return Array.from(names).filter(Boolean).sort((a,b)=>a.localeCompare(b,'ko'));
+  };
+  const loading=store.loading && sameMonth;
+  const limited=flow.partial;
+  const transferIncomplete=!sameMonth || store.partial || !!store.error || store.loading || offline;
+  const actionBlocked=offline || closed || store.busy || !STATE.authToken;
+  const warnings=[...new Set(flow.warnings)];
+  const accountsHtml=flow.accounts.length ? flow.accounts.map(account=>`
+    <div class="transfer-account" role="listitem">
+      <div class="transfer-account-title"><strong>${esc(account.account)}</strong>${account.unclassified?'<span class="transfer-chip">출처 미분류</span>':''}</div>
+      <div class="transfer-account-grid">
+        <div><span>일반 수입</span><strong>${fmt(account.income)}</strong></div>
+        <div><span>일반 출금</span><strong>${fmt(account.expense+account.saving+account.repayment)}</strong></div>
+        <div><span>이체 들어옴</span><strong>${fmt(account.transferIn)}</strong></div>
+        <div><span>이체 나감</span><strong>${fmt(account.transferOut)}</strong></div>
+      </div>
+      <div class="transfer-account-total"><span>이번 달 기록 기준 유입 ${fmt(account.inflow)} · 유출 ${fmt(account.outflow)}</span>
+        <strong>${limited?'순변동 확인 불가':`기록상 순변동 ${fmt(account.net)}`}</strong></div>
+    </div>`).join('') : '<p class="transfer-empty">계좌명이 있는 확정 기록이 아직 없어요.</p>';
+  const listHtml=rows.length ? rows.filter(item=>item && typeof item==='object').map(item=>{
+    const id=String(item.id == null ? '' : item.id);
+    return `<article class="transfer-entry" role="listitem">
+      <div class="transfer-entry-main">
+        <span class="transfer-entry-date">${esc(item.date || '')} · ${esc(item.user || '입력자 미상')}</span>
+        <strong>${esc(item.fromAccount || '출금 계좌 미상')} <span aria-hidden="true">→</span> ${esc(item.toAccount || '입금 계좌 미상')}</strong>
+        ${item.memo?`<p class="transfer-entry-memo">${esc(item.memo)}</p>`:''}
+        ${item.createdAt?`<small class="transfer-entry-created">등록 ${esc(item.createdAt)}</small>`:''}
+      </div>
+      <div class="transfer-entry-action">
+        <strong class="num">${fmt(item.amount)}</strong>
+        <button type="button" class="transfer-remove" data-transfer-id="${esc(id)}" onclick="removeInternalTransfer(this.dataset.transferId)"
+          aria-label="${esc(item.date || '')} ${esc(item.fromAccount || '')}에서 ${esc(item.toAccount || '')}로 이체한 기록 삭제" ${actionBlocked?'disabled':''}>삭제</button>
+      </div>
+    </article>`;
+  }).join('') : `<p class="transfer-empty" role="status">${loading?'내부이체 목록 불러오는 중…':'이 달의 확인된 내부이체 기록이 없어요.'}</p>`;
+  const hint=offline?'온라인 연결 필요':(store.error && sameMonth ? store.error : '');
+  el.innerHTML=`
+    <button class="settlement-back" type="button" onclick="switchView('more')">‹ 더보기로</button>
+    <header class="transfer-header">
+      <div><h1>↔ 계좌간 이체</h1><p>${esc(ym)} · 별도 내부이체 원장</p></div>
+      <button class="transfer-refresh" type="button" onclick="loadInternalTransfers()" ${offline||loading||store.busy?'disabled':''} aria-label="이 달의 내부이체 다시 조회">⟳ 새로고침</button>
+    </header>
+    <p class="transfer-disclaimer">내부이체는 수입·지출·저축에 추가되지 않고 별도로 기록돼요. 결제수단별 숫자는 확정 기록을 기준으로 한 이번 달의 흐름이며 실제 계좌 잔액, 카드 청구액 또는 은행 자동연동 내역이 아니에요.</p>
+    ${closed?`<p class="settlement-close-warn" role="status">🔒 ${esc(ym)}월은 마감돼 이체 추가·삭제가 제한돼요. 변경하려면 월 정산에서 다시 열어줘.</p>`:''}
+    ${offline?'<p class="transfer-status error" role="alert">온라인 연결 필요 · 내부이체 조회·저장은 온라인에서만 가능해요.</p>':''}
+    ${hint&&!offline?`<p class="transfer-status error" role="alert">${esc(hint)}</p>`:''}
+    ${store.notice&&sameMonth?`<p class="transfer-status" role="status" aria-live="polite">${esc(store.notice)}</p>`:''}
+    ${loading?'<p class="transfer-status" role="status">서버 이체 내역을 확인 중이에요…</p>':''}
+    <section class="transfer-card" aria-labelledby="transferNewHeading">
+      <h2 id="transferNewHeading">새 이체 기록</h2>
+      <form class="transfer-form" onsubmit="submitInternalTransfer(event)" autocomplete="off">
+        <label>이체 날짜<input id="internalTransferDate" name="date" type="date" required min="${esc(ym)}-01" max="${esc(lastDateOfYm(ym))}" value="${esc(draft.date)}" oninput="updateInternalTransferDraft('date',this.value)" ${actionBlocked?'disabled':''}></label>
+        <label>보내는 계좌<input id="internalTransferFrom" name="fromAccount" type="text" required maxlength="80" list="internalTransferAccountNames" placeholder="예: 주거래 통장" value="${esc(draft.fromAccount)}" oninput="updateInternalTransferDraft('fromAccount',this.value)" ${actionBlocked?'disabled':''}></label>
+        <label>받는 계좌<input id="internalTransferTo" name="toAccount" type="text" required maxlength="80" list="internalTransferAccountNames" placeholder="예: 저축 통장" value="${esc(draft.toAccount)}" oninput="updateInternalTransferDraft('toAccount',this.value)" ${actionBlocked?'disabled':''}></label>
+        <datalist id="internalTransferAccountNames">${getSourceNames().map(name=>`<option value="${esc(name)}"></option>`).join('')}</datalist>
+        <label>이체 금액 (원)<input id="internalTransferAmount" name="amount" type="text" inputmode="numeric" pattern="[0-9,]+" required placeholder="예: 100000" value="${esc(draft.amount)}" oninput="updateInternalTransferDraft('amount',this.value)" ${actionBlocked?'disabled':''}></label>
+        <label class="transfer-wide">메모 (선택)<input id="internalTransferMemo" name="memo" type="text" maxlength="300" placeholder="예: 적금 계좌로 이동" value="${esc(draft.memo)}" oninput="updateInternalTransferDraft('memo',this.value)" ${actionBlocked?'disabled':''}></label>
+        <div class="transfer-submit-row"><span>기록자: ${esc(STATE.sessionUser || '하콩')} · 일반 거래 합계에 미포함</span>
+          <button class="transfer-submit" type="submit" ${actionBlocked?'disabled':''}>${store.busy?'처리 중…':store.pendingSave?'같은 요청으로 다시 저장 확인':'이체 기록 저장'}</button></div>
+      </form>
+    </section>
+    <section class="transfer-card" aria-labelledby="transferLedgerHeading">
+      <div class="transfer-section-title"><h2 id="transferLedgerHeading">${esc(ym)} 이체 원장</h2><span>${sameMonth?Number(store.count)||0:0}건${limited?' · 일부 확인 불가':''}</span></div>
+      <div class="transfer-total"><span>이번 달 내부 이동 총액</span><strong class="num">${transferIncomplete?'확인 불가':fmt(flow.totals.internalMoved)}</strong><small>양쪽 계좌의 입금·출금을 중복 합산하지 않은 이체 금액</small></div>
+      <div class="transfer-entries" role="list" aria-label="확정된 내부이체 기록">${listHtml}</div>
+    </section>
+    <section class="transfer-card" aria-labelledby="transferAccountHeading">
+      <div class="transfer-section-title"><h2 id="transferAccountHeading">결제수단별 월간 입출 흐름</h2><span>확정 거래와 내부이체만</span></div>
+      ${limited?`<p class="transfer-status error" role="status">⚠️ 일부 기록이 누락됐을 수 있어 계좌별 순변동과 전체 이체 총액은 확인할 수 없어요. ${esc(warnings.join(' '))}</p>`:''}
+      <p class="transfer-note">일반 수입은 유입, 일반 지출·저축·대출상환은 유출로 구분해요. 내부이체 입·출 방향은 따로 표시하고 출처 없는 거래는 미분류로 남겨요.</p>
+      <div class="transfer-account-list" role="list">${accountsHtml}</div>
+    </section>`;
+}
+
 function renderMore(){
   const el=document.getElementById('v-more');
   if(!el) return;
@@ -2975,6 +3271,7 @@ function renderMore(){
       <button class="more-item" onclick="switchView('review')"><span class="more-icon">📋</span>월정리 · 회고</button>
       <button class="more-item" onclick="openBudgetModal()"><span class="more-icon">🎯</span>예산 관리</button>
       <button class="more-item" onclick="switchView('recurring')"><span class="more-icon">🔁</span>정기거래</button>
+      <button class="more-item" onclick="switchView('transfers')"><span class="more-icon" aria-hidden="true">↔️</span>계좌간 이체</button>
       ${STATE.aiReady ? '<button class="more-item" onclick="switchView(\'ai\')"><span class="more-icon">🤖</span>AI 분석</button>' : ''}
     </div>
 
@@ -4548,6 +4845,186 @@ function refreshVisibleMonth(silent, options){
   });
 }
 
+/* ============ 5차 계좌 간 내부이체: 일반 거래/오프라인 큐와 분리 ============ */
+function ensureInternalTransferDraft(ym){
+  const store=STATE.internalTransfers;
+  if(store.draftYm===ym)return store.draft;
+  if(store.draftYm){
+    store.draftsByMonth[store.draftYm]={draft:{...store.draft},pendingSave:store.pendingSave};
+  }
+  const saved=store.draftsByMonth[ym];
+  const suggested=todayStr().slice(0,7)===ym ? todayStr() : lastDateOfYm(ym);
+  store.draft=saved ? {...saved.draft} : {date:suggested,fromAccount:'',toAccount:'',amount:'',memo:''};
+  store.pendingSave=saved ? saved.pendingSave : null;
+  store.draftYm=ym;
+  return store.draft;
+}
+
+function updateInternalTransferDraft(field,value){
+  const store=STATE.internalTransfers;
+  if(store.busy)return;
+  if(!['date','fromAccount','toAccount','amount','memo'].includes(field))return;
+  ensureInternalTransferDraft(STATE.ym);
+  if(store.draft[field]!==value){
+    store.draft[field]=value;
+    // 필드가 바뀌면 새 시도. 결과가 불분명했던 동일 내용 재시도만 기존 ID를 사용한다.
+    store.pendingSave=null;
+    store.notice='';
+  }
+}
+
+function newInternalTransferClientId(){
+  if(typeof crypto!=='undefined' && typeof crypto.randomUUID==='function')return 'itr_'+crypto.randomUUID();
+  return 'itr_'+Date.now()+'_'+Math.random().toString(36).slice(2)+Math.random().toString(36).slice(2);
+}
+
+function internalTransferOnline(){
+  return typeof navigator==='undefined' || navigator.onLine!==false;
+}
+
+function internalTransferViewOpen(){
+  const el=document.getElementById('v-transfers');
+  return !!(el && el.classList && el.classList.contains('on'));
+}
+
+function loadInternalTransfers(ym){
+  const target=ym || STATE.ym;
+  const store=STATE.internalTransfers;
+  if(!target || !STATE.authToken)return Promise.resolve(null);
+  ensureInternalTransferDraft(target);
+  const requestSeq=++store.requestSeq;
+  store.ym=target;
+  const cached=store.byMonth[target];
+  store.rows=cached ? cached.rows.slice() : [];
+  store.count=cached ? cached.count : 0;
+  store.partial=true; // GET이 완료되기 전 캐시만으로는 최신 원장 확인 불가
+  store.error='';store.loading=false;
+  if(!internalTransferOnline()){
+    store.error='온라인 연결 필요';
+    if(internalTransferViewOpen())renderTransfers();
+    return Promise.resolve(null);
+  }
+  store.loading=true;
+  if(internalTransferViewOpen())renderTransfers();
+  return api('getInternalTransfers',target).then(data=>{
+    if(requestSeq!==store.requestSeq || STATE.ym!==target || !STATE.authToken)return null;
+    if(!data || data.ym!==target || !Array.isArray(data.rows))throw new Error('내부이체 목록 응답을 확인하지 못했어요.');
+    const count=Number(data.count);
+    store.rows=data.rows.slice();
+    store.count=Number.isSafeInteger(count)&&count>=0?count:data.rows.length;
+    store.partial=data.partial===true || !Number.isSafeInteger(count) || count!==data.rows.length;
+    store.byMonth[target]={rows:store.rows.slice(),count:store.count,partial:store.partial};
+    store.error='';store.loading=false;
+    if(internalTransferViewOpen())renderTransfers();
+    return data;
+  }).catch(err=>{
+    if(requestSeq!==store.requestSeq || STATE.ym!==target)return null;
+    store.loading=false;
+    store.partial=true;
+    store.error=internalTransferOnline() ? ((err && err.message) || '이체 기록을 불러오지 못했어요.') : '온라인 연결 필요';
+    if(internalTransferViewOpen())renderTransfers();
+    return null;
+  });
+}
+
+function submitInternalTransfer(event){
+  if(event && typeof event.preventDefault==='function')event.preventDefault();
+  const store=STATE.internalTransfers;
+  if(store.busy)return Promise.resolve(false);
+  if(!STATE.authToken){toast('로그인이 필요해.',true);return Promise.resolve(false);}
+  if(!internalTransferOnline()){
+    store.error='온라인 연결 필요';renderTransfers();return Promise.resolve(false);
+  }
+  const ym=STATE.ym;
+  const draft=ensureInternalTransferDraft(ym);
+  const fromAccount=String(draft.fromAccount || '').trim();
+  const toAccount=String(draft.toAccount || '').trim();
+  const date=String(draft.date || '');
+  const amountText=String(draft.amount || '').replace(/,/g,'').trim();
+  const amount=Number(amountText);
+  if(!/^\d{4}-\d{2}-\d{2}$/.test(date) || date.slice(0,7)!==ym ||
+      Number(date.slice(8))<1 || Number(date.slice(8))>new Date(Date.UTC(Number(date.slice(0,4)),Number(date.slice(5,7)),0)).getUTCDate()){
+    toast('조회 중인 월의 올바른 날짜를 선택해줘.',true);return Promise.resolve(false);
+  }
+  if(!fromAccount || !toAccount || fromAccount===toAccount || fromAccount.length>80 || toAccount.length>80){
+    toast('보내는 계좌와 받는 계좌를 서로 다르게 입력해줘 (각 80자 이내).',true);return Promise.resolve(false);
+  }
+  if(!/^\d+$/.test(amountText) || !Number.isSafeInteger(amount) || amount<=0){
+    toast('이체 금액은 0원보다 큰 정수로 입력해줘.',true);return Promise.resolve(false);
+  }
+  const memo=String(draft.memo || '').trim();
+  if(memo.length>300){toast('메모는 300자 이내로 입력해줘.',true);return Promise.resolve(false);}
+  if(STATE.settlement && STATE.settlement.ym===ym && STATE.settlement.isClosed){
+    toast('마감된 월은 정산을 다시 연 뒤 이체할 수 있어.',true);return Promise.resolve(false);
+  }
+  const payload={date,fromAccount,toAccount,amount,memo,user:STATE.sessionUser || '하콩'};
+  const signature=JSON.stringify(payload);
+  if(!store.pendingSave || store.pendingSave.signature!==signature){
+    store.pendingSave={signature,clientId:newInternalTransferClientId(),payload};
+  }
+  const attempt=store.pendingSave;
+  store.busy=true;store.error='';store.notice='내부이체 저장 확인 중…';
+  renderTransfers();
+  return api('saveInternalTransfer',{clientId:attempt.clientId,...attempt.payload}).then(result=>{
+    if(!result || result.ok!==true || String(result.id)!==attempt.clientId || !result.transfer){
+      throw new Error((result && result.message) || '서버 이체 저장 확인 응답이 올바르지 않아요.');
+    }
+    // 이 API의 응답이 확인된 이후에만 초안을 지우고, GET으로 서버 원장을 다시 읽는다.
+    store.pendingSave=null;
+    store.draft={date:todayStr().slice(0,7)===ym?todayStr():lastDateOfYm(ym),fromAccount:'',toAccount:'',amount:'',memo:''};
+    if(store.draftYm===ym)store.draftsByMonth[ym]={draft:{...store.draft},pendingSave:null};
+    store.notice='서버 저장 확인 · 최신 이체 목록을 불러오는 중…';
+    toast('✅ 내부이체 저장 확인');
+    return loadInternalTransfers(ym).then(data=>{
+      if(store.draftYm===ym){
+        store.notice=data ? '서버 이체 내역을 새로 확인했어요.' : '저장은 확인됐지만 목록 새로고침을 완료하지 못했어요.';
+      }
+      return !!data;
+    });
+  }).catch(err=>{
+    // 타임아웃은 서버 기록 성공 후 응답만 잃었을 수 있다. 같은 clientId로 재시도.
+    if(store.draftYm===ym)store.notice='저장 여부 확인 불가 · 내용을 바꾸지 않으면 같은 요청 ID로 다시 시도해요.';
+    store.error=(err && err.message) || '서버 응답을 확인하지 못했어요.';
+    toast(store.error,true);
+    return false;
+  }).finally(()=>{
+    store.busy=false;
+    if(internalTransferViewOpen())renderTransfers();
+  });
+}
+
+function removeInternalTransfer(id){
+  const store=STATE.internalTransfers;
+  if(store.busy || !id)return Promise.resolve(false);
+  if(!internalTransferOnline()){
+    store.error='온라인 연결 필요';renderTransfers();return Promise.resolve(false);
+  }
+  const item=store.rows.find(row=>String(row.id)===String(id));
+  if(!item)return Promise.resolve(false);
+  const ym=STATE.ym;
+  if(STATE.settlement && STATE.settlement.ym===ym && STATE.settlement.isClosed){
+    toast('마감된 월은 정산을 다시 열어야 삭제할 수 있어.',true);return Promise.resolve(false);
+  }
+  const question=ym+' 내부이체를 삭제할까요?\n'+String(item.fromAccount || '')+' → '+String(item.toAccount || '')+
+    ' · '+fmt(item.amount)+'\n월마감 이후에는 수정할 수 없고, 삭제도 서버에서 기록을 확인해 처리해요.';
+  if(!confirm(question))return Promise.resolve(false);
+  store.busy=true;store.error='';store.notice='내부이체 삭제 처리 중…';renderTransfers();
+  return api('deleteInternalTransfer',id).then(result=>{
+    if(!result || result.ok!==true)throw new Error((result && result.message) || '삭제가 확인되지 않았어요.');
+    store.notice='삭제 확인 · 이체 목록 새로고침 중…';
+    return loadInternalTransfers(ym).then(data=>{
+      store.notice=data?'삭제 후 서버 내역을 새로 확인했어요.':'삭제됐지만 목록 새로고침을 완료하지 못했어요.';
+      if(data)toast('✅ 내부이체 삭제 확인');
+      return !!data;
+    });
+  }).catch(err=>{
+    store.error=(err && err.message) || '삭제 여부를 확인하지 못했어요.';
+    store.notice='서버 응답이 불확실해요. 이체 내역을 새로 조회해 확인해줘.';
+    toast(store.error,true);
+    return false;
+  }).finally(()=>{store.busy=false;if(internalTransferViewOpen())renderTransfers();});
+}
+
 function renderView(v){
   if (v === 'home') renderHome();
   else if (v === 'list') renderList();
@@ -4557,6 +5034,7 @@ function renderView(v){
   else if (v === 'ai') renderAi();
   else if (v === 'review') renderReview();
   else if (v === 'settlement') renderSettlementView();
+  else if (v === 'transfers') renderTransfers();
 }
 
 function renderAll(){
@@ -4567,14 +5045,15 @@ function renderAll(){
 }
 
 function switchView(v){
-  const moreChildren = ['ai','review','recurring','settlement'];
+  const moreChildren = ['ai','review','recurring','settlement','transfers'];
   const tabView = moreChildren.indexOf(v) > -1 ? 'more' : v;
   document.querySelectorAll('.tab[data-view]').forEach(t=>t.classList.toggle('active', t.dataset.view===tabView));
-  ['home','list','recurring','asset','ai','review','more','settlement'].forEach(name=>{
+  ['home','list','recurring','asset','ai','review','more','settlement','transfers'].forEach(name=>{
     const view = document.getElementById('v-'+name);
     if (view) view.classList.toggle('on', name===v);
   });
   renderView(v);
+  if(v==='transfers')loadInternalTransfers();
   window.scrollTo(0,0);
 }
 
@@ -5937,6 +6416,7 @@ function changeMonth(delta){
   STATE.list.pageSize = 40;
   const cached = loadMonthCache(newYm);
   STATE.ym = newYm;
+  if(internalTransferViewOpen())loadInternalTransfers(newYm);
   if (cached) {
     applyMonthData(cached);
     mergePendingTransactions();
