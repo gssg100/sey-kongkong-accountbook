@@ -3,7 +3,7 @@
 <head>
 <base target="_top">
 <meta charset="utf-8">
-<meta name="app-version" content="2.3.2">
+<meta name="app-version" content="2.3.3">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, interactive-widget=resizes-content">
 <meta name="description" content="지수와 하콩이의 빠르고 편한 공동 가계부">
 <meta name="theme-color" content="#f5f5f7">
@@ -902,9 +902,9 @@ body.dark-mode .settlement-close-warn{color:var(--gold)}
 <script>
 /* ============ 앱 글로벌 상태 (Store) ============ */
 /* @release:start — pwa-site/scripts/build-static.mjs 가 release.json 을 보고 자동으로 채운다. 손으로 고치지 말 것. */
-const APP_VERSION = '2.3.2';
-const APP_BUILT_AT = '2026-10-09T10:34:14+09:00';
-const APP_RELEASE_NOTES = [{"version":"2.3.2","date":"2026-10-09T10:34:14+09:00","notes":["데이터 보호: 예산·자산·투자 종목을 저장할 때 기존 시트를 먼저 비우지 않고 입력 검증 후 한 번에 반영","서버 보안: 설치용 설정 함수의 원격 호출 차단","화면 보안: 정산 묶음 ID의 HTML 이벤트 삽입 가능성 제거","연결 보안: 기기별 임의 확인값으로 Google Apps Script 브리지 위조 연결·오래된 응답 차단"]},{"version":"2.3.1","date":"2026-09-29T08:53:56+09:00","notes":["보안(중요): 기기 ID를 바꿔 가며 PIN을 무제한으로 추측할 수 있던 문제 수정 — 처음 보는 기기는 공용 잠금, 쓰던 기기는 기기별 잠금","PC: 내역의 분류 칩(식비·교통/차량…기타 뒤)이 옆으로 안 넘어가던 문제 수정 — PC에서는 모든 분류가 한눈에 보이게 줄바꿈","PC: 자주 쓰는 거래·D-Day 줄은 마우스 휠이나 끌어서 옆으로 넘길 수 있어요","PC: 창 폭이 좁을 때 상단 메뉴 글자가 '내 / 역'처럼 세로로 쪼개지던 문제 수정","빠른 입력: 자주 쓰는 거래가 많으면 버튼 글자가 세로로 쌓이던 문제 수정","안정성: 창 위에 창이 열렸다 닫히면 앱 전체가 눌리지 않던 문제 수정","동기화: 지난달을 보다가 동기화하면 그 달 최신 내용을 못 받아오던 문제 수정","정산 공유초안: 다른 기기에서 지운 행이 이 기기의 옛 사본 때문에 되살아나던 문제 수정"]},{"version":"2.3.0","date":"2026-09-27T22:26:29+09:00","notes":["로그인 보안: v3 세션 registry와 현재 세션·모든 기기 원격 로그아웃을 추가하고, 구 v2 세션도 전체 로그아웃 시 함께 폐기","PIN 보호: 기기별 로그인 실패 제한으로 다른 기기의 오입력 때문에 함께 잠기는 문제를 줄이고 전역 abuse guard를 보조 안전망으로 분리","내역 검색: 현재 월/전체 기간 검색을 전환할 수 있고 소비성격·최소/최대 금액 필터와 서버 검색을 연결","알림 정리: 실제 서버 Web Push처럼 보이던 표현을 제거하고 앱 실행 중 기기 알림으로 명확히 표시, 예산 초과·빠른 소진 경고를 실제 동작으로 연결","접근성·안전: 모달 배경 inert·초기 포커스·포커스 트랩을 보강하고 전체기간 검색은 조회 전용, 마감월 일괄변경은 서버에서 사전 차단"]},{"version":"2.2.1","date":"2026-09-27T22:04:26+09:00","notes":["대용량 정산: 한 달 거래가 1,000건을 넘어도 대사·정산 합계·정산 배치가 전체 거래 기준으로 계산","저장 재시도: 연결 오류만 5초→15초→1분→5분 백오프로 자동 재시도하고 검증·마감 오류는 '확인 필요'로 중단","동기화 성능: 변경이 없는 달은 revision으로 확인해 거래 전체 목록을 다시 내려받지 않는 경량 새로고침 적용","시트 안전: 기존 헤더가 예상과 다르면 자동 덮어쓰지 않고 중단하며, 정상 legacy 시트는 뒤쪽 새 컬럼만 안전하게 확장","배포 안전: Apps Script 배포 뒤 생성된 정적 사이트 파일만 GitHub에 자동 게시하도록 릴리스 절차 보강"]},{"version":"2.2.0","date":"2026-09-27T20:57:19+09:00","notes":["데이터 안전: 월마감과 월 회고를 분리해 회고 저장·정산 다시 열기로 마감 기록이 손상되지 않게 개선","정산 안전: 마감된 달은 다시 열기 전까지 거래 추가·수정·삭제를 서버에서 차단","동기화 안전: 정산 공유초안에 revision을 추가하고 저장 중 추가 편집·다중 기기 충돌 시 최신 내용을 보존","오프라인 안전: 기기 저장에 실패한 입력을 저장 완료로 표시하지 않도록 개선","화면 보안: 거래 설명의 inline 이벤트 삽입과 자동분류 raw HTML 렌더링 제거"]},{"version":"2.1.0","date":"2026-09-26T18:01:20+09:00","notes":["정산 마감이 안 되던 문제 수정 — 응답 대기 20초 → 3분, 늦어져도 실제 마감 여부를 다시 확인","앱이 항상 이번 달로 열려요 — 지난달 정산은 홈 맨 위 '정산하기' 카드와 더보기 > 월 정산에서","내역: 지출·수입·저축 탭에 합계 금액 표시, 분류를 고르면 분류 합계와 비중까지","정산: 저장 안 한 대사·투자값을 마감 전에 자동 저장, 체크 항목이 화면 갱신에도 유지","정산: 빈 초안 행은 자동 정리, 다음 달 예산 덮어쓰기를 거절해도 마감은 진행"]},{"version":"2.0.0","date":"2026-09-26T17:44:51+09:00","notes":["앱 버전 표시 추가 — 새 버전이 적용되면 화면 위에 알려줘요","자산: 보물창고 '비상금'이 저장 후 0원으로 되돌아가던 문제 수정","자산: 항목을 전부 지워도 옛 금액이 다시 살아나던 문제 수정","자산: 한 줄로 합쳐진 항목은 수정 창에서 원본(8/2) 세부항목을 불러와 확인 후 저장","자주 쓰는 거래 버튼이 이름에 따옴표가 있으면 눌리지 않던 문제 수정","보안: 누구나 볼 수 있던 화면 코드에서 자산 금액 정보 제거"]}];
+const APP_VERSION = '2.3.3';
+const APP_BUILT_AT = '2026-10-11T12:53:57+09:00';
+const APP_RELEASE_NOTES = [{"version":"2.3.3","date":"2026-10-11T12:53:57+09:00","notes":["월마감 무결성: 마감 상태·활성 마감 이력을 함께 확인해 우회 저장과 중복 마감을 차단","정산 안정성: 월마감과 거래 동시 처리를 보호하고 실패·재시도 상태를 명확히 개선","거래 동기화: 서버 전송 중인 대기 거래를 취소 완료로 잘못 안내하던 문제 개선","오프라인 가계부: 재실행 후 대기 거래 합계와 월 전환 화면의 정확성 개선"]},{"version":"2.3.2","date":"2026-10-09T10:34:14+09:00","notes":["데이터 보호: 예산·자산·투자 종목을 저장할 때 기존 시트를 먼저 비우지 않고 입력 검증 후 한 번에 반영","서버 보안: 설치용 설정 함수의 원격 호출 차단","화면 보안: 정산 묶음 ID의 HTML 이벤트 삽입 가능성 제거","연결 보안: 기기별 임의 확인값으로 Google Apps Script 브리지 위조 연결·오래된 응답 차단"]},{"version":"2.3.1","date":"2026-09-29T08:53:56+09:00","notes":["보안(중요): 기기 ID를 바꿔 가며 PIN을 무제한으로 추측할 수 있던 문제 수정 — 처음 보는 기기는 공용 잠금, 쓰던 기기는 기기별 잠금","PC: 내역의 분류 칩(식비·교통/차량…기타 뒤)이 옆으로 안 넘어가던 문제 수정 — PC에서는 모든 분류가 한눈에 보이게 줄바꿈","PC: 자주 쓰는 거래·D-Day 줄은 마우스 휠이나 끌어서 옆으로 넘길 수 있어요","PC: 창 폭이 좁을 때 상단 메뉴 글자가 '내 / 역'처럼 세로로 쪼개지던 문제 수정","빠른 입력: 자주 쓰는 거래가 많으면 버튼 글자가 세로로 쌓이던 문제 수정","안정성: 창 위에 창이 열렸다 닫히면 앱 전체가 눌리지 않던 문제 수정","동기화: 지난달을 보다가 동기화하면 그 달 최신 내용을 못 받아오던 문제 수정","정산 공유초안: 다른 기기에서 지운 행이 이 기기의 옛 사본 때문에 되살아나던 문제 수정"]},{"version":"2.3.0","date":"2026-09-27T22:26:29+09:00","notes":["로그인 보안: v3 세션 registry와 현재 세션·모든 기기 원격 로그아웃을 추가하고, 구 v2 세션도 전체 로그아웃 시 함께 폐기","PIN 보호: 기기별 로그인 실패 제한으로 다른 기기의 오입력 때문에 함께 잠기는 문제를 줄이고 전역 abuse guard를 보조 안전망으로 분리","내역 검색: 현재 월/전체 기간 검색을 전환할 수 있고 소비성격·최소/최대 금액 필터와 서버 검색을 연결","알림 정리: 실제 서버 Web Push처럼 보이던 표현을 제거하고 앱 실행 중 기기 알림으로 명확히 표시, 예산 초과·빠른 소진 경고를 실제 동작으로 연결","접근성·안전: 모달 배경 inert·초기 포커스·포커스 트랩을 보강하고 전체기간 검색은 조회 전용, 마감월 일괄변경은 서버에서 사전 차단"]},{"version":"2.2.1","date":"2026-09-27T22:04:26+09:00","notes":["대용량 정산: 한 달 거래가 1,000건을 넘어도 대사·정산 합계·정산 배치가 전체 거래 기준으로 계산","저장 재시도: 연결 오류만 5초→15초→1분→5분 백오프로 자동 재시도하고 검증·마감 오류는 '확인 필요'로 중단","동기화 성능: 변경이 없는 달은 revision으로 확인해 거래 전체 목록을 다시 내려받지 않는 경량 새로고침 적용","시트 안전: 기존 헤더가 예상과 다르면 자동 덮어쓰지 않고 중단하며, 정상 legacy 시트는 뒤쪽 새 컬럼만 안전하게 확장","배포 안전: Apps Script 배포 뒤 생성된 정적 사이트 파일만 GitHub에 자동 게시하도록 릴리스 절차 보강"]},{"version":"2.2.0","date":"2026-09-27T20:57:19+09:00","notes":["데이터 안전: 월마감과 월 회고를 분리해 회고 저장·정산 다시 열기로 마감 기록이 손상되지 않게 개선","정산 안전: 마감된 달은 다시 열기 전까지 거래 추가·수정·삭제를 서버에서 차단","동기화 안전: 정산 공유초안에 revision을 추가하고 저장 중 추가 편집·다중 기기 충돌 시 최신 내용을 보존","오프라인 안전: 기기 저장에 실패한 입력을 저장 완료로 표시하지 않도록 개선","화면 보안: 거래 설명의 inline 이벤트 삽입과 자동분류 raw HTML 렌더링 제거"]},{"version":"2.1.0","date":"2026-09-26T18:01:20+09:00","notes":["정산 마감이 안 되던 문제 수정 — 응답 대기 20초 → 3분, 늦어져도 실제 마감 여부를 다시 확인","앱이 항상 이번 달로 열려요 — 지난달 정산은 홈 맨 위 '정산하기' 카드와 더보기 > 월 정산에서","내역: 지출·수입·저축 탭에 합계 금액 표시, 분류를 고르면 분류 합계와 비중까지","정산: 저장 안 한 대사·투자값을 마감 전에 자동 저장, 체크 항목이 화면 갱신에도 유지","정산: 빈 초안 행은 자동 정리, 다음 달 예산 덮어쓰기를 거절해도 마감은 진행"]},{"version":"2.0.0","date":"2026-09-26T17:44:51+09:00","notes":["앱 버전 표시 추가 — 새 버전이 적용되면 화면 위에 알려줘요","자산: 보물창고 '비상금'이 저장 후 0원으로 되돌아가던 문제 수정","자산: 항목을 전부 지워도 옛 금액이 다시 살아나던 문제 수정","자산: 한 줄로 합쳐진 항목은 수정 창에서 원본(8/2) 세부항목을 불러와 확인 후 저장","자주 쓰는 거래 버튼이 이름에 따옴표가 있으면 눌리지 않던 문제 수정","보안: 누구나 볼 수 있던 화면 코드에서 자산 금액 정보 제거"]}];
 /* @release:end */
 const DEFAULT_GAS_URL = 'https://script.google.com/macros/s/AKfycbwjFv7OSDc6T4vD0nUQA5E-W1QazAEU5dowQroEXard5DCMtP0FiMRlwtIjuEfDzo8phA/exec';
 const APP_CACHE_VERSION = 5;
@@ -924,6 +924,7 @@ const STATE = {
   authToken: '', sessionUser: '', ym: '', currentYm: '', monthMode: 'auto', revision: 0, lastSyncAt: 0,
   config: { types: ['지출','수입','저축','대출상환'], byType: {} },
   summary: null, budget: null, recent: [], transactions: [], assets: null,
+  serverMonth: null, monthLoadState: 'idle', monthLoadError: '',
   templates: [], recurrings: [], recurringStatus: null, assetSnapshots: [], pending: [],
   aiReady: false, aiHistory: [], closeHistory: [], insight: null, descDict: {},
   editing: null, form: { type: null, cat: null, fixed: '변동', user: '', catManual: false },
@@ -1289,10 +1290,13 @@ function renderSyncStatus(message, kind){
   const el = document.getElementById('syncStatus');
   if (!el) return;
   const count = (STATE.pending || []).length;
+  const awaitingSnapshot = (STATE.pending || []).filter(row => row.status === 'confirmed').length;
+  const unsentOrUncertain = count - awaitingSnapshot;
   const attention = pendingAttentionCount();
   const text = message || (attention
     ? attention + '건 확인 필요 · 동기화 버튼으로 수동 재시도'
-    : (count ? count + '건 저장 대기 중' : '모든 변경 저장됨'));
+    : (unsentOrUncertain ? unsentOrUncertain + '건 저장 대기/확인 중' :
+      (awaitingSnapshot ? '서버 저장 확인 중' : '모든 변경 저장됨')));
   el.textContent = text;
   el.className = 'on ' + (kind || (count ? 'pending' : 'saved'));
   el.setAttribute('role', 'status');
@@ -1847,6 +1851,10 @@ function renderHome(){
   const keepInsightsOpen = !!(el.querySelector('#homeInsights') && el.querySelector('#homeInsights').open);
   if(!STATE.summary) {
     el.innerHTML = `
+      <div role="${STATE.monthLoadState === 'error' ? 'alert' : 'status'}" class="empty">
+        ${STATE.monthLoadState === 'error' ? `⚠️ ${esc(STATE.ym)} 불러오기 실패 · ${esc(STATE.monthLoadError || '다시 시도해줘.')}
+          <button type="button" onclick="retryMonthLoad()">다시 시도</button>` : `${esc(STATE.ym || '')} 장부 불러오는 중…`}
+      </div>
       <div class="skeleton skeleton-balance"></div>
       <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px">
         <div class="skeleton skeleton-mini"></div>
@@ -2346,10 +2354,12 @@ function txRow(t){
   const readOnlyHistory = STATE.list && STATE.list.scope === 'all';
   const safeRow = String(t.row || '').replace(/['\\]/g, '');
   const txRef = String(t.txId || safeRow).replace(/['\\]/g, '');
-  const isTemp = t.syncState === 'pending' || t.syncState === 'error' || t.syncState === 'attention' || String(t.row).startsWith('temp_');
+  const isTemp = ['pending','sending','confirmed','error','attention'].includes(t.syncState) || String(t.row).startsWith('temp_');
+  const tempEntry = isTemp ? (STATE.pending || []).find(row => row.clientId === (t.clientId || t.txId)) : null;
+  const canCancelPending = isTemp && tempEntry && (tempEntry.status === 'queued' || tempEntry.status === 'rejected' || (!tempEntry.status && Number(tempEntry.attempts || 0) === 0));
   const editBtn = readOnlyHistory || isTemp ? '' : `<button type="button" class="edit-tx-btn" title="수정" onclick="event.stopPropagation(); editTx('${t.row}')">✏️</button>`;
-  const delBtn  = readOnlyHistory ? '' : `<button type="button" class="del-tx-btn" data-delete-row="${esc(safeRow)}" title="${isTemp?'저장 대기 취소':'삭제'}" aria-label="${isTemp?'저장 대기 취소':'거래 삭제'}">${isTemp?'✕':'🗑️'}</button>`;
-  const pendingLabel = t.syncState === 'attention' ? '확인 필요' : (t.syncState === 'error' ? '재시도 대기' : '저장 중');
+  const delBtn  = readOnlyHistory || (isTemp && !canCancelPending) ? '' : `<button type="button" class="del-tx-btn" data-delete-row="${esc(safeRow)}" title="${isTemp?'저장 대기 취소':'삭제'}" aria-label="${isTemp?'저장 대기 취소':'거래 삭제'}">${isTemp?'✕':'🗑️'}</button>`;
+  const pendingLabel = t.syncState === 'confirmed' ? '서버 저장 확인 중' : t.syncState === 'sending' ? '전송됨 · 취소 불가' : t.syncState === 'attention' ? '확인 필요' : (t.syncState === 'error' ? '재시도 대기' : '저장 대기');
   const pendingBadge = isTemp ? `<span class="sync-badge ${t.syncState==='pending'?'':'error'}">${pendingLabel}</span>` : '';
   const bulkActive = STATE.bulkMode && !readOnlyHistory;
   let actionHtml = '';
@@ -2427,6 +2437,10 @@ function renderList(){
   const el=document.getElementById('v-list');
   if(!el) return;
   const wholeHistory = STATE.list.scope === 'all';
+  if (!wholeHistory && !STATE.summary && STATE.monthLoadState !== 'idle') {
+    el.innerHTML = `<div class="empty" role="${STATE.monthLoadState === 'error' ? 'alert' : 'status'}">${esc(STATE.ym)} ${STATE.monthLoadState === 'error' ? '장부 불러오기 실패 · ' + esc(STATE.monthLoadError || '') : '장부 불러오는 중…'} ${STATE.monthLoadState === 'error' ? '<button type="button" onclick="retryMonthLoad()">다시 시도</button>' : ''}</div>`;
+    return;
+  }
   let txs = wholeHistory ? (STATE.list.remoteRows || []) : (STATE.transactions || []);
   if (!wholeHistory && STATE.userFilter) {
     txs = txs.filter(t => t.user === STATE.userFilter);
@@ -3161,6 +3175,8 @@ function applyBootData(data){
   STATE.serverVersion = data.appVersion || STATE.serverVersion || '';
   STATE.pendingSettlementYm = data.pendingSettlementYm != null ? data.pendingSettlementYm : (STATE.pendingSettlementYm || '');
   applyGlobalData(data);
+  rememberServerMonth(data);
+  mergePendingTransactions();
   setTimeout(() => {
     checkAndDispatchDueNotifications();
   }, 1200);
@@ -3197,6 +3213,42 @@ function applyMonthData(data){
   STATE.closeHistory = data.closeHistory || STATE.closeHistory || [];
   STATE.revision = Number(data.revision || STATE.revision || 0);
   STATE.lastSyncAt = Number(data.serverTime || Date.now());
+  rememberServerMonth(data);
+  mergePendingTransactions();
+}
+
+function rememberServerMonth(data){
+  // Never put an optimistic balance back into our server baseline/cache.
+  const previous = STATE.serverMonth && STATE.serverMonth.ym === STATE.ym ? STATE.serverMonth : null;
+  STATE.serverMonth = {
+    ym: STATE.ym,
+    summary: data.summary ? JSON.parse(JSON.stringify(data.summary)) : (previous ? previous.summary : null),
+    transactions: Array.isArray(data.transactions) ? data.transactions.slice() : (previous ? previous.transactions.slice() : []),
+    recent: Array.isArray(data.recent) ? data.recent.slice() : (previous ? previous.recent.slice() : [])
+  };
+  STATE.monthLoadState = 'idle';
+  STATE.monthLoadError = '';
+}
+
+function pendingMayBeCancelled(entry){
+  // Legacy rows that have been attempted may already have committed before a timeout.
+  return !!entry && (entry.status === 'queued' || entry.status === 'rejected' ||
+    (!entry.status && Number(entry.attempts || 0) === 0));
+}
+
+function pendingWasInFlight(entry){
+  return !!entry && (entry.status === 'sent' || entry.status === 'confirmed' ||
+    (!entry.status && Number(entry.attempts || 0) > 0));
+}
+
+function reconcilePendingReceipts(serverRows){
+  const serverIds = new Set((serverRows || []).map(t => String(t.clientId || t.txId || '')));
+  const before = (STATE.pending || []).length;
+  // A successful ACK is not enough to remove the local receipt: if we go
+  // offline before fetching the server snapshot, the overlay must survive a reboot.
+  STATE.pending = (STATE.pending || []).filter(entry => entry.status !== 'confirmed' ||
+    !serverIds.has(String(entry.clientId)));
+  if (STATE.pending.length !== before) persistPendingQueue();
 }
 
 function pendingAsTransaction(entry){
@@ -3216,18 +3268,27 @@ function pendingAsTransaction(entry){
     source: data.source || '',
     settlementBatch: data.settlementBatch || '',
     spendingMood: data.spendingMood || '',
-    syncState: (entry.needsAttention === true || entry.permanent === true) ? 'attention' : (entry.lastError ? 'error' : 'pending')
+    syncState: entry.status === 'confirmed' ? 'confirmed' :
+      ((entry.needsAttention === true || entry.permanent === true) ? 'attention' :
+      (entry.lastError ? 'error' : (pendingWasInFlight(entry) ? 'sending' : 'pending')))
   };
 }
 
 function mergePendingTransactions(){
-  const existing = new Set([].concat(STATE.recent || [], STATE.transactions || []).map(t => String(t.clientId || t.txId || t.row)));
+  const base = STATE.serverMonth;
+  if (!base || base.ym !== STATE.ym) return;
+  reconcilePendingReceipts(base.transactions.concat(base.recent));
+  STATE.summary = base.summary ? JSON.parse(JSON.stringify(base.summary)) : null;
+  STATE.transactions = base.transactions.slice();
+  STATE.recent = base.recent.slice();
+  const existing = new Set([].concat(STATE.recent, STATE.transactions).map(t => String(t.clientId || t.txId || t.row)));
   (STATE.pending || []).forEach(entry => {
     const tx = pendingAsTransaction(entry);
     if (String(tx.date || '').slice(0, 7) !== STATE.ym) return;
     if (existing.has(entry.clientId) || existing.has(tx.row)) return;
     STATE.transactions.unshift(tx);
     STATE.recent.unshift(tx);
+    adjustSummaryOptimistic(tx, 1);
     existing.add(entry.clientId);
   });
   STATE.recent = (STATE.recent || []).slice(0, 20);
@@ -3247,7 +3308,7 @@ function replacePendingTransaction(result){
 function queueTransaction(data, clientId){
   const entry = {
     clientId: clientId || createClientId(), data: data, createdAt: Date.now(),
-    attempts: 0, lastError: '', nextRetryAt: 0, needsAttention: false, permanent: false
+    attempts: 0, lastError: '', nextRetryAt: 0, needsAttention: false, permanent: false, status: 'queued'
   };
   STATE.pending.push(entry);
   if (!persistPendingQueue()) {
@@ -3267,36 +3328,40 @@ function clearPendingRetryTimer(){
 }
 function pendingQueueStatusMessage(){
   const rows=STATE.pending || [];
-  const attention=rows.filter(row => row && (row.needsAttention === true || row.permanent === true)).length;
-  const automatic=Math.max(0,rows.length-attention);
+  const unconfirmed=rows.filter(row => row && row.status !== 'confirmed');
+  const attention=unconfirmed.filter(row => row.needsAttention === true || row.permanent === true).length;
+  const automatic=Math.max(0,unconfirmed.length-attention);
   if (attention && automatic) return attention+'건 확인 필요 · '+automatic+'건 자동 재시도 대기';
   if (attention) return attention+'건 확인 필요 · 동기화 버튼으로 수동 재시도';
-  return automatic ? automatic+'건 자동 재시도 대기' : '장부 저장 완료';
+  return automatic ? automatic+'건 자동 재시도 대기' : (rows.length ? '서버 저장 확인 중' : '장부 저장 완료');
 }
 function markPendingFailure(row, error, options){
   if (!row) return;
   const opt=options || {};
   row.lastError=String(error || '저장 실패');
   if (opt.permanent === true) {
+    row.status='rejected';
     row.needsAttention=true;
     row.permanent=true;
     row.nextRetryAt=0;
     return;
   }
   if (opt.retryable === true) {
+    row.status='sent';
     row.needsAttention=false;
     row.permanent=false;
     row.nextRetryAt=Date.now()+pendingRetryDelay(row.attempts);
     return;
   }
   row.needsAttention=true;
+  row.status='sent';
   row.permanent=false;
   row.nextRetryAt=0;
 }
 function schedulePendingRetry(){
   clearPendingRetryTimer();
   if (navigator.onLine === false || STATE.sync.inFlight) return;
-  const rows=(STATE.pending || []).filter(row => row && row.needsAttention !== true && row.permanent !== true);
+  const rows=(STATE.pending || []).filter(row => row && row.status !== 'confirmed' && row.needsAttention !== true && row.permanent !== true);
   if (!rows.length) return;
   const now=Date.now();
   const nextAt=Math.min.apply(null,rows.map(row => Math.max(now,Number(row.nextRetryAt || 0))));
@@ -3310,6 +3375,7 @@ function flushPendingQueue(options){
   if (!STATE.authToken || !(STATE.pending || []).length) return Promise.resolve();
   if (opt.manual === true) {
     (STATE.pending || []).forEach(row => {
+      if (row.status === 'confirmed') return;
       row.attempts=0;
       row.lastError='';
       row.nextRetryAt=0;
@@ -3325,15 +3391,25 @@ function flushPendingQueue(options){
   }
   clearPendingRetryTimer();
   const now=Date.now();
-  const batch=STATE.pending.filter(row => row && row.needsAttention !== true && row.permanent !== true && Number(row.nextRetryAt || 0) <= now).slice(0,50);
+  const batch=STATE.pending.filter(row => row && row.status !== 'confirmed' && row.needsAttention !== true && row.permanent !== true && Number(row.nextRetryAt || 0) <= now).slice(0,50);
   if (!batch.length) {
     renderSyncStatus(pendingQueueStatusMessage(),'pending');
     schedulePendingRetry();
     return Promise.resolve({ waiting:true });
   }
   STATE.sync.inFlight = true;
-  batch.forEach(row => { row.attempts = Number(row.attempts || 0) + 1; });
-  persistPendingQueue();
+  const previousStates=batch.map(row=>({ row, attempts:row.attempts, status:row.status }));
+  batch.forEach(row => { row.attempts = Number(row.attempts || 0) + 1; row.status='sent'; });
+  // Mark sent durably BEFORE network dispatch; otherwise reboot could offer
+  // a false 'cancel' for an already committed server write.
+  if (!persistPendingQueue()) {
+    previousStates.forEach(item => { item.row.attempts=item.attempts; item.row.status=item.status; });
+    STATE.sync.inFlight = false;
+    renderSyncStatus('전송 상태를 기기에 기록하지 못해 저장을 보류했어.', 'pending');
+    return Promise.resolve({ waiting:true });
+  }
+  mergePendingTransactions();
+  renderAll();
   renderSyncStatus(batch.length + '건 장부에 저장 중', 'syncing');
   return api('addTransactionsFast', batch.map(row => ({ clientId: row.clientId, data: row.data }))).then(res => {
     const completed = new Set();
@@ -3342,10 +3418,10 @@ function flushPendingQueue(options){
       if (result && result.clientId) answered.add(result.clientId);
       if (result && result.ok) {
         completed.add(result.clientId);
-        replacePendingTransaction(result);
+        const receipt=STATE.pending.find(row=>row.clientId === result.clientId);
+        if (receipt) { receipt.status='confirmed'; receipt.lastError=''; receipt.nextRetryAt=0; }
       }
     });
-    STATE.pending = STATE.pending.filter(row => !completed.has(row.clientId));
     (res.results || []).forEach(result => {
       if (!result || result.ok) return;
       const row = STATE.pending.find(item => item.clientId === result.clientId);
@@ -3363,6 +3439,7 @@ function flushPendingQueue(options){
     // res.revision 은 여기서 STATE.revision 으로 올리지 않는다. 그 사이 다른 기기가 바꾼 내용까지
     // '이미 받은 것'으로 취급하게 된다. 성공 건이 있으면 아래 full refresh 가 revision 을 맞춘다.
     persistPendingQueue();
+    mergePendingTransactions();
     renderAll();
     renderSyncStatus(pendingQueueStatusMessage(),STATE.pending.length ? 'pending' : 'saved');
     // pending 성공 직후에는 서버 revision을 이미 받았으므로 conditional GET을 쓰면
@@ -3376,6 +3453,7 @@ function flushPendingQueue(options){
       retryable ? { retryable:true } : {}
     ));
     persistPendingQueue();
+    mergePendingTransactions();
     renderAll();
     renderSyncStatus(retryable ? pendingQueueStatusMessage() : '저장 오류 확인 필요 · 동기화 버튼으로 수동 재시도', 'pending');
   }).finally(() => {
@@ -3389,11 +3467,11 @@ function refreshBootData(silent){
   const startedYm = STATE.ym;
   STATE.sync.bootPromise = api('getBoot').then(data => {
     saveBootCache(data);
-    const otherMonth = STATE.monthMode === 'manual' && data.ym !== startedYm;
+    const otherMonth = STATE.monthMode === 'manual' && (data.ym !== startedYm || STATE.ym !== startedYm);
     if (STATE.monthMode !== 'manual') applyBootData(data);
     else if (!otherMonth) applyMonthData(data);
     else applyGlobalData(data);
-    mergePendingTransactions();
+    if (STATE.ym === startedYm) mergePendingTransactions();
     renderAll();
     if (!silent) toast('✅ 최신 장부로 동기화 완료');
     renderSyncStatus();
@@ -3439,6 +3517,12 @@ function refreshVisibleMonth(silent, options){
     if (!silent) toast('✅ ' + ym + ' 최신 데이터');
     return data;
   }).catch(err => {
+    if (requestId !== STATE.requestSeq || STATE.ym !== ym) throw err;
+    if (!STATE.summary) {
+      STATE.monthLoadState='error';
+      STATE.monthLoadError=(err && err.message) || '데이터를 불러오지 못했어.';
+      renderAll();
+    }
     if (!silent) toast((err && err.message) || '데이터를 불러오지 못했어.', true);
     throw err;
   });
@@ -4544,10 +4628,13 @@ function submitQuickTx(closeAfter){
   }
   STATE.undurableQuickTx = null;
   const tx = pendingAsTransaction(entry);
-  if (String(date).slice(0, 7) === STATE.ym) {
+  // Rebuild from the immutable server snapshot. Repeated hydration must not
+  // compound the optimistic amount (including after an offline reboot).
+  if (STATE.serverMonth && STATE.serverMonth.ym === STATE.ym) mergePendingTransactions();
+  else if (String(date).slice(0, 7) === STATE.ym && STATE.summary) {
+    // Only relevant to a session without a fetched server snapshot yet.
     STATE.transactions.unshift(tx);
     STATE.recent.unshift(tx);
-    STATE.recent = STATE.recent.slice(0, 20);
     adjustSummaryOptimistic(tx, 1);
   }
   renderAll();
@@ -4616,16 +4703,31 @@ function handleTransactionListClick(event){
 function deleteTxPrompt(row){
   const tx = transactionForDelete(row);
   if (!tx) return toast('거래 정보를 찾을 수 없어.', true);
+  const isTemp = String(row).indexOf('temp_') === 0;
+  const clientId = isTemp ? (tx.clientId || String(row).replace(/^temp_/, '')) : '';
+  const pendingEntry = isTemp ? (STATE.pending || []).find(item => item.clientId === clientId) : null;
+  // ACK may still be in flight; removing the queue entry cannot retract the
+  // server request. Even a timed-out write may have committed successfully.
+  if (isTemp && (!pendingEntry || !pendingMayBeCancelled(pendingEntry))) {
+    toast('이미 서버로 전송됐어. 저장 확인 후 일반 거래 삭제를 이용해줘.', true);
+    return;
+  }
   const desc=tx.desc || tx.cat || '거래';
   const amount=Number(tx.amount || 0);
   if(!confirm(`'${desc}' (${fmt(amount)}) 거래를 삭제할까요?`)) return;
-  if (String(row).indexOf('temp_') === 0 && tx) {
-    const clientId = tx.clientId || String(row).replace(/^temp_/, '');
+  if (isTemp && tx) {
+    // A sync tick may run while the confirmation dialog was open.
+    if (!pendingMayBeCancelled((STATE.pending || []).find(item => item.clientId === clientId))) {
+      toast('전송이 시작돼 취소할 수 없어. 저장 확인 후 삭제해줘.', true);
+      return;
+    }
     STATE.pending = (STATE.pending || []).filter(item => item.clientId !== clientId);
-    STATE.transactions = (STATE.transactions || []).filter(item => String(item.row) !== String(row));
-    STATE.recent = (STATE.recent || []).filter(item => String(item.row) !== String(row));
-    adjustSummaryOptimistic(tx, -1);
-    persistPendingQueue();
+    if (!persistPendingQueue()) {
+      STATE.pending.push(pendingEntry);
+      toast('기기에 취소 상태를 저장하지 못해 취소하지 않았어.', true);
+      return;
+    }
+    mergePendingTransactions();
     renderAll();
     toast('저장 대기 입력을 취소했어.');
     return;
@@ -4664,7 +4766,17 @@ function changeMonth(delta){
     renderAll();
     renderSyncStatus(newYm + ' 저장된 화면 · 최신 확인 중', 'syncing');
   } else {
-    document.getElementById('mLabel').textContent = newYm;
+    STATE.serverMonth = null;
+    STATE.summary = null;
+    STATE.budget = null;
+    STATE.transactions = [];
+    STATE.recent = [];
+    STATE.settlement = null;
+    STATE.revision = 0;
+    STATE.lastSyncAt = 0;
+    STATE.monthLoadState = 'loading';
+    STATE.monthLoadError = '';
+    renderAll();
     renderSyncStatus(newYm + ' 불러오는 중', 'syncing');
   }
   api('getMonthData', newYm).then(data => {
@@ -4675,10 +4787,24 @@ function changeMonth(delta){
     renderAll();
     renderSyncStatus();
   }).catch(err => {
+    if (requestId !== STATE.requestSeq || STATE.ym !== newYm) return;
+    if (!cached) {
+      STATE.monthLoadState='error';
+      STATE.monthLoadError=(err && err.message) || '데이터를 불러오지 못했어.';
+      renderAll();
+    }
     if (!cached) toast((err && err.message) || '데이터를 불러오지 못했어.', true);
     renderSyncStatus(cached ? '저장된 화면 · 오프라인' : '불러오기 실패', 'pending');
   });
     }
+
+function retryMonthLoad(){
+  if (!STATE.ym || !STATE.authToken) return;
+  STATE.monthLoadState='loading';
+  STATE.monthLoadError='';
+  renderAll();
+  refreshVisibleMonth(false, {forceFull:true}).catch(()=>{});
+}
 
     // ===== 고정거래(Recurring) 제어 로직 =====
     function toggleRecurringTrigger(turnOn) {
