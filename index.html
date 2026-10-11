@@ -3,7 +3,7 @@
 <head>
 <base target="_top">
 <meta charset="utf-8">
-<meta name="app-version" content="2.3.4">
+<meta name="app-version" content="2.3.5">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, interactive-widget=resizes-content">
 <meta name="description" content="지수와 하콩이의 빠르고 편한 공동 가계부">
 <meta name="theme-color" content="#f5f5f7">
@@ -206,6 +206,51 @@ main{padding:18px 16px 0}
 .forecast-head .amt{font-size:18px;font-weight:900;color:var(--green)}
 .forecast-head .amt.minus{color:var(--expense)}
 .forecast-desc{font-size:12.5px;color:var(--muted);line-height:1.45}
+
+/* Real living allowance: keep the recorded balance visually separate from
+   conservative scheduled-reserve estimates. */
+.living-allowance{margin:12px 0 16px;padding:16px;background:var(--card);border:1px solid var(--line-soft);border-radius:18px;box-shadow:var(--shadow)}
+.living-allowance h3{font-size:14px;font-weight:900;color:var(--ink);margin:0 0 10px}
+.living-flow{display:grid;gap:8px;margin:0}
+.living-flow div{display:flex;justify-content:space-between;align-items:flex-start;gap:12px;font-size:12.5px}
+.living-flow dt{font-weight:700;color:var(--muted);line-height:1.5}
+.living-flow dd{margin:0;font-weight:850;color:var(--ink);text-align:right;font-variant-numeric:tabular-nums;overflow-wrap:anywhere}
+.living-flow .living-highlight{margin-top:4px;padding:10px 12px;border-radius:12px;background:var(--line-soft);align-items:center}
+.living-flow .living-highlight dt{color:var(--ink);font-weight:900}
+.living-flow .living-highlight dd{font-size:19px;color:var(--forest)}
+.living-flow .living-highlight.negative dd{color:var(--expense)}
+.living-cadence{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:10px}
+.living-cadence div{background:var(--bg);padding:11px 12px;border-radius:12px}
+.living-cadence span{display:block;font-size:11px;color:var(--muted);font-weight:700}
+.living-cadence strong{display:block;margin-top:3px;font-size:15px;font-weight:900;font-variant-numeric:tabular-nums;color:var(--ink)}
+.living-caution{font-size:11px;color:var(--muted);line-height:1.6;margin:10px 0 0}
+.living-caution.warn{color:var(--expense)}
+.dday-chip .dday-meta{display:flex;flex-direction:column;gap:3px;min-width:0}
+.dday-chip .dday-meta strong{font-size:12px;font-weight:800;overflow-wrap:anywhere}
+.dday-chip .dday-meta small{font-size:11px;color:var(--muted);font-weight:700}
+.dday-chip .dday-state{font-size:10px;font-weight:850;white-space:nowrap;color:var(--muted)}
+.dday-chip .dday-state.pending{color:var(--expense)}
+.dday-warning{margin-top:7px;font-size:11px;line-height:1.5;color:var(--muted)}
+.dday-more{flex:0 0 auto;align-self:center;font-size:11px;font-weight:750;color:var(--muted);padding:10px}
+.rec-budget-summary{border:1px solid var(--line-soft);background:var(--card);border-radius:17px;padding:16px;margin:12px 0 19px;box-shadow:var(--shadow)}
+.rec-budget-heading{display:flex;align-items:center;justify-content:space-between;gap:8px;flex-wrap:wrap;margin-bottom:12px}
+.rec-budget-heading h3{font-size:15px;margin:0;color:var(--ink);font-weight:900}
+.rec-budget-heading span{font-size:11px;color:var(--muted);font-weight:750}
+.rec-budget-metrics{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.rec-budget-metrics>div{padding:11px 12px;background:var(--bg);border-radius:12px;min-width:0}
+.rec-budget-metrics span{display:block;font-size:11px;color:var(--muted);font-weight:750}
+.rec-budget-metrics strong{display:block;margin-top:4px;font-size:16px;line-height:1.35;color:var(--ink);font-weight:900;overflow-wrap:anywhere;font-variant-numeric:tabular-nums}
+.rec-budget-metrics strong.income{color:var(--income)}
+.rec-budget-annual{display:flex;justify-content:space-between;gap:12px;align-items:flex-start;border-top:1px solid var(--line-soft);margin-top:12px;padding-top:12px;font-size:12px}
+.rec-budget-annual span{font-weight:700;color:var(--muted)}
+.rec-budget-annual strong{font-weight:850;text-align:right;line-height:1.5;color:var(--ink)}
+.rec-budget-note{font-size:11px;line-height:1.6;color:var(--muted);margin:10px 0 0}
+.rec-budget-subscriptions{display:flex;flex-direction:column;gap:5px;background:var(--line-soft);border-radius:12px;padding:10px 12px;margin-top:12px;font-size:12px;line-height:1.5}
+.rec-budget-subscriptions strong{font-weight:900;color:var(--ink)}
+.rec-budget-subscriptions span{overflow-wrap:anywhere;color:var(--ink)}
+.rec-budget-subscriptions small{font-size:11px;color:var(--muted)}
+.rec-schedule-state{white-space:nowrap}
+@media(max-width:420px){.living-allowance,.rec-budget-summary{padding:13px}.living-flow div{gap:7px}.living-cadence strong,.rec-budget-metrics strong{font-size:14px}.rec-budget-annual{flex-direction:column;gap:4px}.rec-budget-annual strong{text-align:left}}
 
 .budget-gauge-row{margin-bottom:14px}
 .budget-gauge-row:last-child{margin-bottom:0}
@@ -926,9 +971,9 @@ body.dark-mode .settlement-close-warn{color:var(--gold)}
 <script>
 /* ============ 앱 글로벌 상태 (Store) ============ */
 /* @release:start — pwa-site/scripts/build-static.mjs 가 release.json 을 보고 자동으로 채운다. 손으로 고치지 말 것. */
-const APP_VERSION = '2.3.4';
-const APP_BUILT_AT = '2026-10-11T13:30:40+09:00';
-const APP_RELEASE_NOTES = [{"version":"2.3.4","date":"2026-10-11T13:30:40+09:00","notes":["편의 개선 1차: 한 줄 문장에서 금액과 내역을 추출해 빠른 입력 칸에 미리 채우기","편의 개선 1차: 사용자가 붙여넣은 카드 승인 문자의 금액·가맹점·날짜를 확인 후 적용","편의 개선 1차: 기존 거래의 분류를 활용한 가맹점 추천과 거래 다시 입력","입력 안전성: 취소 알림·모호한 금액·중복 저장 위험을 자동 등록 없이 검토하고 기존 오프라인 대기열 보호 유지"]},{"version":"2.3.3","date":"2026-10-11T12:53:57+09:00","notes":["월마감 무결성: 마감 상태·활성 마감 이력을 함께 확인해 우회 저장과 중복 마감을 차단","정산 안정성: 월마감과 거래 동시 처리를 보호하고 실패·재시도 상태를 명확히 개선","거래 동기화: 서버 전송 중인 대기 거래를 취소 완료로 잘못 안내하던 문제 개선","오프라인 가계부: 재실행 후 대기 거래 합계와 월 전환 화면의 정확성 개선"]},{"version":"2.3.2","date":"2026-10-09T10:34:14+09:00","notes":["데이터 보호: 예산·자산·투자 종목을 저장할 때 기존 시트를 먼저 비우지 않고 입력 검증 후 한 번에 반영","서버 보안: 설치용 설정 함수의 원격 호출 차단","화면 보안: 정산 묶음 ID의 HTML 이벤트 삽입 가능성 제거","연결 보안: 기기별 임의 확인값으로 Google Apps Script 브리지 위조 연결·오래된 응답 차단"]},{"version":"2.3.1","date":"2026-09-29T08:53:56+09:00","notes":["보안(중요): 기기 ID를 바꿔 가며 PIN을 무제한으로 추측할 수 있던 문제 수정 — 처음 보는 기기는 공용 잠금, 쓰던 기기는 기기별 잠금","PC: 내역의 분류 칩(식비·교통/차량…기타 뒤)이 옆으로 안 넘어가던 문제 수정 — PC에서는 모든 분류가 한눈에 보이게 줄바꿈","PC: 자주 쓰는 거래·D-Day 줄은 마우스 휠이나 끌어서 옆으로 넘길 수 있어요","PC: 창 폭이 좁을 때 상단 메뉴 글자가 '내 / 역'처럼 세로로 쪼개지던 문제 수정","빠른 입력: 자주 쓰는 거래가 많으면 버튼 글자가 세로로 쌓이던 문제 수정","안정성: 창 위에 창이 열렸다 닫히면 앱 전체가 눌리지 않던 문제 수정","동기화: 지난달을 보다가 동기화하면 그 달 최신 내용을 못 받아오던 문제 수정","정산 공유초안: 다른 기기에서 지운 행이 이 기기의 옛 사본 때문에 되살아나던 문제 수정"]},{"version":"2.3.0","date":"2026-09-27T22:26:29+09:00","notes":["로그인 보안: v3 세션 registry와 현재 세션·모든 기기 원격 로그아웃을 추가하고, 구 v2 세션도 전체 로그아웃 시 함께 폐기","PIN 보호: 기기별 로그인 실패 제한으로 다른 기기의 오입력 때문에 함께 잠기는 문제를 줄이고 전역 abuse guard를 보조 안전망으로 분리","내역 검색: 현재 월/전체 기간 검색을 전환할 수 있고 소비성격·최소/최대 금액 필터와 서버 검색을 연결","알림 정리: 실제 서버 Web Push처럼 보이던 표현을 제거하고 앱 실행 중 기기 알림으로 명확히 표시, 예산 초과·빠른 소진 경고를 실제 동작으로 연결","접근성·안전: 모달 배경 inert·초기 포커스·포커스 트랩을 보강하고 전체기간 검색은 조회 전용, 마감월 일괄변경은 서버에서 사전 차단"]},{"version":"2.2.1","date":"2026-09-27T22:04:26+09:00","notes":["대용량 정산: 한 달 거래가 1,000건을 넘어도 대사·정산 합계·정산 배치가 전체 거래 기준으로 계산","저장 재시도: 연결 오류만 5초→15초→1분→5분 백오프로 자동 재시도하고 검증·마감 오류는 '확인 필요'로 중단","동기화 성능: 변경이 없는 달은 revision으로 확인해 거래 전체 목록을 다시 내려받지 않는 경량 새로고침 적용","시트 안전: 기존 헤더가 예상과 다르면 자동 덮어쓰지 않고 중단하며, 정상 legacy 시트는 뒤쪽 새 컬럼만 안전하게 확장","배포 안전: Apps Script 배포 뒤 생성된 정적 사이트 파일만 GitHub에 자동 게시하도록 릴리스 절차 보강"]},{"version":"2.2.0","date":"2026-09-27T20:57:19+09:00","notes":["데이터 안전: 월마감과 월 회고를 분리해 회고 저장·정산 다시 열기로 마감 기록이 손상되지 않게 개선","정산 안전: 마감된 달은 다시 열기 전까지 거래 추가·수정·삭제를 서버에서 차단","동기화 안전: 정산 공유초안에 revision을 추가하고 저장 중 추가 편집·다중 기기 충돌 시 최신 내용을 보존","오프라인 안전: 기기 저장에 실패한 입력을 저장 완료로 표시하지 않도록 개선","화면 보안: 거래 설명의 inline 이벤트 삽입과 자동분류 raw HTML 렌더링 제거"]},{"version":"2.1.0","date":"2026-09-26T18:01:20+09:00","notes":["정산 마감이 안 되던 문제 수정 — 응답 대기 20초 → 3분, 늦어져도 실제 마감 여부를 다시 확인","앱이 항상 이번 달로 열려요 — 지난달 정산은 홈 맨 위 '정산하기' 카드와 더보기 > 월 정산에서","내역: 지출·수입·저축 탭에 합계 금액 표시, 분류를 고르면 분류 합계와 비중까지","정산: 저장 안 한 대사·투자값을 마감 전에 자동 저장, 체크 항목이 화면 갱신에도 유지","정산: 빈 초안 행은 자동 정리, 다음 달 예산 덮어쓰기를 거절해도 마감은 진행"]}];
+const APP_VERSION = '2.3.5';
+const APP_BUILT_AT = '2026-10-11T13:48:38+09:00';
+const APP_RELEASE_NOTES = [{"version":"2.3.5","date":"2026-10-11T13:48:38+09:00","notes":["생활비 개편 2차: 현재 입력된 금액에서 아직 기록되지 않은 예정 정기지출·저축·상환을 제외한 생활비 여유액 추정","생활비 개편 2차: 오늘부터 월말까지의 하루·일주일 사용 가능액과 예약 고정비 내역을 구분해 표시","고정비 관리: 월간 지출·정기수입과 연간 환산 규모를 한눈에 비교하는 대시보드","계산 안전성: 이미 기록된 정기거래 중복 차감 방지, 예정 정기수입 선반영 금지, 미입력·불확실한 항목 명시"]},{"version":"2.3.4","date":"2026-10-11T13:30:40+09:00","notes":["편의 개선 1차: 한 줄 문장에서 금액과 내역을 추출해 빠른 입력 칸에 미리 채우기","편의 개선 1차: 사용자가 붙여넣은 카드 승인 문자의 금액·가맹점·날짜를 확인 후 적용","편의 개선 1차: 기존 거래의 분류를 활용한 가맹점 추천과 거래 다시 입력","입력 안전성: 취소 알림·모호한 금액·중복 저장 위험을 자동 등록 없이 검토하고 기존 오프라인 대기열 보호 유지"]},{"version":"2.3.3","date":"2026-10-11T12:53:57+09:00","notes":["월마감 무결성: 마감 상태·활성 마감 이력을 함께 확인해 우회 저장과 중복 마감을 차단","정산 안정성: 월마감과 거래 동시 처리를 보호하고 실패·재시도 상태를 명확히 개선","거래 동기화: 서버 전송 중인 대기 거래를 취소 완료로 잘못 안내하던 문제 개선","오프라인 가계부: 재실행 후 대기 거래 합계와 월 전환 화면의 정확성 개선"]},{"version":"2.3.2","date":"2026-10-09T10:34:14+09:00","notes":["데이터 보호: 예산·자산·투자 종목을 저장할 때 기존 시트를 먼저 비우지 않고 입력 검증 후 한 번에 반영","서버 보안: 설치용 설정 함수의 원격 호출 차단","화면 보안: 정산 묶음 ID의 HTML 이벤트 삽입 가능성 제거","연결 보안: 기기별 임의 확인값으로 Google Apps Script 브리지 위조 연결·오래된 응답 차단"]},{"version":"2.3.1","date":"2026-09-29T08:53:56+09:00","notes":["보안(중요): 기기 ID를 바꿔 가며 PIN을 무제한으로 추측할 수 있던 문제 수정 — 처음 보는 기기는 공용 잠금, 쓰던 기기는 기기별 잠금","PC: 내역의 분류 칩(식비·교통/차량…기타 뒤)이 옆으로 안 넘어가던 문제 수정 — PC에서는 모든 분류가 한눈에 보이게 줄바꿈","PC: 자주 쓰는 거래·D-Day 줄은 마우스 휠이나 끌어서 옆으로 넘길 수 있어요","PC: 창 폭이 좁을 때 상단 메뉴 글자가 '내 / 역'처럼 세로로 쪼개지던 문제 수정","빠른 입력: 자주 쓰는 거래가 많으면 버튼 글자가 세로로 쌓이던 문제 수정","안정성: 창 위에 창이 열렸다 닫히면 앱 전체가 눌리지 않던 문제 수정","동기화: 지난달을 보다가 동기화하면 그 달 최신 내용을 못 받아오던 문제 수정","정산 공유초안: 다른 기기에서 지운 행이 이 기기의 옛 사본 때문에 되살아나던 문제 수정"]},{"version":"2.3.0","date":"2026-09-27T22:26:29+09:00","notes":["로그인 보안: v3 세션 registry와 현재 세션·모든 기기 원격 로그아웃을 추가하고, 구 v2 세션도 전체 로그아웃 시 함께 폐기","PIN 보호: 기기별 로그인 실패 제한으로 다른 기기의 오입력 때문에 함께 잠기는 문제를 줄이고 전역 abuse guard를 보조 안전망으로 분리","내역 검색: 현재 월/전체 기간 검색을 전환할 수 있고 소비성격·최소/최대 금액 필터와 서버 검색을 연결","알림 정리: 실제 서버 Web Push처럼 보이던 표현을 제거하고 앱 실행 중 기기 알림으로 명확히 표시, 예산 초과·빠른 소진 경고를 실제 동작으로 연결","접근성·안전: 모달 배경 inert·초기 포커스·포커스 트랩을 보강하고 전체기간 검색은 조회 전용, 마감월 일괄변경은 서버에서 사전 차단"]},{"version":"2.2.1","date":"2026-09-27T22:04:26+09:00","notes":["대용량 정산: 한 달 거래가 1,000건을 넘어도 대사·정산 합계·정산 배치가 전체 거래 기준으로 계산","저장 재시도: 연결 오류만 5초→15초→1분→5분 백오프로 자동 재시도하고 검증·마감 오류는 '확인 필요'로 중단","동기화 성능: 변경이 없는 달은 revision으로 확인해 거래 전체 목록을 다시 내려받지 않는 경량 새로고침 적용","시트 안전: 기존 헤더가 예상과 다르면 자동 덮어쓰지 않고 중단하며, 정상 legacy 시트는 뒤쪽 새 컬럼만 안전하게 확장","배포 안전: Apps Script 배포 뒤 생성된 정적 사이트 파일만 GitHub에 자동 게시하도록 릴리스 절차 보강"]},{"version":"2.2.0","date":"2026-09-27T20:57:19+09:00","notes":["데이터 안전: 월마감과 월 회고를 분리해 회고 저장·정산 다시 열기로 마감 기록이 손상되지 않게 개선","정산 안전: 마감된 달은 다시 열기 전까지 거래 추가·수정·삭제를 서버에서 차단","동기화 안전: 정산 공유초안에 revision을 추가하고 저장 중 추가 편집·다중 기기 충돌 시 최신 내용을 보존","오프라인 안전: 기기 저장에 실패한 입력을 저장 완료로 표시하지 않도록 개선","화면 보안: 거래 설명의 inline 이벤트 삽입과 자동분류 raw HTML 렌더링 제거"]}];
 /* @release:end */
 const DEFAULT_GAS_URL = 'https://script.google.com/macros/s/AKfycbwjFv7OSDc6T4vD0nUQA5E-W1QazAEU5dowQroEXard5DCMtP0FiMRlwtIjuEfDzo8phA/exec';
 const APP_CACHE_VERSION = 5;
@@ -1345,6 +1390,240 @@ function lastDateOfYm(ym){
   const parts = String(ym || todayStr().slice(0,7)).split('-');
   const d = new Date(Number(parts[0]), Number(parts[1]), 0);
   return d.getFullYear()+'-'+pad(d.getMonth()+1)+'-'+pad(d.getDate());
+}
+
+/**
+ * 현재 월의 기록 기준 생활비 여유액(추정). 순수 계산 전용:
+ * STATE/DOM/스토리지/API/현재 시계에 접근하지 않으며 today는 todayStr() 결과를 전달한다.
+ *
+ * 금액 계약:
+ *  - summary.left는 입출금/저축/상환이 반영된 **거래 기록상 현금흐름**이지 실계좌 잔액이 아니다.
+ *  - availableNow=summary.left-reserved-unconfirmedIncome (음수 보존);
+ *    대기 중인 수입은 낙관적 합계에서 뺀 뒤 확인 전까지 가용액으로 잡지 않는다.
+ *  - monthlyOutflow/annualOutflow는 활성 정기 *출금 계획*과 그 단순 12배 연환산.
+ *  - monthlyExpense/actualOutflow는 이번 달 실제 기록, scheduledIncome은 여유액에 합산하지 않는다.
+ *  - 호출부의 summary는 pending 거래가 이미 합산된 STATE.summary여야 한다.
+ *    정확히 일치한 pending 건을 또 예약하면 이중 차감되므로 pendingItems로 분리한다.
+ *  - 마지막 실행월 표시만 있고 실제 거래가 안 보이면 삭제/누락 가능성으로 예약을 유지한다.
+ *  - 트랜잭션 누락/금액변경/동명이인 등 불명확하면 예약을 유지(fail-conservative).
+ */
+function calculateLivingAllowance(input){
+  const opt=input || {};
+  const ym=String(opt.ym || '').trim();
+  const today=String(opt.today || '').trim();
+  const warnings=[];
+  const invalidResult={
+    applicable:false,ym,today,availableNow:0,reserved:0,unconfirmedIncome:0,perDay:0,perWeek:0,
+    daysRemaining:0,monthlyExpense:0,actualOutflow:0,monthlyOutflow:0,
+    annualOutflow:0,scheduledIncome:0,reservedItems:[],settledItems:[],
+    pendingItems:[],excludedItems:[],incomeItems:[],subscriptionCandidates:[],
+    monthlySubscriptionEstimate:0,annualSubscriptionEstimate:0,
+    uncertain:true,note:'현재 달의 기록 기준 여유액만 계산할 수 있어.',warnings:[]
+  };
+  const monthParts=ym.match(/^([1-9]\d{3})-(0[1-9]|1[0-2])$/);
+  const todayParts=today.match(/^([1-9]\d{3})-(0[1-9]|1[0-2])-([0-2]\d|3[01])$/);
+  if (!monthParts || !todayParts) return invalidResult;
+  const year=Number(todayParts[1]),month=Number(todayParts[2]),day=Number(todayParts[3]);
+  const daysInMonth=new Date(Date.UTC(year,month,0)).getUTCDate();
+  if(day<1 || day>daysInMonth || ym!==today.slice(0,7)) return invalidResult;
+  const summary=opt.summary || {};
+  const rawLeft=summary.left;
+  if(rawLeft == null || String(rawLeft).trim()==='' || !Number.isFinite(Number(rawLeft))) {
+    return Object.assign({},invalidResult,{note:'장부의 이번 달 수입·지출 집계를 확인할 수 없어 계산하지 않았어.'});
+  }
+  const positiveAmount=v=>{
+    if(v == null || typeof v==='boolean') return 0;
+    const raw=String(v).trim();
+    if(!/^(?:\d+|\d{1,3}(?:,\d{3})+)(?:\.\d+)?$/.test(raw)) return 0;
+    const amount=Number(raw.replace(/,/g,''));
+    return Number.isFinite(amount) && amount>0 && amount<=Number.MAX_SAFE_INTEGER ? amount : 0;
+  };
+  const safeNumber=v=>Number.isFinite(Number(v)) ? Number(v) : 0;
+  const planned=Array.isArray(opt.recurrings) ? opt.recurrings : [];
+  const inputTx=Array.isArray(opt.transactions) ? opt.transactions : [];
+  let uncertain=!Array.isArray(opt.recurrings) || !Array.isArray(opt.transactions);
+  if(!Array.isArray(opt.transactions)) warnings.push('거래 내역 조회가 없어 자동기록 여부를 확신할 수 없어.');
+  if(!Array.isArray(opt.recurrings)) warnings.push('정기거래 목록을 확인할 수 없어.');
+  if(inputTx.length>=1000){
+    uncertain=true;
+    warnings.push('거래 목록이 최대 조회 건수에 닿아 일부 정기거래 기록을 놓쳤을 수 있어.');
+  }
+  if(Number.isFinite(Number(summary.count)) && Number(summary.count)>inputTx.length){
+    uncertain=true;
+    warnings.push('장부 집계 건수보다 전달된 거래가 적어 누락된 기록이 있을 수 있어.');
+  }
+  if(opt.recurringStatus && opt.recurringStatus.installed===false){
+    uncertain=true;
+    warnings.push('정기거래 자동입력이 꺼져 있어 예정 금액은 직접 확인해야 해.');
+  }
+  // 최근+월 거래에 같은 transaction이 중복 포함되어도 한 실제 거래만 인정한다.
+  // 식별자가 없다면 완전히 같은 행을 보수적으로 한 건으로 간주한다.
+  const seenTx=new Set();
+  const txs=[];
+  inputTx.forEach((tx,index)=>{
+    if(!tx || tx.deleted===true || tx.deleted==='TRUE') return;
+    const date=String(tx.date || '').slice(0,10);
+    if(!/^\d{4}-\d{2}-\d{2}$/.test(date) || date.slice(0,7)!==ym) return;
+    const isPending=!!tx.syncState || /^temp_/.test(String(tx.row || ''));
+    const id=tx.txId || tx.clientId || (tx.row!=null ? 'row:'+tx.row : '');
+    const fingerprint=[date,tx.type,tx.cat,tx.desc,tx.amount,tx.user,tx.memo].join('\u001f');
+    const key=id ? 'id:'+String(id) : 'content:'+fingerprint;
+    if(seenTx.has(key)){
+      if(!id){uncertain=true;warnings.push('식별자 없는 동일 거래는 중복 계산하지 않았어.');}
+      return;
+    }
+    seenTx.add(key);
+    txs.push({tx,index,date,isPending,key});
+  });
+  // 현재 STATE.summary는 queue의 낙관적 수입도 합산할 수 있다. 서버 미확정 수입을
+  // 예정금에 더하지 않는 것만으로는 부족하므로 표시 여유액에서 명시적으로 제외한다.
+  const unconfirmedIncome=txs.reduce((sum,row)=>{
+    if(!row.isPending || String(row.tx.type || '').trim()!=='수입') return sum;
+    const amount=positiveAmount(row.tx.amount);
+    if(!amount){
+      uncertain=true;
+      warnings.push('미확정 수입 중 금액을 확인할 수 없는 거래가 있어.');
+    }
+    return sum+amount;
+  },0);
+  if(unconfirmedIncome){
+    uncertain=true;
+    warnings.push('서버에서 확정되지 않은 수입은 기록 합계에서 다시 제외했어.');
+  }
+  const usedTx=new Set();
+  const normalize=v=>String(v == null ? '' : v).trim();
+  const amountSame=(a,b)=>Number(a)===Number(b) && Number.isFinite(Number(a));
+  const tagName=tx=>{
+    const memo=normalize(tx.memo);
+    const marker='🔁 정기거래: ';
+    const pos=memo.indexOf(marker);
+    return pos<0 ? '' : memo.slice(pos+marker.length).split(/\s+\/\s+/)[0].trim();
+  };
+  const sameShape=(rec,tx,dueDate)=>tx.date===dueDate &&
+    normalize(tx.type)===normalize(rec.type) &&
+    normalize(tx.cat)===normalize(rec.cat) &&
+    normalize(tx.desc)===normalize(rec.desc || rec.name) &&
+    amountSame(tx.amount,rec.amount) &&
+    normalize(tx.user)===normalize(rec.user);
+  const reservedItems=[],settledItems=[],pendingItems=[],excludedItems=[],incomeItems=[],subscriptionCandidates=[];
+  let reserved=0,scheduledIncome=0,monthlyOutflow=0;
+  const seenRecurringIds=new Set();
+  const recurringRows=planned.map((r,index)=>({r,index})).filter(({r})=>!!r);
+  // lastRunYm 처리된 건을 먼저 예약 해제하고 매칭 거래를 선점한다.
+  recurringRows.sort((a,b)=>(normalize(b.r.lastRunYm)===ym ? 1:0) -
+    (normalize(a.r.lastRunYm)===ym ? 1:0) || a.index-b.index);
+  recurringRows.forEach(({r,index})=>{
+    const id=normalize(r.id) || 'recurring-'+index;
+    const name=normalize(r.name) || normalize(r.desc) || '이름 없는 정기거래';
+    const amount=positiveAmount(r.amount);
+    const type=normalize(r.type),cat=normalize(r.cat),user=normalize(r.user);
+    const endYm=normalize(r.endYm);
+    const enabled=!(r.enabled===false || r.enabled===0 || r.enabled==='false' || r.enabled==='FALSE');
+    const due=Number(r.day);
+    const dueValid=Number.isInteger(due) && due>=1 && due<=31;
+    const endValid=!endYm || /^([1-9]\d{3})-(0[1-9]|1[0-2])$/.test(endYm);
+    const dueDate=dueValid ? ym+'-'+String(Math.min(due,daysInMonth)).padStart(2,'0') : '';
+    const item={id,name,amount,type,cat,dueDate,user};
+    let reason='';
+    if(seenRecurringIds.has(id)){reason='duplicate-recurring-id';uncertain=true;}
+    else seenRecurringIds.add(id);
+    if(!reason && !enabled) reason='disabled';
+    if(!reason && !endValid){reason='invalid-end-month';uncertain=true;}
+    if(!reason && endYm && endYm<ym) reason='expired';
+    if(!reason && (!name || !amount || !dueValid || !cat ||
+        !['지출','저축','대출상환','수입'].includes(type))){reason='invalid';uncertain=true;}
+    if(reason){
+      excludedItems.push(Object.assign({},item,{status:'excluded',reason}));
+      if(reason==='invalid' || reason==='invalid-end-month' || reason==='duplicate-recurring-id')
+        warnings.push(name+' 정기거래 설정을 확인해줘.');
+      return;
+    }
+    if(type!=='수입'){
+      monthlyOutflow+=amount;
+      if(type==='지출' && /구독|멤버십|정기결제|넷플릭스|유튜브|티빙|웨이브|디즈니|스포티파이|클라우드|[Oo][Tt][Tt]|[Ss]ubscription/.test(name+' '+normalize(r.desc)+' '+cat))
+        subscriptionCandidates.push(Object.assign({},item,{status:'candidate',annualAmount:amount*12,reason:'name-keyword'}));
+    }
+    const candidateTx=txs.filter(row=>!usedTx.has(row.key) && !row.isPending &&
+      normalize(row.tx.type)===type && row.date.slice(0,7)===ym);
+    const strongTag=candidateTx.filter(row=>tagName(row.tx)===name);
+    // 태그가 붙은 거래에서 금액/입력자가 달라졌다면 과거 실적을 가정하지 않고 예치한다.
+    const tagged=strongTag.find(row=>amountSame(row.tx.amount,amount) &&
+      normalize(row.tx.user)===user);
+    // 다른 정기명으로 명시된 거래를 내역·금액이 우연히 같다는 이유로 가로채지 않는다.
+    const exact=candidateTx.find(row=>!tagName(row.tx) &&
+      sameShape(Object.assign({},r,{amount,type,cat,user}),row.tx,dueDate));
+    const matched=tagged || exact || null;
+    const match=tagged ? 'tag' : (exact ? 'exact' : '');
+    const pendingMatch=txs.find(row=>!usedTx.has(row.key) && row.isPending &&
+      normalize(row.tx.type)===type &&
+      (tagName(row.tx)===name && amountSame(row.tx.amount,amount) &&
+       normalize(row.tx.user)===user ||
+       (!tagName(row.tx) && sameShape(Object.assign({},r,{amount,type,cat,user}),row.tx,dueDate))));
+    const hadRun=normalize(r.lastRunYm)===ym;
+    if(matched){
+      usedTx.add(matched.key);
+      settledItems.push(Object.assign({},item,{status:'posted',match:hadRun ? 'lastRunYm' : match,
+        txId:normalize(matched.tx.txId || matched.tx.clientId || matched.tx.row)}));
+      return;
+    }
+    if(pendingMatch){
+      // STATE.summary는 낙관적 pending 지출을 이미 차감한 숫자다.
+      // 다시 reserved에 넣지 않되 서버 미확정 사실을 표시하고 사용가능액을 단정하지 않는다.
+      usedTx.add(pendingMatch.key);
+      uncertain=true;
+      warnings.push(name+'은(는) 저장 대기 거래에 있어 확정 여부를 확인해야 해.');
+      pendingItems.push(Object.assign({},item,{status:'pending',
+        syncState:normalize(pendingMatch.tx.syncState) || 'pending',
+        txId:normalize(pendingMatch.tx.txId || pendingMatch.tx.clientId || pendingMatch.tx.row)}));
+      if(type==='수입'){
+        scheduledIncome+=amount;
+        incomeItems.push(Object.assign({},item,{status:'scheduled-income',pending:true}));
+      }
+      return;
+    }
+    if(hadRun){
+      uncertain=true;
+      warnings.push(name+'은(는) 실행월 표시만 있고 확정 거래가 보이지 않아 삭제·조회누락 가능성을 고려해 예약했어.');
+    }
+    const related=txs.some(row=>row.date.slice(0,7)===ym && (
+      tagName(row.tx)===name || (normalize(row.tx.desc)===normalize(r.desc || r.name) &&
+      normalize(row.tx.type)===type && normalize(row.tx.cat)===cat)));
+    if(related || strongTag.length){
+      uncertain=true;
+      warnings.push(name+'의 유사 거래가 있지만 금액·날짜·입력자 등이 달라 미기록으로 예약했어.');
+    }
+    if(type==='수입'){
+      scheduledIncome+=amount;
+      incomeItems.push(Object.assign({},item,{status:'scheduled-income',overdue:dueDate<today}));
+      return;
+    }
+    reserved+=amount;
+    const overdue=dueDate<today;
+    reservedItems.push(Object.assign({},item,{status:'reserved',overdue}));
+    if(overdue){uncertain=true;warnings.push(name+' 예정일이 지났지만 확정 기록이 없어 전액 남겨뒀어.');}
+  });
+  const left=Number(rawLeft);
+  const availableNow=left-reserved-unconfirmedIncome;
+  if(availableNow<0) warnings.push('남은 정기출금을 고려하면 이번 달 기록 기준 여유액이 부족해.');
+  const daysRemaining=daysInMonth-day+1;
+  const freeBudget=Math.max(0,availableNow);
+  const perDay=Math.floor(freeBudget/daysRemaining);
+  const perWeek=Math.floor(freeBudget*Math.min(7,daysRemaining)/daysRemaining);
+  const monthlyExpense=safeNumber(summary.expense);
+  const actualOutflow=monthlyExpense+safeNumber(summary.save)+
+    safeNumber(summary.repay)+safeNumber(summary.unclassified);
+  const monthlySubscriptionEstimate=subscriptionCandidates.reduce((sum,item)=>sum+item.amount,0);
+  const note='기록 기준 여유액(추정). 은행 실잔액이 아니며 입력하지 않은 거래·삭제된 정기거래·미완료 동기화가 있으면 실제 금액과 달라질 수 있어.'+
+    (uncertain ? ' 정기거래 기록/설정에 확인할 항목이 있어.' : '');
+  return {
+    applicable:true,ym,today,availableNow,reserved,perDay,perWeek,daysRemaining,
+    monthlyExpense,actualOutflow,monthlyOutflow,annualOutflow:monthlyOutflow*12,
+    scheduledIncome,unconfirmedIncome,reservedItems,settledItems,excludedItems,incomeItems,
+    pendingItems,
+    subscriptionCandidates,monthlySubscriptionEstimate,
+    annualSubscriptionEstimate:monthlySubscriptionEstimate*12,
+    uncertain,note,warnings
+  };
 }
 function settlementDraftKey(ym){ return SETTLEMENT_DRAFT_PREFIX + String(ym || ''); }
 const SETTLEMENT_DRAFT_SYNC_META = Object.create(null);
@@ -1931,12 +2210,16 @@ function renderHome(){
   let recent5 = recent5Src.map(txRow).join('') ||
     `<div class="empty"><span class="e">📭</span>아직 입력된 거래가 없어</div>`;
 
-  // 예측값은 오늘이 포함된 현재 월에서만 계산한다.
-  const now = new Date();
-  const currentDay = now.getDate();
-  const lastDay = new Date(now.getFullYear(), now.getMonth() + 1, 0).getDate();
-  const daysLeft = Math.max(1, lastDay - currentDay + 1);
-  const dailyAllowance = Math.max(0, Math.round((s.left || 0) / daysLeft));
+  // Calendar-local Seoul dates: UTC or host timezone may differ at midnight.
+  const today = todayStr();
+  const currentDay = Number(today.slice(8,10));
+  const lastDay = new Date(Number(today.slice(0,4)), Number(today.slice(5,7)), 0).getDate();
+  const allowance = isCurrentMonth && typeof calculateLivingAllowance === 'function'
+    ? calculateLivingAllowance({
+      ym: selectedYm, today, summary: s, recurrings: STATE.recurrings || [],
+      transactions: monthRows, recurringStatus: STATE.recurringStatus
+    }) : null;
+  const hasAllowance = !!(allowance && allowance.applicable);
 
   const elapsedRatio = currentDay / lastDay;
   const totalBudgetOrIncome = Math.max(1, (s.income || (s.expense + Math.max(0, s.left))));
@@ -1948,20 +2231,52 @@ function renderHome(){
     speedColor = '🟡'; speedText = '지출 페이스가 약간 가속되고 있어요'; speedClass = 'warning';
   }
 
-  // 고정비 D-Day는 현재 월에만 의미가 있다.
-  const recurrings = STATE.recurrings || [];
-  const upcomingRec = recurrings.filter(r => r.enabled !== false && Number(r.day || 0) >= currentDay)
-    .sort((a,b) => Number(a.day) - Number(b.day));
-  const ddayChipsHtml = upcomingRec.length ? upcomingRec.slice(0,4).map(r => {
-    const dday = Number(r.day) - currentDay;
-    const badgeText = dday === 0 ? '오늘' : `D-${dday}`;
-    const imminent = dday <= 3;
-    return `<div class="dday-chip ${imminent?'imminent':''}">
-      <span class="badge">${badgeText}</span>
-      <span>${esc(r.name || r.cat)}</span>
-      <span style="color:var(--muted);font-size:11.5px">${fmt(r.amount || 0)}</span>
+  // Use the SAME recorded/unrecorded/expired judgement as the pure allowance
+  // function. A calendar day alone cannot prove a recurring bill is unpaid.
+  const reserveItems = hasAllowance && Array.isArray(allowance.reservedItems) ? allowance.reservedItems : [];
+  const pendingItems = hasAllowance && Array.isArray(allowance.pendingItems) ? allowance.pendingItems : [];
+  const settledItems = hasAllowance && Array.isArray(allowance.settledItems) ? allowance.settledItems : [];
+  const excludedItems = hasAllowance && Array.isArray(allowance.excludedItems) ? allowance.excludedItems : [];
+  const reasonText = reason => ({disabled:'비활성',ended:'종료',expired:'종료',invalid:'날짜 확인 필요',
+    'invalid-date':'날짜 확인 필요','invalid-amount':'금액 확인 필요'}[String(reason || '')] || '확인 필요');
+  const recurringDueChip = (r, state) => {
+    const due = String(r.dueDate || '').slice(0,10);
+    const day = Number(due.slice(8,10));
+    const remaining = Number.isFinite(day) && day > 0 ? day-currentDay : null;
+    const dayLabel = !due ? '날짜 미확인' : remaining === 0 ? '오늘' :
+      (remaining > 0 ? `D-${remaining}` : `${Math.abs(remaining)}일 경과`);
+    const isPending = state.startsWith('미기록');
+    return `<div role="listitem" class="dday-chip ${isPending && remaining !== null && remaining <= 3 ? 'imminent' : ''}">
+      <span class="badge">${esc(dayLabel)}</span>
+      <span class="dday-meta"><strong>${esc(r.name || r.cat || '이름 없음')}</strong>
+        <small>${due ? esc(due) : '결제일 확인 필요'} · ${esc(r.type || '유형 미정')} · ${fmt(Number(r.amount) || 0)}</small></span>
+      <span class="dday-state ${isPending ? 'pending' : ''}">${esc(state)}</span>
     </div>`;
-  }).join('') : `<div class="dday-chip"><span>남은 고정비가 없어요 🍃</span></div>`;
+  };
+  const reservedHtml = reserveItems.slice(0,5).map(r=>recurringDueChip(r, r.overdue ? '미기록 · 결제일 경과' : '미기록')).join('');
+  const pendingHtml = pendingItems.slice(0,3).map(r=>recurringDueChip(r,'전송 대기 · 미확정')).join('');
+  const settledHtml = settledItems.slice(0,2).map(r=>recurringDueChip(r, '이미 기록')).join('');
+  const excludedHtml = excludedItems.slice(0,2).map(r=>recurringDueChip(r,reasonText(r.reason))).join('');
+  const upcomingExtra = Math.max(0,reserveItems.length-5)+Math.max(0,pendingItems.length-3)+Math.max(0,settledItems.length-2)+Math.max(0,excludedItems.length-2);
+  const ddayChipsHtml = (reservedHtml || pendingHtml || settledHtml || excludedHtml)
+    ? `${reservedHtml}${pendingHtml}${settledHtml}${excludedHtml}${upcomingExtra ? `<span class="dday-more">이외 ${upcomingExtra}건도 확인해줘.</span>` : ''}`
+    : `<div class="dday-chip"><span>${(STATE.recurrings || []).length ? '표시할 남은 일정이 없어요. 기록 여부를 확인해줘.' : '등록된 정기거래가 없어요. 계획에 빠진 고정비가 있는지 확인해줘.'}</span></div>`;
+  const ddayWarning = hasAllowance && (allowance.uncertain || pendingItems.length || (allowance.warnings || []).length)
+    ? `<p class="dday-warning">⚠️ ${esc(allowance.note || '일부 정기거래 상태를 확실히 확인할 수 없어. 장부 내역과 대조해줘.')}</p>` : '';
+  const livingCardHtml = hasAllowance ? `<section class="living-allowance" aria-labelledby="livingAllowanceTitle">
+    <h3 id="livingAllowanceTitle">💰 예정 반영 생활비 여유 <small>(추정)</small></h3>
+    <dl class="living-flow">
+      <div><dt>기록 기준 남은 돈</dt><dd>${fmt(Number(s.left) || 0)}</dd></div>
+      <div><dt>미기록 정기 지출·저축·상환 예약</dt><dd>− ${fmt(Number(allowance.reserved) || 0)}</dd></div>
+      ${Number(allowance.unconfirmedIncome) > 0 ? `<div><dt>서버 미확정 수입 제외</dt><dd>− ${fmt(Number(allowance.unconfirmedIncome))}</dd></div>` : ''}
+      <div class="living-highlight ${Number(allowance.availableNow) < 0 ? 'negative' : ''}"><dt>예정 금액을 제외한 여유</dt><dd>${fmt(Number(allowance.availableNow) || 0)}</dd></div>
+    </dl>
+    <div class="living-cadence">
+      <div><span>남은 ${Number(allowance.daysRemaining) || 0}일 기준 · 하루 사용 가능</span><strong>${fmt(Math.max(0, Number(allowance.perDay) || 0))}</strong></div>
+      <div><span>앞으로 최대 7일 사용 가능</span><strong>${fmt(Math.max(0, Number(allowance.perWeek) || 0))}</strong></div>
+    </div>
+    <p class="living-caution ${allowance.uncertain || Number(allowance.availableNow) < 0 || !(STATE.recurrings || []).length ? 'warn' : ''}">${Number(allowance.availableNow) < 0 ? '⚠️ 예정 지출을 예약하면 여유가 부족해요. ' : ''}${esc(allowance.note || '등록된 정기거래와 장부 기록을 바탕으로 계산한 추정값이에요.')}${!(STATE.recurrings || []).length ? ' ⚠️ 정기거래 등록 정보가 없어 예상 지출을 충분히 반영하지 못했을 수 있어요.' : ''}${pendingItems.length ? ' 전송 대기 중인 항목은 장부 잔액에 반영된 것으로 보고 예약에서 다시 빼지 않았어요.' : ''}${Number(allowance.scheduledIncome) > 0 ? ` 예정 정기수입 ${fmt(allowance.scheduledIncome)}은 실제 입금 전이라 더하지 않았어요.` : ' 향후 수입은 실제 입금되기 전에는 반영하지 않아요.'}</p>
+  </section>` : '';
 
   // 지수 vs 하콩 부부 분담 계산 (지출 & 수입)
   let jisooSpent = 0, hayoungSpent = 0;
@@ -2019,20 +2334,27 @@ function renderHome(){
     </div>
   `;
 
-  // 월말 잔액 예측 AI 캐스터 계산
-  const avgDailySpent = Math.round((s.expense || 0) / Math.max(1, currentDay));
-  const forecastMonthExpense = Math.round(avgDailySpent * lastDay);
-  const forecastLeft = (s.income || 0) - forecastMonthExpense;
+  // Forecast only FUTURE variable spending. Recorded fixed expenses, savings,
+  // repayment and unrecorded reserves are already in availableNow; subtracting
+  // a forecast of all expenses again would double-count them.
+  const recordedPendingVariable = monthRows.filter(t => String(t.row || '').startsWith('temp_') &&
+    t.type === '지출' && t.fixed !== '고정')
+    .reduce((sum,t)=>sum+Math.max(0,Number(t.amount)||0),0);
+  const knownVariableExpense = Number.isFinite(Number(s.variableExpense)) && s.variableExpense != null;
+  const variableExpense = knownVariableExpense ? Math.max(0, Number(s.variableExpense)+recordedPendingVariable) : 0;
+  const avgDailyVariable = variableExpense / Math.max(1,currentDay);
+  const remainingDaysAfterToday = Math.max(0,hasAllowance ? Number(allowance.daysRemaining || 0)-1 : lastDay-currentDay);
+  const forecastAdditionalVariable = Math.round(avgDailyVariable*remainingDaysAfterToday);
+  const forecastLeft = hasAllowance ? Number(allowance.availableNow || 0)-forecastAdditionalVariable : 0;
   const isForecastMinus = forecastLeft < 0;
 
   const currentInsightHtml = isCurrentMonth ? `
     <div class="insight-stack">
-      <div class="insight-note">오늘부터 하루 <strong>${fmt(dailyAllowance)}</strong>까지 사용 가능</div>
       <div class="speed-light ${speedClass}">${speedColor} <span>${speedText}</span></div>
-      <div class="forecast-card insight-note">
-        <div class="forecast-head"><span>월말 예상 잔액</span><span class="amt ${isForecastMinus?'minus':''}">${fmt(forecastLeft)}</span></div>
-        <div class="forecast-desc">현재 속도라면 총지출은 약 <strong>${fmt(forecastMonthExpense)}</strong>으로 예상돼요</div>
-      </div>
+      ${hasAllowance && knownVariableExpense ? `<div class="forecast-card insight-note">
+        <div class="forecast-head"><span>월말 예상 여유잔액 (추정)</span><span class="amt ${isForecastMinus?'minus':''}">${fmt(forecastLeft)}</span></div>
+        <div class="forecast-desc">변동비 지출 속도 기준 추정 · 앞으로 남은 날에 변동비가 약 <strong>${fmt(forecastAdditionalVariable)}</strong> 더 나간다고 가정했어요. 이미 기록된 고정비는 다시 빼지 않고, 미기록 예정 지출·저축·상환은 위 여유금액에서 먼저 예약했어요.${allowance.uncertain ? ' 일부 일정이 불확실해 실제 금액은 달라질 수 있어요.' : ''}</div>
+      </div>` : `<div class="insight-note">월말 예측은 변동비 기록과 정기거래 예약 금액을 확인할 수 있을 때만 표시해요.</div>`}
       ${compareBadgeHtml}
     </div>
   ` : `<div class="insight-note">${isPastMonth ? '완료된 달은 예측 대신 확정 결산 금액을 표시해요.' : '미래 월은 거래가 쌓이면 결산 정보가 표시돼요.'}</div>`;
@@ -2065,8 +2387,9 @@ function renderHome(){
     <div class="balance">
       <div class="lab">${isCurrentMonth ? '이번 달 남은 돈' : isPastMonth ? monthLabel + ' 결산 잔액' : monthLabel + ' 계획 잔액'}</div>
       <div class="big ${minus?'minus':''}">${fmt(s.left)}</div>
-      <div class="rate">저축률 ${s.savingRate}%${minus?' · 현금흐름 마이너스':''}</div>
+      <div class="rate">장부 기록 기준 · 은행 계좌 잔액과 다를 수 있어요 · 저축률 ${s.savingRate}%${minus?' · 현금흐름 마이너스':''}</div>
     </div>
+    ${livingCardHtml}
     <button type="button" class="home-smart-trigger" onclick="openQuickEntryModalSmart()">✍️ 한 줄로 빠른 입력 <span>점심 11000 · 문자 붙여넣기</span></button>
     <div class="summary-grid">
       <div class="mini"><div class="l">수입</div><div class="v in">${fmt(s.income)}</div></div>
@@ -2086,7 +2409,8 @@ function renderHome(){
         <div class="insight-block">${currentInsightHtml}</div>
         ${isCurrentMonth ? `<div class="insight-block">
           <div class="insight-title">다가오는 고정비</div>
-          <div class="dday-strip">${ddayChipsHtml}</div>
+          <div class="dday-strip" role="list" aria-label="이번 달 정기거래 기록과 예약 상태">${ddayChipsHtml}</div>
+          ${ddayWarning}
           <button class="text-action" onclick="switchView('recurring')" style="margin-top:10px">정기거래 관리</button>
         </div>` : ''}
         <div class="insight-block">
@@ -2307,19 +2631,82 @@ function renderRecurring() {
   
   const incomes = recurrings.filter(r => r.type === '수입');
   const expenses = recurrings.filter(r => r.type !== '수입');
+  const displayYm = STATE.ym || todayStr().slice(0,7);
+  const recurringAllowance = displayYm === todayStr().slice(0,7) && typeof calculateLivingAllowance === 'function'
+    ? calculateLivingAllowance({ym: displayYm,today:todayStr(),summary:STATE.summary || {},
+      recurrings,transactions:STATE.transactions || [],recurringStatus:status}) : null;
+  const recordedIds = new Set((recurringAllowance && recurringAllowance.settledItems || []).map(item=>String(item.id || '')));
+  const unrecordedIds = new Set((recurringAllowance && recurringAllowance.reservedItems || []).map(item=>String(item.id || '')));
+  // Monthly and annualized numbers are schedule estimates, never proof that
+  // the money has actually moved. Disabled and expired schedules are excluded.
+  const seenScheduledIds = new Set();
+  const scheduled = recurrings.filter((r,index) => {
+    if(!r) return false;
+    const id=String(r.id || '').trim() || 'recurring-'+index;
+    if(seenScheduledIds.has(id)) return false;
+    seenScheduledIds.add(id);
+    if(r.enabled === false || r.enabled === 0 || r.enabled === 'false' || r.enabled === 'FALSE') return false;
+    const end=String(r.endYm || '');
+    if(end && (!/^\d{4}-(0[1-9]|1[0-2])$/.test(end) || end<displayYm)) return false;
+    if(!['지출','저축','대출상환','수입'].includes(String(r.type || '').trim()) || !String(r.cat || '').trim()) return false;
+    const day=Number(r.day);
+    if(!Number.isInteger(day) || day<1 || day>31) return false;
+    const raw=String(r.amount == null ? '' : r.amount).trim();
+    if(!/^(?:\d+|\d{1,3}(?:,\d{3})+)(?:\.\d+)?$/.test(raw)) return false;
+    const amount=Number(raw.replace(/,/g,''));
+    return Number.isFinite(amount) && amount>0 && amount<=Number.MAX_SAFE_INTEGER;
+  });
+  const scheduledTotal = type => scheduled.filter(r => String(r.type || '').trim() === type)
+    .reduce((sum, r) => sum + Number(String(r.amount).replace(/,/g,'')), 0);
+  const monthlyExpense = scheduledTotal('지출');
+  const monthlySaving = scheduledTotal('저축');
+  const monthlyRepay = scheduledTotal('대출상환');
+  const monthlyIncome = scheduledTotal('수입');
+  const monthlyOutflow = monthlyExpense + monthlySaving + monthlyRepay;
+  const hasInvalidSchedules = recurrings.length !== scheduled.length +
+    recurrings.filter(r=>r && (r.enabled === false || r.enabled === 0 || r.enabled === 'false' || r.enabled === 'FALSE' ||
+      (r.endYm && String(r.endYm)<displayYm))).length;
+  const hasScheduledEnd = scheduled.some(r => r.endYm);
+  const subscriptionPattern = /넷플릭스|유튜브|디즈니|티빙|웨이브|왓챠|쿠팡\s*와우|스포티파이|멜론|지니뮤직|애플뮤직|[Ii]cloud|[Aa]dobe|구독|멤버십|정기\s*결제|회원권|[Pp]rime/;
+  const possibleSubscriptions = recurringAllowance && recurringAllowance.applicable
+    ? (recurringAllowance.subscriptionCandidates || [])
+    : scheduled.filter(r => String(r.type || '').trim() === '지출' &&
+      subscriptionPattern.test(String(r.name || '')+' '+String(r.desc || '')));
+  const recurringSummaryHtml = `<section class="rec-budget-summary" aria-labelledby="recBudgetTitle">
+    <div class="rec-budget-heading"><h3 id="recBudgetTitle">정기거래 월간 계획</h3><span>${esc(displayYm)} 기준 · 추정</span></div>
+    <div class="rec-budget-metrics">
+      <div><span>월 정기 지출</span><strong>${fmt(monthlyExpense)}</strong></div>
+      <div><span>월 정기 저축</span><strong>${fmt(monthlySaving)}</strong></div>
+      <div><span>월 대출 상환</span><strong>${fmt(monthlyRepay)}</strong></div>
+      <div><span>월 정기 수입</span><strong class="income">+${fmt(monthlyIncome)}</strong></div>
+    </div>
+    <div class="rec-budget-annual"><span>매달 같은 일정 가정 시 연간 환산</span>
+      <strong>지출·저축·상환 ${fmt(monthlyOutflow * 12)} / 수입 ${fmt(monthlyIncome * 12)}</strong></div>
+    <p class="rec-budget-note">등록된 금액을 12배 한 단순 환산이며 실제 입금·결제 확정액이 아니에요.${hasScheduledEnd ? ' 종료월이 있는 거래는 실제 연간 합계가 다를 수 있어요.' : ''}${hasInvalidSchedules ? ' 설정이 불명확하거나 중복된 정기거래는 합계에서 제외했으니 확인해줘.' : ''} 과거 금액 변화 기록이 없어 인상·인하 여부는 판정하지 않아요.</p>
+    ${possibleSubscriptions.length ? `<div class="rec-budget-subscriptions"><strong>구독·멤버십 후보 ${possibleSubscriptions.length}건</strong>
+      <span>${possibleSubscriptions.map(r => `${esc(r.name || r.desc || r.cat || '이름 없음')} (${fmt(Number(r.amount) || 0)})`).join(' · ')}</span>
+      <small>이름으로 추측한 후보예요. 실제 구독 여부는 직접 확인해줘.</small></div>` : ''}
+  </section>`;
   
   const renderItem = (r) => {
     const icoColor = catColorClass(r.cat);
     const disabledStyle = r.enabled === false ? 'opacity:0.5; filter:grayscale(1);' : '';
+    const recurringId = String(r.id || '');
+    const scheduleState = r.enabled === false ? '비활성' :
+      (r.endYm && String(r.endYm) < displayYm ? '종료' :
+      (recordedIds.has(recurringId) ? '이미 기록' :
+      (unrecordedIds.has(recurringId) ? '미기록 · 예약 반영' :
+      (r.lastRunYm === displayYm ? '자동 실행 기록 있음 · 장부 대조 필요' : '입력 여부 확인 필요'))));
     return `<div class="tx" style="${disabledStyle}">
       <div class="ico ${icoColor}">${emo(r.cat)}</div>
       <div class="mid">
         <div class="d">${esc(r.name || r.cat)}</div>
         <div class="s">
-          <span class="tag">매월 ${r.day}일</span> 
+          <span class="tag">매월 ${esc(String(r.day || '?'))}일</span>
           <span class="tag">${esc(r.cat)}</span>
+          <span class="tag rec-schedule-state">${esc(scheduleState)}</span>
           ${r.user ? `<span class="rec-user-badge">${r.user === '지수' ? '🧔 지수' : '👧 하콩'}</span>` : ''}
-          ${r.endYm ? `<span class="tag" style="background:#fbe9e6;color:var(--expense);">~${r.endYm.replace('-','.')} 종료</span>` : ''}
+          ${r.endYm ? `<span class="tag" style="background:#fbe9e6;color:var(--expense);">~${esc(String(r.endYm).replace('-','.'))} 종료</span>` : ''}
         </div>
       </div>
       <div class="amt ${r.type==='수입'?'in':'out'}">${r.type==='수입'?'+':'-'}${comma(r.amount)}</div>
@@ -2330,6 +2717,7 @@ function renderRecurring() {
   el.innerHTML = `
     <div class="sec-title" style="margin-top:8px">고정지출 / 수입 관리</div>
     ${bannerHtml}
+    ${recurringSummaryHtml}
     
     <div class="sec-title">고정 지출 (${expenses.length}건)</div>
     <div class="tx-list">
