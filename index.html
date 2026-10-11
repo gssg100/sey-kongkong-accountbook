@@ -3,7 +3,7 @@
 <head>
 <base target="_top">
 <meta charset="utf-8">
-<meta name="app-version" content="2.3.3">
+<meta name="app-version" content="2.3.4">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, interactive-widget=resizes-content">
 <meta name="description" content="지수와 하콩이의 빠르고 편한 공동 가계부">
 <meta name="theme-color" content="#f5f5f7">
@@ -303,6 +303,22 @@ body.dark-mode .tabbar{background:rgba(28,28,30,0.85);border-top-color:rgba(255,
 .chip:active{transform:scale(.96)}
 .chip.on{background:var(--forest);border-color:var(--forest);color:#fff}
 .in-text{width:100%;padding:14px 16px;border:1px solid var(--line);border-radius:14px;background:var(--bg);color:var(--ink)}
+.smart-entry-field{margin-bottom:16px;padding:12px;border:1px solid var(--line-soft);border-radius:16px;background:color-mix(in srgb,var(--forest) 4%,var(--card))}
+.smart-entry-optional{font-size:11px;font-weight:600;color:var(--muted)}
+.smart-entry-input{resize:vertical;min-height:64px;max-height:170px;font:inherit;font-size:14px;line-height:1.5}
+.smart-entry-preview{margin-top:8px;font-size:12px;line-height:1.5;color:var(--ink);font-weight:700;overflow-wrap:anywhere}
+.smart-entry-preview strong{color:var(--forest)}
+.smart-entry-preview.warn{color:var(--expense)}
+.smart-entry-help{margin-top:6px;font-size:11px;line-height:1.5;color:var(--muted)}
+.smart-entry-actions{display:flex;justify-content:flex-end;margin-top:8px}
+.smart-entry-actions button{min-height:40px;padding:8px 14px;border-radius:11px;background:var(--forest);color:#fff;font-weight:800;font-size:12px}
+.smart-entry-actions button:disabled{opacity:.45;cursor:not-allowed}
+.home-smart-trigger{display:flex;justify-content:space-between;align-items:center;gap:8px;width:100%;min-height:45px;margin:10px 0 12px;padding:10px 15px;border-radius:14px;border:1px solid var(--line);background:var(--card);color:var(--forest);font-size:13px;font-weight:900;text-align:left}
+.home-smart-trigger span{font-size:11px;font-weight:600;color:var(--muted)}
+.repeat-tx-btn{min-height:36px;padding:6px 8px;border-radius:9px;background:var(--line-soft);color:var(--forest);font-size:11px;font-weight:800;white-space:nowrap}
+.repeat-tx-btn:focus-visible,.home-smart-trigger:focus-visible,.smart-entry-actions button:focus-visible{outline:3px solid var(--forest);outline-offset:2px}
+.repeat-entry-notice:not([hidden]){margin:8px 0 14px;padding:10px 12px;border:1px solid var(--line);border-radius:12px;background:var(--line-soft);font-size:12px;font-weight:750;line-height:1.5;color:var(--ink)}
+@media(max-width:420px){.home-smart-trigger span{font-size:10px}.repeat-tx-btn{padding:6px}.repeat-tx-btn span{display:none}}
 .amount-wrap{position:relative}
 .amount-wrap .won{position:absolute;left:16px;top:50%;transform:translateY(-50%);font-weight:900;
   font-size:24px;color:var(--muted);pointer-events:none}
@@ -723,6 +739,13 @@ body.dark-mode .settlement-close-warn{color:var(--gold)}
   </div>
   <div class="sbody">
     <div class="field" id="templateField"><label>자주 쓰는 거래</label><div class="template-strip" id="templateChips"></div></div>
+    <div class="field smart-entry-field" id="smartEntryField">
+      <label for="smartEntryText">스마트 입력 <span class="smart-entry-optional">선택</span></label>
+      <textarea class="in-text smart-entry-input" id="smartEntryText" rows="2" maxlength="3000" placeholder="점심 11000 · 11000 점심 · 카드 승인 문자 붙여넣기" aria-describedby="smartEntryHelp smartEntryPreview"></textarea>
+      <div class="smart-entry-preview" id="smartEntryPreview" role="status" aria-live="polite">금액과 내역을 제안해요. 확인 후 아래 저장 버튼을 눌러야 저장돼요.</div>
+      <div class="smart-entry-actions"><button type="button" id="smartEntryApply" onclick="applyQuickEntryText()" disabled>입력칸에 적용</button></div>
+      <div class="smart-entry-help" id="smartEntryHelp">카드 문자는 이 화면에서만 분석해요. 취소·환불·미승인 및 불확실한 금액은 자동 적용하지 않아요.</div>
+    </div>
     <div class="field">
       <label>금액</label>
       <div class="amount-wrap"><span class="won">₩</span><input id="fAmount" type="text" inputmode="numeric" placeholder="0"></div>
@@ -735,6 +758,7 @@ body.dark-mode .settlement-close-warn{color:var(--gold)}
       </div>
     </div>
     <div class="field"><label id="descLabel">내역</label><input class="in-text" id="fDesc" type="text" placeholder="예: 점심, 커피, 마트"><div class="recommend-box" id="recommendBox"></div></div>
+    <div class="repeat-entry-notice" id="repeatEntryNotice" role="status" hidden></div>
     <div class="field"><label>분류</label><div class="chips compact-chips" id="typeChips"></div><div class="chips compact-chips" id="catChips"></div></div>
     <details class="extra-fields" id="extraFields">
       <summary>추가 옵션 <span>날짜 · 입력자 · 메모</span></summary>
@@ -902,9 +926,9 @@ body.dark-mode .settlement-close-warn{color:var(--gold)}
 <script>
 /* ============ 앱 글로벌 상태 (Store) ============ */
 /* @release:start — pwa-site/scripts/build-static.mjs 가 release.json 을 보고 자동으로 채운다. 손으로 고치지 말 것. */
-const APP_VERSION = '2.3.3';
-const APP_BUILT_AT = '2026-10-11T12:53:57+09:00';
-const APP_RELEASE_NOTES = [{"version":"2.3.3","date":"2026-10-11T12:53:57+09:00","notes":["월마감 무결성: 마감 상태·활성 마감 이력을 함께 확인해 우회 저장과 중복 마감을 차단","정산 안정성: 월마감과 거래 동시 처리를 보호하고 실패·재시도 상태를 명확히 개선","거래 동기화: 서버 전송 중인 대기 거래를 취소 완료로 잘못 안내하던 문제 개선","오프라인 가계부: 재실행 후 대기 거래 합계와 월 전환 화면의 정확성 개선"]},{"version":"2.3.2","date":"2026-10-09T10:34:14+09:00","notes":["데이터 보호: 예산·자산·투자 종목을 저장할 때 기존 시트를 먼저 비우지 않고 입력 검증 후 한 번에 반영","서버 보안: 설치용 설정 함수의 원격 호출 차단","화면 보안: 정산 묶음 ID의 HTML 이벤트 삽입 가능성 제거","연결 보안: 기기별 임의 확인값으로 Google Apps Script 브리지 위조 연결·오래된 응답 차단"]},{"version":"2.3.1","date":"2026-09-29T08:53:56+09:00","notes":["보안(중요): 기기 ID를 바꿔 가며 PIN을 무제한으로 추측할 수 있던 문제 수정 — 처음 보는 기기는 공용 잠금, 쓰던 기기는 기기별 잠금","PC: 내역의 분류 칩(식비·교통/차량…기타 뒤)이 옆으로 안 넘어가던 문제 수정 — PC에서는 모든 분류가 한눈에 보이게 줄바꿈","PC: 자주 쓰는 거래·D-Day 줄은 마우스 휠이나 끌어서 옆으로 넘길 수 있어요","PC: 창 폭이 좁을 때 상단 메뉴 글자가 '내 / 역'처럼 세로로 쪼개지던 문제 수정","빠른 입력: 자주 쓰는 거래가 많으면 버튼 글자가 세로로 쌓이던 문제 수정","안정성: 창 위에 창이 열렸다 닫히면 앱 전체가 눌리지 않던 문제 수정","동기화: 지난달을 보다가 동기화하면 그 달 최신 내용을 못 받아오던 문제 수정","정산 공유초안: 다른 기기에서 지운 행이 이 기기의 옛 사본 때문에 되살아나던 문제 수정"]},{"version":"2.3.0","date":"2026-09-27T22:26:29+09:00","notes":["로그인 보안: v3 세션 registry와 현재 세션·모든 기기 원격 로그아웃을 추가하고, 구 v2 세션도 전체 로그아웃 시 함께 폐기","PIN 보호: 기기별 로그인 실패 제한으로 다른 기기의 오입력 때문에 함께 잠기는 문제를 줄이고 전역 abuse guard를 보조 안전망으로 분리","내역 검색: 현재 월/전체 기간 검색을 전환할 수 있고 소비성격·최소/최대 금액 필터와 서버 검색을 연결","알림 정리: 실제 서버 Web Push처럼 보이던 표현을 제거하고 앱 실행 중 기기 알림으로 명확히 표시, 예산 초과·빠른 소진 경고를 실제 동작으로 연결","접근성·안전: 모달 배경 inert·초기 포커스·포커스 트랩을 보강하고 전체기간 검색은 조회 전용, 마감월 일괄변경은 서버에서 사전 차단"]},{"version":"2.2.1","date":"2026-09-27T22:04:26+09:00","notes":["대용량 정산: 한 달 거래가 1,000건을 넘어도 대사·정산 합계·정산 배치가 전체 거래 기준으로 계산","저장 재시도: 연결 오류만 5초→15초→1분→5분 백오프로 자동 재시도하고 검증·마감 오류는 '확인 필요'로 중단","동기화 성능: 변경이 없는 달은 revision으로 확인해 거래 전체 목록을 다시 내려받지 않는 경량 새로고침 적용","시트 안전: 기존 헤더가 예상과 다르면 자동 덮어쓰지 않고 중단하며, 정상 legacy 시트는 뒤쪽 새 컬럼만 안전하게 확장","배포 안전: Apps Script 배포 뒤 생성된 정적 사이트 파일만 GitHub에 자동 게시하도록 릴리스 절차 보강"]},{"version":"2.2.0","date":"2026-09-27T20:57:19+09:00","notes":["데이터 안전: 월마감과 월 회고를 분리해 회고 저장·정산 다시 열기로 마감 기록이 손상되지 않게 개선","정산 안전: 마감된 달은 다시 열기 전까지 거래 추가·수정·삭제를 서버에서 차단","동기화 안전: 정산 공유초안에 revision을 추가하고 저장 중 추가 편집·다중 기기 충돌 시 최신 내용을 보존","오프라인 안전: 기기 저장에 실패한 입력을 저장 완료로 표시하지 않도록 개선","화면 보안: 거래 설명의 inline 이벤트 삽입과 자동분류 raw HTML 렌더링 제거"]},{"version":"2.1.0","date":"2026-09-26T18:01:20+09:00","notes":["정산 마감이 안 되던 문제 수정 — 응답 대기 20초 → 3분, 늦어져도 실제 마감 여부를 다시 확인","앱이 항상 이번 달로 열려요 — 지난달 정산은 홈 맨 위 '정산하기' 카드와 더보기 > 월 정산에서","내역: 지출·수입·저축 탭에 합계 금액 표시, 분류를 고르면 분류 합계와 비중까지","정산: 저장 안 한 대사·투자값을 마감 전에 자동 저장, 체크 항목이 화면 갱신에도 유지","정산: 빈 초안 행은 자동 정리, 다음 달 예산 덮어쓰기를 거절해도 마감은 진행"]},{"version":"2.0.0","date":"2026-09-26T17:44:51+09:00","notes":["앱 버전 표시 추가 — 새 버전이 적용되면 화면 위에 알려줘요","자산: 보물창고 '비상금'이 저장 후 0원으로 되돌아가던 문제 수정","자산: 항목을 전부 지워도 옛 금액이 다시 살아나던 문제 수정","자산: 한 줄로 합쳐진 항목은 수정 창에서 원본(8/2) 세부항목을 불러와 확인 후 저장","자주 쓰는 거래 버튼이 이름에 따옴표가 있으면 눌리지 않던 문제 수정","보안: 누구나 볼 수 있던 화면 코드에서 자산 금액 정보 제거"]}];
+const APP_VERSION = '2.3.4';
+const APP_BUILT_AT = '2026-10-11T13:30:40+09:00';
+const APP_RELEASE_NOTES = [{"version":"2.3.4","date":"2026-10-11T13:30:40+09:00","notes":["편의 개선 1차: 한 줄 문장에서 금액과 내역을 추출해 빠른 입력 칸에 미리 채우기","편의 개선 1차: 사용자가 붙여넣은 카드 승인 문자의 금액·가맹점·날짜를 확인 후 적용","편의 개선 1차: 기존 거래의 분류를 활용한 가맹점 추천과 거래 다시 입력","입력 안전성: 취소 알림·모호한 금액·중복 저장 위험을 자동 등록 없이 검토하고 기존 오프라인 대기열 보호 유지"]},{"version":"2.3.3","date":"2026-10-11T12:53:57+09:00","notes":["월마감 무결성: 마감 상태·활성 마감 이력을 함께 확인해 우회 저장과 중복 마감을 차단","정산 안정성: 월마감과 거래 동시 처리를 보호하고 실패·재시도 상태를 명확히 개선","거래 동기화: 서버 전송 중인 대기 거래를 취소 완료로 잘못 안내하던 문제 개선","오프라인 가계부: 재실행 후 대기 거래 합계와 월 전환 화면의 정확성 개선"]},{"version":"2.3.2","date":"2026-10-09T10:34:14+09:00","notes":["데이터 보호: 예산·자산·투자 종목을 저장할 때 기존 시트를 먼저 비우지 않고 입력 검증 후 한 번에 반영","서버 보안: 설치용 설정 함수의 원격 호출 차단","화면 보안: 정산 묶음 ID의 HTML 이벤트 삽입 가능성 제거","연결 보안: 기기별 임의 확인값으로 Google Apps Script 브리지 위조 연결·오래된 응답 차단"]},{"version":"2.3.1","date":"2026-09-29T08:53:56+09:00","notes":["보안(중요): 기기 ID를 바꿔 가며 PIN을 무제한으로 추측할 수 있던 문제 수정 — 처음 보는 기기는 공용 잠금, 쓰던 기기는 기기별 잠금","PC: 내역의 분류 칩(식비·교통/차량…기타 뒤)이 옆으로 안 넘어가던 문제 수정 — PC에서는 모든 분류가 한눈에 보이게 줄바꿈","PC: 자주 쓰는 거래·D-Day 줄은 마우스 휠이나 끌어서 옆으로 넘길 수 있어요","PC: 창 폭이 좁을 때 상단 메뉴 글자가 '내 / 역'처럼 세로로 쪼개지던 문제 수정","빠른 입력: 자주 쓰는 거래가 많으면 버튼 글자가 세로로 쌓이던 문제 수정","안정성: 창 위에 창이 열렸다 닫히면 앱 전체가 눌리지 않던 문제 수정","동기화: 지난달을 보다가 동기화하면 그 달 최신 내용을 못 받아오던 문제 수정","정산 공유초안: 다른 기기에서 지운 행이 이 기기의 옛 사본 때문에 되살아나던 문제 수정"]},{"version":"2.3.0","date":"2026-09-27T22:26:29+09:00","notes":["로그인 보안: v3 세션 registry와 현재 세션·모든 기기 원격 로그아웃을 추가하고, 구 v2 세션도 전체 로그아웃 시 함께 폐기","PIN 보호: 기기별 로그인 실패 제한으로 다른 기기의 오입력 때문에 함께 잠기는 문제를 줄이고 전역 abuse guard를 보조 안전망으로 분리","내역 검색: 현재 월/전체 기간 검색을 전환할 수 있고 소비성격·최소/최대 금액 필터와 서버 검색을 연결","알림 정리: 실제 서버 Web Push처럼 보이던 표현을 제거하고 앱 실행 중 기기 알림으로 명확히 표시, 예산 초과·빠른 소진 경고를 실제 동작으로 연결","접근성·안전: 모달 배경 inert·초기 포커스·포커스 트랩을 보강하고 전체기간 검색은 조회 전용, 마감월 일괄변경은 서버에서 사전 차단"]},{"version":"2.2.1","date":"2026-09-27T22:04:26+09:00","notes":["대용량 정산: 한 달 거래가 1,000건을 넘어도 대사·정산 합계·정산 배치가 전체 거래 기준으로 계산","저장 재시도: 연결 오류만 5초→15초→1분→5분 백오프로 자동 재시도하고 검증·마감 오류는 '확인 필요'로 중단","동기화 성능: 변경이 없는 달은 revision으로 확인해 거래 전체 목록을 다시 내려받지 않는 경량 새로고침 적용","시트 안전: 기존 헤더가 예상과 다르면 자동 덮어쓰지 않고 중단하며, 정상 legacy 시트는 뒤쪽 새 컬럼만 안전하게 확장","배포 안전: Apps Script 배포 뒤 생성된 정적 사이트 파일만 GitHub에 자동 게시하도록 릴리스 절차 보강"]},{"version":"2.2.0","date":"2026-09-27T20:57:19+09:00","notes":["데이터 안전: 월마감과 월 회고를 분리해 회고 저장·정산 다시 열기로 마감 기록이 손상되지 않게 개선","정산 안전: 마감된 달은 다시 열기 전까지 거래 추가·수정·삭제를 서버에서 차단","동기화 안전: 정산 공유초안에 revision을 추가하고 저장 중 추가 편집·다중 기기 충돌 시 최신 내용을 보존","오프라인 안전: 기기 저장에 실패한 입력을 저장 완료로 표시하지 않도록 개선","화면 보안: 거래 설명의 inline 이벤트 삽입과 자동분류 raw HTML 렌더링 제거"]},{"version":"2.1.0","date":"2026-09-26T18:01:20+09:00","notes":["정산 마감이 안 되던 문제 수정 — 응답 대기 20초 → 3분, 늦어져도 실제 마감 여부를 다시 확인","앱이 항상 이번 달로 열려요 — 지난달 정산은 홈 맨 위 '정산하기' 카드와 더보기 > 월 정산에서","내역: 지출·수입·저축 탭에 합계 금액 표시, 분류를 고르면 분류 합계와 비중까지","정산: 저장 안 한 대사·투자값을 마감 전에 자동 저장, 체크 항목이 화면 갱신에도 유지","정산: 빈 초안 행은 자동 정리, 다음 달 예산 덮어쓰기를 거절해도 마감은 진행"]}];
 /* @release:end */
 const DEFAULT_GAS_URL = 'https://script.google.com/macros/s/AKfycbwjFv7OSDc6T4vD0nUQA5E-W1QazAEU5dowQroEXard5DCMtP0FiMRlwtIjuEfDzo8phA/exec';
 const APP_CACHE_VERSION = 5;
@@ -2043,6 +2067,7 @@ function renderHome(){
       <div class="big ${minus?'minus':''}">${fmt(s.left)}</div>
       <div class="rate">저축률 ${s.savingRate}%${minus?' · 현금흐름 마이너스':''}</div>
     </div>
+    <button type="button" class="home-smart-trigger" onclick="openQuickEntryModalSmart()">✍️ 한 줄로 빠른 입력 <span>점심 11000 · 문자 붙여넣기</span></button>
     <div class="summary-grid">
       <div class="mini"><div class="l">수입</div><div class="v in">${fmt(s.income)}</div></div>
       <div class="mini"><div class="l">지출</div><div class="v out">${fmt(s.expense)}</div></div>
@@ -2357,6 +2382,7 @@ function txRow(t){
   const isTemp = ['pending','sending','confirmed','error','attention'].includes(t.syncState) || String(t.row).startsWith('temp_');
   const tempEntry = isTemp ? (STATE.pending || []).find(row => row.clientId === (t.clientId || t.txId)) : null;
   const canCancelPending = isTemp && tempEntry && (tempEntry.status === 'queued' || tempEntry.status === 'rejected' || (!tempEntry.status && Number(tempEntry.attempts || 0) === 0));
+  const repeatBtn = isTemp ? '' : `<button type="button" class="repeat-tx-btn" data-repeat-row="${esc(safeRow)}" title="이 거래를 오늘 날짜로 다시 입력" aria-label="${esc(t.desc || t.cat || '거래')} 다시 입력">↻ <span>다시 입력</span></button>`;
   const editBtn = readOnlyHistory || isTemp ? '' : `<button type="button" class="edit-tx-btn" title="수정" onclick="event.stopPropagation(); editTx('${t.row}')">✏️</button>`;
   const delBtn  = readOnlyHistory || (isTemp && !canCancelPending) ? '' : `<button type="button" class="del-tx-btn" data-delete-row="${esc(safeRow)}" title="${isTemp?'저장 대기 취소':'삭제'}" aria-label="${isTemp?'저장 대기 취소':'거래 삭제'}">${isTemp?'✕':'🗑️'}</button>`;
   const pendingLabel = t.syncState === 'confirmed' ? '서버 저장 확인 중' : t.syncState === 'sending' ? '전송됨 · 취소 불가' : t.syncState === 'attention' ? '확인 필요' : (t.syncState === 'error' ? '재시도 대기' : '저장 대기');
@@ -2374,7 +2400,7 @@ function txRow(t){
   } else {
     actionHtml = `${pendingBadge}
     <div class="amt ${cls}">${sign}${comma(t.amount)}</div>
-    ${editBtn}${delBtn}`;
+    ${repeatBtn}${editBtn}${delBtn}`;
   }
 
   return `<div class="tx" data-row="${safeRow}" ${bulkActive && !isTemp ? `onclick="const cb=this.querySelector('input[type=checkbox]'); if(cb) { cb.checked=!cb.checked; toggleBulkSelect('${txRef}', cb.checked); }"` : ''}>
@@ -3613,6 +3639,12 @@ function openQuickEntryModal(){
     STATE.form.user = STATE.form.user || STATE.sessionUser || '하콩';
     STATE.form.mood = '';
     STATE.form.catManual = false; // 수동 터치 초기화
+    STATE.form.typeManual = false;
+    clearQuickEntryPreview();
+    const smartField=document.getElementById('smartEntryField');
+    if(smartField) smartField.style.display='';
+    const repeatNotice=document.getElementById('repeatEntryNotice');
+    if(repeatNotice){repeatNotice.hidden=true;repeatNotice.textContent='';}
   }
 
   const dateInp = document.getElementById('fDate');
@@ -3771,6 +3803,7 @@ function renderFormChips(){
 function selectFormChip(field, value){
   if(field === 'type'){
     STATE.form.type = value;
+    STATE.form.typeManual = true;
     STATE.form.cat = null;
     STATE.form.catManual = false;
     renderFormChips();
@@ -3796,6 +3829,8 @@ function applyTemplate(name){
   STATE.form.type = tmpl.type || '지출';
   STATE.form.cat = tmpl.cat || '식비';
   STATE.form.fixed = tmpl.fixed || '변동';
+  STATE.form.typeManual = true;
+  STATE.form.catManual = true;
   renderFormChips();
   const amtInp = document.getElementById('fAmount');
   if(amtInp && tmpl.amount) amtInp.value = comma(tmpl.amount);
@@ -3812,7 +3847,7 @@ function applyTemplateByIndex(index){
 function closeQuickEntryModal(){
   closeDialogSheet('sheet');
   // 폼 상태 완전 초기화 (편집 모드 포함)
-  STATE.form = { type: null, cat: null, fixed: '변동', user: STATE.form.user || '하콩', catManual: false, mood: '' };
+  STATE.form = { type: null, cat: null, fixed: '변동', user: STATE.form.user || '하콩', catManual: false, typeManual: false, mood: '' };
   STATE.editing = null;
   const amtInp = document.getElementById('fAmount');
   const descInp = document.getElementById('fDesc');
@@ -3822,6 +3857,11 @@ function closeQuickEntryModal(){
   if(descInp) descInp.value = '';
   if(memoInp) memoInp.value = '';
   if(dateInp) dateInp.value = '';
+  clearQuickEntryPreview();
+  const smartField=document.getElementById('smartEntryField');
+  if(smartField) smartField.style.display='';
+  const repeatNotice=document.getElementById('repeatEntryNotice');
+  if(repeatNotice){repeatNotice.hidden=true;repeatNotice.textContent='';}
   const extraFields = document.getElementById('extraFields');
   if(extraFields) extraFields.open = false;
   const titleEl = document.getElementById('sheetTitle');
@@ -4658,12 +4698,16 @@ function editTx(row){
   STATE.form.fixed = tx.fixed || '변동';
   STATE.form.user  = tx.user || '하콩';
   STATE.form.mood  = tx.spendingMood || '';
+  STATE.form.catManual = true;
+  STATE.form.typeManual = true;
 
   // 모달 열기 (날짜/금액/내역/메모 프리필)
   openDialogSheet('sheet','#fAmount');
 
   const titleEl = document.getElementById('sheetTitle');
   if(titleEl) titleEl.textContent = '거래 수정';
+  const smartField=document.getElementById('smartEntryField');
+  if(smartField) smartField.style.display='none';
 
   const dateInp = document.getElementById('fDate');
   if(dateInp) dateInp.value = tx.date || todayStr();
@@ -4687,6 +4731,44 @@ function editTx(row){
   setTimeout(()=>{ if(amtInp){ amtInp.focus(); amtInp.select(); } }, 100);
 }
 
+function repeatTransaction(row){
+  const tx=(STATE.transactions || []).concat((STATE.list || {}).remoteRows || [],STATE.recent || [])
+    .find(item=>String(item.row)===String(row));
+  if(!tx || tx.syncState || String(tx.row).startsWith('temp_')){
+    toast('서버 저장을 확인한 거래만 다시 입력할 수 있어.',true);
+    return false;
+  }
+  // This creates a fresh, editable draft; never an edit of the past row.
+  STATE.editing=null;
+  if(!STATE.authToken){toast('로그인이 필요해',true);return false;}
+  openQuickEntryModal();
+  STATE.form.type=tx.type || '지출';
+  STATE.form.cat=tx.cat || null;
+  STATE.form.fixed=tx.fixed || '변동';
+  STATE.form.user=tx.user || STATE.sessionUser || '하콩';
+  STATE.form.mood=tx.spendingMood || '';
+  STATE.form.typeManual=true;
+  STATE.form.catManual=true;
+  const amount=document.getElementById('fAmount');
+  const desc=document.getElementById('fDesc');
+  const date=document.getElementById('fDate');
+  const memo=document.getElementById('fMemo');
+  if(amount) amount.value=comma(tx.amount || 0);
+  if(desc) desc.value=tx.desc || '';
+  // The old row may belong to a closed month. Repeating must start TODAY.
+  if(date) date.value=todayStr();
+  if(memo) memo.value=tx.memo || '';
+  const extra=document.getElementById('extraFields');
+  if(extra) extra.open=true;
+  const title=document.getElementById('sheetTitle');
+  if(title) title.textContent='거래 다시 입력 · 오늘 날짜';
+  const note=document.getElementById('repeatEntryNotice');
+  if(note){note.hidden=false;note.textContent='새 거래를 준비했어. 날짜는 오늘이야. 내용을 확인한 뒤 저장해줘.';}
+  renderFormChips();
+  if(amount) amount.focus();
+  return true;
+}
+
 function transactionForDelete(row){
   return (STATE.transactions || []).find(item => String(item.row) === String(row))
     || (STATE.recent || []).find(item => String(item.row) === String(row));
@@ -4694,6 +4776,8 @@ function transactionForDelete(row){
 
 function handleTransactionListClick(event){
   const target=event && event.target;
+  const repeat=target && typeof target.closest === 'function' ? target.closest('.repeat-tx-btn[data-repeat-row]') : null;
+  if(repeat){event.stopPropagation();repeatTransaction(repeat.dataset.repeatRow);return;}
   const button=target && typeof target.closest === 'function' ? target.closest('.del-tx-btn[data-delete-row]') : null;
   if (!button) return;
   event.stopPropagation();
@@ -4804,6 +4888,209 @@ function retryMonthLoad(){
   STATE.monthLoadError='';
   renderAll();
   refreshVisibleMonth(false, {forceFull:true}).catch(()=>{});
+}
+
+function openQuickEntryModalSmart(){
+  if(!STATE.authToken){toast('로그인이 필요해');return;}
+  openQuickEntryModal();
+  // Focus moves after openQuickEntryModal's amount-field focus timer.
+  setTimeout(() => {
+    const input=document.getElementById('smartEntryText');
+    if(input) input.focus();
+  }, 140);
+}
+
+// The parser never writes to a queue, localStorage, console or the server.
+// It returns only reviewed transaction fields, never the pasted SMS body.
+function parseQuickEntryText(text){
+  const input=String(text == null ? '' : text).trim();
+  const fail=(reason,ambiguous=false)=>({ok:false,ambiguous,reason});
+  if (!input) return fail('문장 또는 승인 문자를 입력해줘.');
+  if (input.length > 3000) return fail('문자가 너무 길어. 한 건씩 확인해줘.',true);
+  // Apply the rejection guard before the simple one-line grammar too: a
+  // partial reversal may look like "[카드] 부분취소 마트 3,000원".
+  if (/취소|환불|미승인|미사용|승인거절|거절|승인실패|결제실패|부분\s*(?:취소|환불)|해외|외화|USD|JPY|EUR|환율/i.test(input))
+    return fail('취소·환불·미승인·해외 사용 문자는 자동 입력하지 않아. 내용을 직접 확인해줘.',true);
+  if (!/승인/.test(input) && /잔액|가용금액|이용가능|사용가능|누적|한도|카드번호|승인번호|할부원금|고객센터/.test(input))
+    return fail('거래 승인 내용이 아닌 잔액·한도 알림은 입력하지 않아.',true);
+  if (!/승인/.test(input) && /\[(?:[^\]]*카드|[Kk][Bb]|[Nn][Hh]|신한|국민|현대|삼성|롯데|하나|우리)[^\]]*\]|(?:KB국민|신한|현대|삼성|롯데|BC|NH|농협)카드/.test(input))
+    return fail('카드 승인 여부가 명확하지 않아. 직접 확인해줘.',true);
+  const plain=input.replace(/\s+/g,' ').trim();
+  const simpleFirst=plain.match(/^(?:₩\s*)?([1-9]\d{2,8}|[1-9]\d{0,2}(?:,\d{3}){1,2})\s*원?\s+(.{2,60})$/);
+  const simpleLast=plain.match(/^(.{2,60}?)\s+(?:₩\s*)?([1-9]\d{2,8}|[1-9]\d{0,2}(?:,\d{3}){1,2})\s*원?$/);
+  const isCard=/카드|승인|체크카드|신용카드|[Ww]eb발신|이용금액/.test(input);
+  if (!/승인|[Ww]eb발신/.test(input) && !input.includes('\n') && (simpleFirst || simpleLast)) {
+    const parts=simpleFirst || simpleLast;
+    const amount=Number((simpleFirst ? parts[1] : parts[2]).replace(/,/g,''));
+    const desc=(simpleFirst ? parts[2] : parts[1]).trim();
+    if (!Number.isSafeInteger(amount) || amount <= 0 || amount > 999999999 ||
+        /\d[\d,]{3,}/.test(desc) || /[\n\r<>]/.test(desc)) return fail('금액과 내역이 불확실해. 직접 확인해줘.',true);
+    return {ok:true,source:'line',amount,desc,type:'지출'};
+  }
+  if (!isCard) return fail('금액과 내역을 한 건씩 입력해줘. 예: 점심 11000',true);
+
+  if (!/승인/.test(input)) return fail('승인 완료 여부를 확인할 수 없어. 직접 확인해줘.',true);
+  // More than one approval cannot be safely reduced to a single transaction.
+  const approvals=input.match(/승인(?:\s*완료|\s*내역|\s*금액|\s*시간)?/g) || [];
+  if (approvals.length !== 1) return fail('승인 내역이 여러 건이야. 한 건씩 나눠 확인해줘.',true);
+  // A single SMS line can append a different amount for available balance,
+  // installments or cumulative charges. Cut that ancillary tail before
+  // examining money or merchant tokens; never guess between two charges.
+  const primary=input
+    .split(/\s+(?:잔액|가용금액|이용가능금액|이용가능|사용가능|할부원금|누적(?:이용액|금액)?|고객센터|연락처|전화번호|한도|카드번호|승인번호)(?=\s|:|\d|$)/i)[0]
+    .split(/\s+카드\s+\d{4}(?=\s|\-|\*)/i)[0];
+  const lines=primary.split(/\r?\n/).map(s=>s.trim()).filter(Boolean);
+  const incidental=/잔액|누적|한도|이용가능|사용가능|승인번호|카드번호|고객센터|전화|연락처|청구|포인트|적립|합계|총액|결제예정|문자수신|문의|이용내역/i;
+  const candidateLines=lines.filter(line=>!incidental.test(line));
+  const amountMatches=[];
+  candidateLines.forEach((line,index)=>{
+    const pattern=/([1-9]\d{0,2}(?:,\d{3})+|[1-9]\d{3,8})\s*원(?![가-힣\d])|([1-9]\d{0,2}(?:,\d{3})+)(?!\d)/g;
+    let match;
+    while((match=pattern.exec(line))!==null){
+      const amount=Number((match[1] || match[2]).replace(/,/g,''));
+      if(Number.isSafeInteger(amount) && amount > 0 && amount <= 999999999) amountMatches.push({amount,index,raw:match[0]});
+    }
+  });
+  if (amountMatches.length !== 1) return fail('승인 금액이 없거나 여러 개야. 한 건씩 직접 확인해줘.',true);
+  const amount=amountMatches[0].amount;
+  const parseDate=()=>{
+    const match=input.match(/\b(?:(20\d{2})[.\-/]\s*)?(0?[1-9]|1[0-2])[.\-/]\s*(0?[1-9]|[12]\d|3[01])\b/);
+    if(!match) return '';
+    const today=todayStr();
+    let year=match[1] ? Number(match[1]) : Number(today.slice(0,4));
+    const month=Number(match[2]),day=Number(match[3]);
+    if(!match[1] && month === 12 && today.slice(5,7) === '01') year--;
+    const result=year+'-'+pad(month)+'-'+pad(day);
+    const parsed=new Date(result+'T12:00:00Z');
+    return parsed.getUTCFullYear()===year && parsed.getUTCMonth()===month-1 && parsed.getUTCDate()===day && result <= today ? result : '';
+  };
+  const date=parseDate();
+  if (!date) return fail('승인 날짜가 명확하지 않아. 원문을 보고 직접 입력해줘.',true);
+
+  const merchantOptions=candidateLines.map((line,index)=>{
+    let value=line.replace(/\[\s*(?:Web발신|국민|신한|현대|삼성|롯데|하나|우리|농협|KB|BC|NH|카드승인|카드)[^\]]*\]/gi,' ')
+      .replace(/\b(?:20\d{2}[.\-/])?(?:0?[1-9]|1[0-2])[.\-/](?:0?[1-9]|[12]\d|3[01])\b/g,' ')
+      .replace(/\b(?:[01]?\d|2[0-3]):[0-5]\d\b/g,' ')
+      .replace(/(?:^|\s)(?:(?:KB|NH|BC|신한|삼성|현대|롯데|우리|하나|국민|농협)\s*)?(?:카드승인|체크카드|신용카드|카드|승인금액|승인|완료|일시불|가맹점|결제|금액)(?=\s|$)/gi,' ')
+      .replace(amountMatches[0].index === index ? amountMatches[0].raw : /$^/,' ')
+      .replace(/^[\s:·\-*#()\[\]]+|[\s:·\-*#()\[\]]+$/g,' ').trim();
+    if(value.length < 2 || value.length > 45 || /\d{3,}|[*#@]|(?:님|고객|휴대폰|[0-9]{2,4}-[0-9]{3,4})/.test(value)) return '';
+    if (/^\(?\d+\)?$/.test(value)) return '';
+    return value;
+  }).filter(Boolean);
+  // Prefer the merchant near the approval amount; never treat a masked name,
+  // card number, approval code or phone as a description.
+  const desc=merchantOptions[merchantOptions.length-1] || '';
+  if(!desc || /\d{4,}|\b(?:카드|승인|원|건)\b/.test(desc)) return fail('가맹점이 명확하지 않아. 직접 입력해줘.',true);
+  return {ok:true,source:'card',type:'지출',amount,desc,date};
+}
+
+function availableQuickEntryCategories(type){
+  const defaults={
+    '지출':['식비','교통/차량','주거/통신','쇼핑/문화','경조/이벤트','건강/의료','용돈','기타'],
+    '수입':['월급','부수입','상여','금융수입','기타수입'],
+    '저축':['적금/예금','청약','투자','비상금'],
+    '대출상환':['원금상환','이자납입','학자금','기타대출']
+  };
+  const configured=((STATE.config || {}).byType || {})[type];
+  return Array.isArray(configured) && configured.length ? configured : (defaults[type] || []);
+}
+
+function suggestQuickEntryCategory(desc,type){
+  const kind=type || '지출';
+  const allowed=availableQuickEntryCategories(kind);
+  const normalized=String(desc || '').normalize('NFKC').toLowerCase().replace(/[\s.,·\-_/()[\]]+/g,'').trim();
+  if(normalized.length < 2) return null;
+  const matches=[];
+  const dict=STATE.descDict || {};
+  Object.keys(dict).forEach(key=>{
+    const data=dict[key] || {};
+    if (data.type && data.type !== kind || allowed.indexOf(data.cat) < 0) return;
+    const value=String(key).normalize('NFKC').toLowerCase().replace(/[\s.,·\-_/()[\]]+/g,'');
+    if(value===normalized) matches.push({cat:data.cat,score:100});
+    else if(value.length >= 4 && normalized.length >= 4 && (normalized.includes(value) || value.includes(normalized))) matches.push({cat:data.cat,score:50});
+  });
+  const seenHistory=new Set();
+  (STATE.transactions || []).concat(STATE.recent || []).forEach(tx=>{
+    if(!tx || tx.syncState || tx.type !== kind || allowed.indexOf(tx.cat) < 0) return;
+    const id=String(tx.txId || tx.row || tx.clientId || '');
+    if(!id || seenHistory.has(id)) return;
+    seenHistory.add(id);
+    const value=String(tx.desc || '').normalize('NFKC').toLowerCase().replace(/[\s.,·\-_/()[\]]+/g,'');
+    if(value===normalized) matches.push({cat:tx.cat,score:90});
+    else if(value.length >= 4 && normalized.length >= 4 && (normalized.includes(value) || value.includes(normalized))) matches.push({cat:tx.cat,score:30});
+  });
+  if(matches.length){
+    const best=Math.max(...matches.map(m=>m.score));
+    const winners=matches.filter(m=>m.score===best);
+    const cats=[...new Set(winners.map(m=>m.cat))];
+    // History rows need >=2 independent examples, not a single past guess.
+    // An exact server-derived descDict mapping is already a learned match.
+    if(cats.length===1 && (best===100 || winners.length>=2)) return cats[0];
+    return null;
+  }
+  const keywords={
+    '식비':/점심|저녁|아침|식사|커피|카페|스타벅스|식당|편의점|배달|치킨|버거|마트|분식|도시락/,
+    '교통/차량':/택시|버스|지하철|주유|주차|고속도로|기차|철도/,
+    '주거/통신':/월세|관리비|전기요금|가스요금|통신비|인터넷요금/,
+    '건강/의료':/병원|약국|치과|의원|진료/,
+    '쇼핑/문화':/영화|서점|문구|쇼핑|백화점|온라인몰/,
+    '월급':/월급|급여|봉급/,
+    '투자':/증권|주식|펀드|투자/
+  };
+  const candidates=Object.keys(keywords).filter(cat=>allowed.includes(cat) && keywords[cat].test(String(desc)));
+  return candidates.length===1 ? candidates[0] : null;
+}
+
+function clearQuickEntryPreview(){
+  const input=document.getElementById('smartEntryText');
+  if(input) input.value='';
+  const preview=document.getElementById('smartEntryPreview');
+  if(preview){preview.textContent='금액과 내역을 제안해요. 확인 후 아래 저장 버튼을 눌러야 저장돼요.';preview.className='smart-entry-preview';}
+  const button=document.getElementById('smartEntryApply');
+  if(button) button.disabled=true;
+}
+
+function updateQuickEntryPreview(){
+  const input=document.getElementById('smartEntryText');
+  if(!input) return;
+  const result=parseQuickEntryText(input.value);
+  const preview=document.getElementById('smartEntryPreview');
+  const button=document.getElementById('smartEntryApply');
+  if(button) button.disabled=!result.ok;
+  if(preview){
+    const category=result.ok ? suggestQuickEntryCategory(result.desc,result.type) : null;
+    preview.textContent=result.ok
+      ? `제안: ${result.desc} · ${fmt(result.amount)}${result.date ? ' · '+result.date : ' · 날짜 확인 필요'}${category ? ' · '+category : ''} — 적용 후 수정·저장해줘.`
+      : result.reason;
+    preview.className='smart-entry-preview'+(result.ok?'':' warn');
+  }
+}
+
+function applyQuickEntryText(){
+  if(STATE.editing) return false;
+  const input=document.getElementById('smartEntryText');
+  const result=parseQuickEntryText(input ? input.value : '');
+  if(!result.ok){updateQuickEntryPreview();return false;}
+  const amount=document.getElementById('fAmount');
+  const desc=document.getElementById('fDesc');
+  const date=document.getElementById('fDate');
+  if(amount) amount.value=comma(result.amount);
+  if(desc) desc.value=result.desc;
+  if(date && result.date) date.value=result.date;
+  if(!STATE.form.typeManual && !STATE.form.catManual) STATE.form.type=result.type || '지출';
+  if(!STATE.form.catManual){
+    const category=suggestQuickEntryCategory(result.desc,STATE.form.type || '지출');
+    if(category) STATE.form.cat=category;
+  }
+  renderFormChips();
+  // The full SMS never enters desc/memo/localStorage. Erase pasted content
+  // immediately once extracted fields have been applied to editable inputs.
+  clearQuickEntryPreview();
+  const preview=document.getElementById('smartEntryPreview');
+  if(preview) preview.textContent='입력칸에만 반영했어. 금액·날짜·분류를 확인하고 저장을 눌러줘.';
+  if(desc) desc.focus();
+  return true;
 }
 
     // ===== 고정거래(Recurring) 제어 로직 =====
@@ -5869,6 +6156,18 @@ function bindApp(){
   const continueBtn = document.getElementById('continueBtn');
   if(continueBtn) continueBtn.addEventListener('click', ()=>submitQuickTx(false));
 
+  const smartInput=document.getElementById('smartEntryText');
+  if(smartInput){
+    smartInput.addEventListener('input', updateQuickEntryPreview);
+    smartInput.addEventListener('keydown', e=>{
+      // Enter in the paste area never performs a financial save.
+      if(e.key==='Enter' && (e.ctrlKey || e.metaKey)){
+        e.preventDefault();
+        applyQuickEntryText();
+      }
+    });
+  }
+
   // 금액 입력 시 3자리 콤마(,) 실시간 자동 생성
   const fAmount = document.getElementById('fAmount');
   if(fAmount) {
@@ -5894,36 +6193,18 @@ function bindApp(){
     fDesc.addEventListener('input', e => {
       const val = e.target.value.trim();
       const hint = document.getElementById('recommendBox');
-      
-      if (val && STATE.descDict && STATE.descDict[val]) {
-        if (!STATE.form.catManual) {
-          const dict = STATE.descDict[val];
-          STATE.form.type = dict.type;
-          STATE.form.cat = dict.cat;
-          STATE.form.fixed = dict.fixed || '변동';
-          renderFormChips();
-          if (hint) hint.textContent = `💡 ${val} ➔ ${dict.cat} 자동 분류`;
-        }
-      } else {
-        if (hint) hint.textContent = '';
-        if (val && !STATE.form.catManual) {
-          // 예전에는 무조건 '기타'로 되돌렸는데, ⚙️설정 시트에 '기타'가 없으면
-          // 어떤 칩도 선택되지 않은 채 유령 카테고리로 저장됐다.
-          const defaultCatsByType = {
-            '지출': ['식비','교통/차량','주거/통신','쇼핑/문화','경조/이벤트','건강/의료','용돈','기타'],
-            '수입': ['월급','부수입','상여','금융수입','기타수입'],
-            '저축': ['적금/예금','청약','투자','비상금'],
-            '대출상환': ['원금상환','이자납입','학자금','기타대출']
-          };
-          const curT = STATE.form.type || '지출';
-          const cfgCats = ((STATE.config && STATE.config.byType) || {})[curT];
-          const cats = (cfgCats && cfgCats.length) ? cfgCats : (defaultCatsByType[curT] || []);
-          const fallback = cats.indexOf('기타') > -1 ? '기타' : (cats.indexOf(STATE.form.cat) > -1 ? STATE.form.cat : cats[0]);
-          if (fallback && fallback !== STATE.form.cat) {
-            STATE.form.cat = fallback;
-            renderFormChips();
-          }
-        }
+      if(hint) hint.textContent='';
+      if(!val || STATE.form.catManual) return;
+      const dict=(STATE.descDict || {})[val];
+      if(dict && dict.type && !STATE.form.typeManual && availableQuickEntryCategories(dict.type).includes(dict.cat)){
+        STATE.form.type=dict.type;
+        STATE.form.fixed=dict.fixed || STATE.form.fixed || '변동';
+      }
+      const cat=suggestQuickEntryCategory(val,STATE.form.type || '지출');
+      if(cat){
+        STATE.form.cat=cat;
+        renderFormChips();
+        if(hint) hint.textContent=`💡 ${cat} 추천 · 저장 전 변경할 수 있어.`;
       }
     });
 
