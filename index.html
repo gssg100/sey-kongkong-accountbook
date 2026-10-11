@@ -3,7 +3,7 @@
 <head>
 <base target="_top">
 <meta charset="utf-8">
-<meta name="app-version" content="2.3.5">
+<meta name="app-version" content="2.3.6">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, interactive-widget=resizes-content">
 <meta name="description" content="지수와 하콩이의 빠르고 편한 공동 가계부">
 <meta name="theme-color" content="#f5f5f7">
@@ -597,6 +597,66 @@ body.dark-mode #toast{background:rgba(58,58,60,0.92)}
 .list-remote-error{display:flex;align-items:center;justify-content:space-between;gap:10px;margin:8px 0;padding:10px 12px;border-radius:12px;background:color-mix(in srgb,var(--expense) 8%,var(--card));color:var(--expense);font-size:12px;font-weight:750}
 .list-remote-error button{flex-shrink:0;padding:7px 10px;border-radius:9px;background:var(--expense);color:#fff;font-size:11.5px;font-weight:850}
 .list-readonly-note{margin:8px 0 10px;padding:9px 11px;border-radius:11px;background:var(--line-soft);color:var(--muted);font-size:11.5px;font-weight:750;line-height:1.45}
+
+/* Consumer spending calendar (inside the existing monthly transaction view). */
+.spending-view-switch{display:grid;grid-template-columns:1fr 1fr;gap:4px;padding:4px;margin:10px 0 14px;background:var(--line-soft);border-radius:14px}
+.spending-view-switch button{min-height:44px;padding:9px 8px;border:1px solid transparent;border-radius:11px;background:transparent;color:var(--muted);font-size:13px;font-weight:850;cursor:pointer}
+.spending-view-switch button.on{background:var(--card);border-color:var(--line);box-shadow:var(--shadow);color:var(--forest)}
+.spending-view-switch button:disabled{opacity:.45;cursor:not-allowed}
+.spending-view-switch button:focus-visible,.spending-day:focus-visible{outline:3px solid var(--forest);outline-offset:2px;position:relative;z-index:2}
+.spending-calendar{min-width:0;margin:4px 0 30px}
+.spending-calendar-heading{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:6px;margin-bottom:7px}
+.spending-calendar-heading h3{margin:0;font-size:18px;font-weight:900;color:var(--ink)}
+.spending-calendar-heading>span{font-size:11px;font-weight:800;color:var(--muted);background:var(--line-soft);padding:5px 9px;border-radius:999px}
+.spending-calendar-note{font-size:11.5px;line-height:1.6;color:var(--muted);margin:5px 0 10px}
+.spending-calendar-note.caution{color:var(--expense);font-weight:800}
+.spending-month-totals{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin:12px 0}
+.spending-month-totals span{display:flex;align-items:center;justify-content:space-between;gap:5px;border-radius:12px;background:var(--card);border:1px solid var(--line-soft);padding:10px 12px;color:var(--muted);font-size:11.5px;font-weight:750}
+.spending-month-totals strong{color:var(--ink);font-size:13px;font-weight:900;overflow-wrap:anywhere;text-align:right}
+.spending-month-grid{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:5px;background:var(--card);border:1px solid var(--line-soft);border-radius:16px;padding:9px;box-shadow:var(--shadow);min-width:0}
+.spending-weekday{text-align:center;font-size:11px;font-weight:900;color:var(--muted);padding:5px 0 8px}
+.spending-weekday:nth-child(7){color:var(--expense)}
+.spending-day-placeholder{min-width:0;min-height:70px}
+.spending-day{--day-heat:transparent;display:flex;flex-direction:column;align-items:center;justify-content:space-between;gap:4px;min-width:0;min-height:76px;padding:7px 2px;border:2px solid transparent;border-radius:10px;background:var(--day-heat);color:var(--ink);cursor:pointer;text-align:center;transition:border-color .12s,transform .12s}
+.spending-day.heat-0{--day-heat:var(--bg)}
+.spending-day.heat-1{--day-heat:color-mix(in srgb,var(--forest) 9%,var(--card))}
+.spending-day.heat-2{--day-heat:color-mix(in srgb,var(--forest) 18%,var(--card))}
+.spending-day.heat-3{--day-heat:color-mix(in srgb,var(--forest) 28%,var(--card))}
+.spending-day.heat-4{--day-heat:color-mix(in srgb,var(--forest) 42%,var(--card))}
+.spending-day.selected{border-color:var(--forest);box-shadow:inset 0 0 0 1px var(--forest)}
+.spending-day:active{transform:scale(.96)}
+.spending-day-number{font-size:12px;font-weight:900;line-height:1.2;color:var(--ink)}
+.spending-day-amount{font-size:clamp(9px,2.4vw,11.5px);font-weight:850;line-height:1.25;color:var(--ink);overflow-wrap:anywhere;font-variant-numeric:tabular-nums}
+.spending-day-count{font-size:9px;line-height:1.3;color:var(--muted);font-weight:700}
+.spending-day-count.empty-count{visibility:hidden}
+.spending-heat-legend{display:flex;justify-content:flex-end;align-items:center;gap:5px;margin:8px 2px 16px;font-size:10.5px;color:var(--muted);font-weight:750}
+.spending-heat-legend i{display:block;width:13px;height:13px;border:1px solid var(--line-soft);border-radius:3px;background:var(--bg)}
+.spending-heat-legend i.heat-1{background:color-mix(in srgb,var(--forest) 9%,var(--card))}
+.spending-heat-legend i.heat-2{background:color-mix(in srgb,var(--forest) 18%,var(--card))}
+.spending-heat-legend i.heat-3{background:color-mix(in srgb,var(--forest) 28%,var(--card))}
+.spending-heat-legend i.heat-4{background:color-mix(in srgb,var(--forest) 42%,var(--card))}
+.spending-week-summary,.spending-topcats,.spending-day-detail{margin:14px 0;background:var(--card);border:1px solid var(--line-soft);border-radius:16px;padding:15px;box-shadow:var(--shadow)}
+.spending-week-summary h4,.spending-topcats h4{margin:0 0 10px;font-size:13px;color:var(--ink);font-weight:900}
+.spending-week-summary h4 small{margin-left:4px;font-size:10.5px;color:var(--muted);font-weight:700}
+.spending-week-grid{display:grid;gap:8px}
+.spending-week-row{display:flex;align-items:center;justify-content:space-between;gap:6px;flex-wrap:wrap;background:var(--bg);border-radius:10px;padding:10px;font-size:11px}
+.spending-week-row>span{font-weight:850;color:var(--ink)}
+.spending-week-row>strong{font-size:12px;font-weight:900;color:var(--expense)}
+.spending-week-row>small{flex-basis:100%;font-size:10.5px;font-weight:700;color:var(--muted)}
+.spending-topcats>div{display:flex;flex-wrap:wrap;gap:7px}
+.spending-cat-tag{display:inline-flex;align-items:center;gap:5px;padding:7px 9px;border-radius:999px;background:var(--line-soft);font-size:11px;font-weight:700;color:var(--ink)}
+.spending-cat-tag strong{color:var(--forest);font-weight:900}
+.spending-detail-heading{display:flex;justify-content:space-between;align-items:center;gap:8px;margin-bottom:11px}
+.spending-detail-heading h3{margin:0;color:var(--ink);font-size:15px;font-weight:900}
+.spending-detail-heading span{color:var(--muted);font-size:12px;font-weight:800}
+.spending-detail-totals{display:grid;grid-template-columns:1fr 1fr;gap:7px;margin-bottom:12px}
+.spending-detail-total{display:flex;align-items:center;flex-wrap:wrap;gap:4px;border-radius:10px;background:var(--bg);padding:8px;color:var(--muted);font-size:11px;font-weight:800}
+.spending-detail-total strong{color:var(--ink);font-variant-numeric:tabular-nums}
+.spending-detail-total small{margin-left:auto;color:var(--muted)}
+.spending-detail-group{margin-top:12px;border-top:1px solid var(--line-soft);padding-top:10px}
+.spending-detail-group h4{margin:0 0 4px;font-size:12px;font-weight:900;color:var(--muted)}
+.spending-detail-group .tx:last-child{border-bottom:0}
+@media(max-width:420px){.spending-month-grid{gap:3px;padding:5px}.spending-day{min-height:68px;padding:5px 1px}.spending-day-placeholder{min-height:68px}.spending-day-number{font-size:11px}.spending-day-amount{font-size:9px}.spending-week-summary,.spending-topcats,.spending-day-detail{padding:12px}.spending-month-totals strong{font-size:12px}.spending-detail-total{font-size:10px}}
 .list-search-inp{width:100%;height:44px;padding:0 38px 0 40px;border-radius:14px;border:1px solid var(--line);background:var(--card);color:var(--ink);font-size:14px;font-weight:650;outline:none;transition:border-color .15s,box-shadow .15s}
 .list-search-inp:focus{border-color:var(--forest);box-shadow:0 0 0 3px color-mix(in srgb,var(--forest) 12%,transparent)}
 .search-clear-btn{position:absolute;right:10px;width:24px;height:24px;border-radius:50%;border:0;background:var(--line-soft);color:var(--muted);font-size:12px;display:flex;align-items:center;justify-content:center;cursor:pointer}
@@ -971,9 +1031,9 @@ body.dark-mode .settlement-close-warn{color:var(--gold)}
 <script>
 /* ============ 앱 글로벌 상태 (Store) ============ */
 /* @release:start — pwa-site/scripts/build-static.mjs 가 release.json 을 보고 자동으로 채운다. 손으로 고치지 말 것. */
-const APP_VERSION = '2.3.5';
-const APP_BUILT_AT = '2026-10-11T13:48:38+09:00';
-const APP_RELEASE_NOTES = [{"version":"2.3.5","date":"2026-10-11T13:48:38+09:00","notes":["생활비 개편 2차: 현재 입력된 금액에서 아직 기록되지 않은 예정 정기지출·저축·상환을 제외한 생활비 여유액 추정","생활비 개편 2차: 오늘부터 월말까지의 하루·일주일 사용 가능액과 예약 고정비 내역을 구분해 표시","고정비 관리: 월간 지출·정기수입과 연간 환산 규모를 한눈에 비교하는 대시보드","계산 안전성: 이미 기록된 정기거래 중복 차감 방지, 예정 정기수입 선반영 금지, 미입력·불확실한 항목 명시"]},{"version":"2.3.4","date":"2026-10-11T13:30:40+09:00","notes":["편의 개선 1차: 한 줄 문장에서 금액과 내역을 추출해 빠른 입력 칸에 미리 채우기","편의 개선 1차: 사용자가 붙여넣은 카드 승인 문자의 금액·가맹점·날짜를 확인 후 적용","편의 개선 1차: 기존 거래의 분류를 활용한 가맹점 추천과 거래 다시 입력","입력 안전성: 취소 알림·모호한 금액·중복 저장 위험을 자동 등록 없이 검토하고 기존 오프라인 대기열 보호 유지"]},{"version":"2.3.3","date":"2026-10-11T12:53:57+09:00","notes":["월마감 무결성: 마감 상태·활성 마감 이력을 함께 확인해 우회 저장과 중복 마감을 차단","정산 안정성: 월마감과 거래 동시 처리를 보호하고 실패·재시도 상태를 명확히 개선","거래 동기화: 서버 전송 중인 대기 거래를 취소 완료로 잘못 안내하던 문제 개선","오프라인 가계부: 재실행 후 대기 거래 합계와 월 전환 화면의 정확성 개선"]},{"version":"2.3.2","date":"2026-10-09T10:34:14+09:00","notes":["데이터 보호: 예산·자산·투자 종목을 저장할 때 기존 시트를 먼저 비우지 않고 입력 검증 후 한 번에 반영","서버 보안: 설치용 설정 함수의 원격 호출 차단","화면 보안: 정산 묶음 ID의 HTML 이벤트 삽입 가능성 제거","연결 보안: 기기별 임의 확인값으로 Google Apps Script 브리지 위조 연결·오래된 응답 차단"]},{"version":"2.3.1","date":"2026-09-29T08:53:56+09:00","notes":["보안(중요): 기기 ID를 바꿔 가며 PIN을 무제한으로 추측할 수 있던 문제 수정 — 처음 보는 기기는 공용 잠금, 쓰던 기기는 기기별 잠금","PC: 내역의 분류 칩(식비·교통/차량…기타 뒤)이 옆으로 안 넘어가던 문제 수정 — PC에서는 모든 분류가 한눈에 보이게 줄바꿈","PC: 자주 쓰는 거래·D-Day 줄은 마우스 휠이나 끌어서 옆으로 넘길 수 있어요","PC: 창 폭이 좁을 때 상단 메뉴 글자가 '내 / 역'처럼 세로로 쪼개지던 문제 수정","빠른 입력: 자주 쓰는 거래가 많으면 버튼 글자가 세로로 쌓이던 문제 수정","안정성: 창 위에 창이 열렸다 닫히면 앱 전체가 눌리지 않던 문제 수정","동기화: 지난달을 보다가 동기화하면 그 달 최신 내용을 못 받아오던 문제 수정","정산 공유초안: 다른 기기에서 지운 행이 이 기기의 옛 사본 때문에 되살아나던 문제 수정"]},{"version":"2.3.0","date":"2026-09-27T22:26:29+09:00","notes":["로그인 보안: v3 세션 registry와 현재 세션·모든 기기 원격 로그아웃을 추가하고, 구 v2 세션도 전체 로그아웃 시 함께 폐기","PIN 보호: 기기별 로그인 실패 제한으로 다른 기기의 오입력 때문에 함께 잠기는 문제를 줄이고 전역 abuse guard를 보조 안전망으로 분리","내역 검색: 현재 월/전체 기간 검색을 전환할 수 있고 소비성격·최소/최대 금액 필터와 서버 검색을 연결","알림 정리: 실제 서버 Web Push처럼 보이던 표현을 제거하고 앱 실행 중 기기 알림으로 명확히 표시, 예산 초과·빠른 소진 경고를 실제 동작으로 연결","접근성·안전: 모달 배경 inert·초기 포커스·포커스 트랩을 보강하고 전체기간 검색은 조회 전용, 마감월 일괄변경은 서버에서 사전 차단"]},{"version":"2.2.1","date":"2026-09-27T22:04:26+09:00","notes":["대용량 정산: 한 달 거래가 1,000건을 넘어도 대사·정산 합계·정산 배치가 전체 거래 기준으로 계산","저장 재시도: 연결 오류만 5초→15초→1분→5분 백오프로 자동 재시도하고 검증·마감 오류는 '확인 필요'로 중단","동기화 성능: 변경이 없는 달은 revision으로 확인해 거래 전체 목록을 다시 내려받지 않는 경량 새로고침 적용","시트 안전: 기존 헤더가 예상과 다르면 자동 덮어쓰지 않고 중단하며, 정상 legacy 시트는 뒤쪽 새 컬럼만 안전하게 확장","배포 안전: Apps Script 배포 뒤 생성된 정적 사이트 파일만 GitHub에 자동 게시하도록 릴리스 절차 보강"]},{"version":"2.2.0","date":"2026-09-27T20:57:19+09:00","notes":["데이터 안전: 월마감과 월 회고를 분리해 회고 저장·정산 다시 열기로 마감 기록이 손상되지 않게 개선","정산 안전: 마감된 달은 다시 열기 전까지 거래 추가·수정·삭제를 서버에서 차단","동기화 안전: 정산 공유초안에 revision을 추가하고 저장 중 추가 편집·다중 기기 충돌 시 최신 내용을 보존","오프라인 안전: 기기 저장에 실패한 입력을 저장 완료로 표시하지 않도록 개선","화면 보안: 거래 설명의 inline 이벤트 삽입과 자동분류 raw HTML 렌더링 제거"]}];
+const APP_VERSION = '2.3.6';
+const APP_BUILT_AT = '2026-10-11T14:02:04+09:00';
+const APP_RELEASE_NOTES = [{"version":"2.3.6","date":"2026-10-11T14:02:04+09:00","notes":["생활형 화면 3차: 내역에서 월별 소비 달력과 날짜별 지출 히트맵을 확인하고 하루 거래를 바로 펼쳐 보기","주간 소비 요약: 월요일 시작 주간 지출·수입·저축/상환 흐름 및 많이 지출한 날·카테고리 비교","이용 편의: 모바일 내역 목록과 달력 전환, 날짜 선택·접근성·월 이동에 따른 안전한 초기화","집계 안전성: 오프라인 대기 내역 중복 계산 방지, 거래 1000건 제한 등 데이터 일부 누락시 추정임을 명시"]},{"version":"2.3.5","date":"2026-10-11T13:48:38+09:00","notes":["생활비 개편 2차: 현재 입력된 금액에서 아직 기록되지 않은 예정 정기지출·저축·상환을 제외한 생활비 여유액 추정","생활비 개편 2차: 오늘부터 월말까지의 하루·일주일 사용 가능액과 예약 고정비 내역을 구분해 표시","고정비 관리: 월간 지출·정기수입과 연간 환산 규모를 한눈에 비교하는 대시보드","계산 안전성: 이미 기록된 정기거래 중복 차감 방지, 예정 정기수입 선반영 금지, 미입력·불확실한 항목 명시"]},{"version":"2.3.4","date":"2026-10-11T13:30:40+09:00","notes":["편의 개선 1차: 한 줄 문장에서 금액과 내역을 추출해 빠른 입력 칸에 미리 채우기","편의 개선 1차: 사용자가 붙여넣은 카드 승인 문자의 금액·가맹점·날짜를 확인 후 적용","편의 개선 1차: 기존 거래의 분류를 활용한 가맹점 추천과 거래 다시 입력","입력 안전성: 취소 알림·모호한 금액·중복 저장 위험을 자동 등록 없이 검토하고 기존 오프라인 대기열 보호 유지"]},{"version":"2.3.3","date":"2026-10-11T12:53:57+09:00","notes":["월마감 무결성: 마감 상태·활성 마감 이력을 함께 확인해 우회 저장과 중복 마감을 차단","정산 안정성: 월마감과 거래 동시 처리를 보호하고 실패·재시도 상태를 명확히 개선","거래 동기화: 서버 전송 중인 대기 거래를 취소 완료로 잘못 안내하던 문제 개선","오프라인 가계부: 재실행 후 대기 거래 합계와 월 전환 화면의 정확성 개선"]},{"version":"2.3.2","date":"2026-10-09T10:34:14+09:00","notes":["데이터 보호: 예산·자산·투자 종목을 저장할 때 기존 시트를 먼저 비우지 않고 입력 검증 후 한 번에 반영","서버 보안: 설치용 설정 함수의 원격 호출 차단","화면 보안: 정산 묶음 ID의 HTML 이벤트 삽입 가능성 제거","연결 보안: 기기별 임의 확인값으로 Google Apps Script 브리지 위조 연결·오래된 응답 차단"]},{"version":"2.3.1","date":"2026-09-29T08:53:56+09:00","notes":["보안(중요): 기기 ID를 바꿔 가며 PIN을 무제한으로 추측할 수 있던 문제 수정 — 처음 보는 기기는 공용 잠금, 쓰던 기기는 기기별 잠금","PC: 내역의 분류 칩(식비·교통/차량…기타 뒤)이 옆으로 안 넘어가던 문제 수정 — PC에서는 모든 분류가 한눈에 보이게 줄바꿈","PC: 자주 쓰는 거래·D-Day 줄은 마우스 휠이나 끌어서 옆으로 넘길 수 있어요","PC: 창 폭이 좁을 때 상단 메뉴 글자가 '내 / 역'처럼 세로로 쪼개지던 문제 수정","빠른 입력: 자주 쓰는 거래가 많으면 버튼 글자가 세로로 쌓이던 문제 수정","안정성: 창 위에 창이 열렸다 닫히면 앱 전체가 눌리지 않던 문제 수정","동기화: 지난달을 보다가 동기화하면 그 달 최신 내용을 못 받아오던 문제 수정","정산 공유초안: 다른 기기에서 지운 행이 이 기기의 옛 사본 때문에 되살아나던 문제 수정"]},{"version":"2.3.0","date":"2026-09-27T22:26:29+09:00","notes":["로그인 보안: v3 세션 registry와 현재 세션·모든 기기 원격 로그아웃을 추가하고, 구 v2 세션도 전체 로그아웃 시 함께 폐기","PIN 보호: 기기별 로그인 실패 제한으로 다른 기기의 오입력 때문에 함께 잠기는 문제를 줄이고 전역 abuse guard를 보조 안전망으로 분리","내역 검색: 현재 월/전체 기간 검색을 전환할 수 있고 소비성격·최소/최대 금액 필터와 서버 검색을 연결","알림 정리: 실제 서버 Web Push처럼 보이던 표현을 제거하고 앱 실행 중 기기 알림으로 명확히 표시, 예산 초과·빠른 소진 경고를 실제 동작으로 연결","접근성·안전: 모달 배경 inert·초기 포커스·포커스 트랩을 보강하고 전체기간 검색은 조회 전용, 마감월 일괄변경은 서버에서 사전 차단"]},{"version":"2.2.1","date":"2026-09-27T22:04:26+09:00","notes":["대용량 정산: 한 달 거래가 1,000건을 넘어도 대사·정산 합계·정산 배치가 전체 거래 기준으로 계산","저장 재시도: 연결 오류만 5초→15초→1분→5분 백오프로 자동 재시도하고 검증·마감 오류는 '확인 필요'로 중단","동기화 성능: 변경이 없는 달은 revision으로 확인해 거래 전체 목록을 다시 내려받지 않는 경량 새로고침 적용","시트 안전: 기존 헤더가 예상과 다르면 자동 덮어쓰지 않고 중단하며, 정상 legacy 시트는 뒤쪽 새 컬럼만 안전하게 확장","배포 안전: Apps Script 배포 뒤 생성된 정적 사이트 파일만 GitHub에 자동 게시하도록 릴리스 절차 보강"]}];
 /* @release:end */
 const DEFAULT_GAS_URL = 'https://script.google.com/macros/s/AKfycbwjFv7OSDc6T4vD0nUQA5E-W1QazAEU5dowQroEXard5DCMtP0FiMRlwtIjuEfDzo8phA/exec';
 const APP_CACHE_VERSION = 5;
@@ -1623,6 +1683,213 @@ function calculateLivingAllowance(input){
     subscriptionCandidates,monthlySubscriptionEstimate,
     annualSubscriptionEstimate:monthlySubscriptionEstimate*12,
     uncertain,note,warnings
+  };
+}
+
+/**
+ * 월별 거래 달력의 순수 집계 엔진. DOM/STATE/API/시계/스토리지에 접근하지 않는다.
+ * 반환값은 "전달받은 거래 기록 기준"이지 모든 은행 거래의 완전한 내역은 아니다.
+ * 특히 0원 날짜는 기록 기준 무지출이며 실제 무소비가 증명된 날짜가 아니다.
+ *
+ * days에는 해당 달 모든 날짜(0원 포함), weeks에는 월요일~일요일 주간의
+ * 선택 월 안쪽 경계만 포함한다. userFilter는 공백일 때 전체, 그 외 입력자 정확 일치.
+ * 거래의 cat/desc 등은 평문 데이터로만 반환하며 HTML escaping은 호출 UI의 책임.
+ */
+function calculateSpendingCalendar(input){
+  const opt=input || {};
+  const ym=String(opt.ym == null ? '' : opt.ym).trim();
+  const warnings=[];
+  const empty={
+    ym,days:[],weeks:[],expenseTotal:0,incomeTotal:0,savingTotal:0,
+    repaymentTotal:0,maxDayExpense:0,dayCount:0,zeroExpenseDays:0,
+    avgExpensePerDay:0,busiestDate:'',topCategories:[],
+    partial:true,uncertain:true,
+    note:'입력된 기록 기준 집계만 표시해. 기록이 없는 날도 실제 무지출이 확인된 것은 아니야.',
+    warnings
+  };
+  const parts=ym.match(/^([1-9]\d{3})-(0[1-9]|1[0-2])$/);
+  if(!parts){
+    warnings.push('조회할 월은 YYYY-MM 형식으로 선택해줘.');
+    return empty;
+  }
+  const year=Number(parts[1]),month=Number(parts[2]);
+  // UTC 달력 산술만 사용하며 지역/현재 시간대에 영향을 받지 않는다.
+  const countDays=new Date(Date.UTC(year,month,0)).getUTCDate();
+  const dateText=day=>ym+'-'+String(day).padStart(2,'0');
+  const days=Array.from({length:countDays},(_,index)=>({
+    date:dateText(index+1),day:index+1,expense:0,income:0,
+    saving:0,repayment:0,count:0,expenseCount:0,transactions:[]
+  }));
+  const inputRows=Array.isArray(opt.transactions) ? opt.transactions : [];
+  const summary=opt.summary;
+  let partial=!Array.isArray(opt.transactions) || !summary || typeof summary!=='object';
+  let uncertain=partial;
+  if(!Array.isArray(opt.transactions)) warnings.push('조회할 거래 목록이 없어 표시 금액이 일부 누락될 수 있어.');
+  if(!summary || typeof summary!=='object') warnings.push('월 집계가 없어 모든 거래가 전달됐는지 검증할 수 없어.');
+  if(inputRows.length>=1000){
+    partial=true;
+    uncertain=true;
+    warnings.push('거래 조회가 1,000건 한도에 닿아 일부 거래가 누락됐을 수 있어.');
+  }
+  const validDate=date=>{
+    const match=String(date == null ? '' : date).match(/^([1-9]\d{3})-(0[1-9]|1[0-2])-(0[1-9]|[12]\d|3[01])$/);
+    if(!match) return null;
+    const y=Number(match[1]),mo=Number(match[2]),d=Number(match[3]);
+    return d<=new Date(Date.UTC(y,mo,0)).getUTCDate() ? {ym:match[1]+'-'+match[2],day:d} : null;
+  };
+  // summary.count는 서버 전체 월 거래 건수다. 입력자 필터를 먼저 적용하면
+  // 정상적으로 일부만 선택한 상태도 누락으로 오인하므로 필터 전 raw month로 비교.
+  const rawMonthRows=inputRows.filter(tx=>tx && String(tx.date || '').slice(0,7)===ym);
+  const summaryCount=summary && summary.count;
+  if(summary && (summaryCount==null || String(summaryCount).trim()==='' ||
+      !Number.isSafeInteger(Number(summaryCount)) || Number(summaryCount)<0)){
+    partial=true;
+    uncertain=true;
+    warnings.push('월 거래 전체 건수를 확인할 수 없어 일부만 표시됐을 수 있어.');
+  } else if(summary && Number(summaryCount)>rawMonthRows.length){
+    partial=true;
+    uncertain=true;
+    warnings.push('월 전체 거래 건수보다 전달된 거래가 적어 부분 조회일 수 있어.');
+  }
+  const isFiltered=opt.userFilter!=null && String(opt.userFilter)!=='';
+  const userFilter=isFiltered ? String(opt.userFilter) : '';
+  const selected=[];
+  const indexById=new Map();
+  const identityTokens=tx=>[tx.txId,tx.clientId]
+    .map(id=>String(id==null ? '' : id).trim())
+    .filter(Boolean)
+    .map(id=>'id:'+id);
+  const provisional=tx=>!!String(tx.syncState || '').trim() ||
+    String(tx.row || '').startsWith('temp_');
+  // 같은 실제 거래가 pending overlay와 서버 snapshot에 함께 있으면 confirmed 우선.
+  // ID 없는 동일 금액/내역도 진짜 2회 결제일 수 있으므로 임의 병합하지 않는다.
+  inputRows.forEach(tx=>{
+    if(!tx || typeof tx!=='object') {
+      uncertain=true;
+      return;
+    }
+    const parsed=validDate(tx.date);
+    if(!parsed){
+      uncertain=true;
+      return;
+    }
+    if(parsed.ym!==ym) return;
+    const keys=identityTokens(tx);
+    let found=-1;
+    for(const key of keys){
+      if(indexById.has(key)){found=indexById.get(key);break;}
+    }
+    if(found>=0){
+      const previous=selected[found];
+      if(previous && provisional(previous) && !provisional(tx)) selected[found]=tx;
+      // 이전 pending의 clientId/서버 txId 형태가 섞여도 모두 같은 슬롯을 공유한다.
+      keys.forEach(key=>indexById.set(key,found));
+      return;
+    }
+    const index=selected.length;
+    selected.push(tx);
+    keys.forEach(key=>indexById.set(key,index));
+  });
+  const filtered=isFiltered ? selected.filter(tx=>String(tx.user == null ? '' : tx.user)===userFilter) : selected;
+  const catMap=new Map();
+  let expenseTotal=0,incomeTotal=0,savingTotal=0,repaymentTotal=0;
+  const typeKey={'지출':'expense','수입':'income','저축':'saving','대출상환':'repayment'};
+  filtered.forEach(tx=>{
+    if(tx.deleted===true || tx.deleted==='TRUE' || tx.deleted===1) return;
+    const parsed=validDate(tx.date);
+    if(!parsed || parsed.ym!==ym) return;
+    const type=String(tx.type || '').trim();
+    const key=typeKey[type];
+    if(!key){
+      uncertain=true;
+      warnings.push('유형이 불명확한 거래를 집계에서 제외했어.');
+      return;
+    }
+    // 소수/음수/0/지수표기/문자열 쓰레기를 허용하지 않는 원 단위 정수.
+    // 큰 금액과 합계의 JS precision 손실도 원천 차단한다.
+    const raw=String(tx.amount == null ? '' : tx.amount).trim();
+    if(!/^(?:[1-9]\d*|[1-9]\d{0,2}(?:,\d{3})+)$/.test(raw)){
+      uncertain=true;
+      warnings.push('금액이 정확한 양의 정수가 아닌 거래를 제외했어.');
+      return;
+    }
+    const amount=Number(raw.replace(/,/g,''));
+    const dayRow=days[parsed.day-1];
+    const newTotal=dayRow[key]+amount;
+    const totals={'expense':expenseTotal,'income':incomeTotal,'saving':savingTotal,'repayment':repaymentTotal};
+    const aggregateTotal=totals[key]+amount;
+    const category=String(tx.cat == null || tx.cat==='' ? '미분류' : tx.cat);
+    const previousCat=catMap.get(category);
+    if(!Number.isSafeInteger(amount) || amount<=0 ||
+       !Number.isSafeInteger(newTotal) || !Number.isSafeInteger(aggregateTotal) ||
+       (key==='expense' && previousCat && !Number.isSafeInteger(previousCat.amount+amount))){
+      uncertain=true;
+      warnings.push('금액이 너무 커서 정확한 합계를 계산할 수 없는 거래를 제외했어.');
+      return;
+    }
+    dayRow[key]=newTotal;
+    dayRow.count++;
+    // 참조를 반환하지 않고 얕은 복사본을 제공해 UI 편집이 원본 데이터에 미치지 않도록 한다.
+    dayRow.transactions.push({...tx});
+    if(key==='expense'){
+      expenseTotal=aggregateTotal;
+      dayRow.expenseCount++;
+      const current=previousCat || {cat:category,amount:0,count:0};
+      catMap.set(category,{cat:category,amount:current.amount+amount,count:current.count+1});
+    } else if(key==='income') incomeTotal=aggregateTotal;
+    else if(key==='saving') savingTotal=aggregateTotal;
+    else repaymentTotal=aggregateTotal;
+  });
+  const weeks=[];
+  for(let start=1;start<=countDays;){
+    const startDow=new Date(Date.UTC(year,month-1,start)).getUTCDay();
+    const last=Math.min(countDays,start+(7-(startDow+6)%7)-1);
+    const rows=days.slice(start-1,last);
+    weeks.push({
+      start:dateText(start),end:dateText(last),
+      expense:rows.reduce((n,d)=>n+d.expense,0),
+      income:rows.reduce((n,d)=>n+d.income,0),
+      saving:rows.reduce((n,d)=>n+d.saving,0),
+      repayment:rows.reduce((n,d)=>n+d.repayment,0),
+      count:rows.reduce((n,d)=>n+d.count,0)
+    });
+    start=last+1;
+  }
+  const maxDayExpense=days.reduce((highest,row)=>Math.max(highest,row.expense),0);
+  const busiestDate=maxDayExpense>0
+    ? days.find(row=>row.expense===maxDayExpense).date : '';
+  const zeroExpenseDays=days.filter(row=>row.expense===0).length;
+  const topCategories=[...catMap.values()].sort((a,b)=>
+    (b.amount-a.amount) || (b.count-a.count) || a.cat.localeCompare(b.cat));
+  // summary.count는 pending overlay 시 증가하지 않을 수 있어 '전체가 더 적은'
+  // 경우는 누락으로 단정하지 않는다. 반대로 실제 월 summary 지출/수입 합계가
+  // 전달된 모든 거래 합계보다 유의미하게 크면 조회 누락 경고만 제공한다.
+  // 입력자 필터가 설정된 경우에는 합계 비교 자체를 건너뛴다.
+  if(!isFiltered && summary && typeof summary==='object'){
+    const comparisons=[
+      ['expense',expenseTotal],['income',incomeTotal],
+      ['save',savingTotal],['repay',repaymentTotal]
+    ];
+    const shortfall=comparisons.some(([key,total])=>{
+      if(summary[key]==null || String(summary[key]).trim()==='') return false;
+      const expected=Number(summary[key]);
+      return Number.isFinite(expected) && expected>=0 &&
+        expected-total>Math.max(1000,expected*0.05);
+    });
+    if(shortfall){
+      partial=true;
+      uncertain=true;
+      warnings.push('월 전체 집계보다 표시 거래의 금액 합계가 작아 일부 기록이 누락됐을 수 있어.');
+    }
+  }
+  const note=(partial ? '부분 조회일 수 있어. ' : '')+
+    '입력된 기록 기준 지출 달력이야. 0원 날짜는 기록상 무지출이며 실제 무소비를 뜻하지 않아.'+
+    (uncertain ? ' 불확실한 거래는 제외했거나 검토가 필요해.' : '');
+  return {
+    ym,days,weeks,expenseTotal,incomeTotal,savingTotal,repaymentTotal,
+    maxDayExpense,dayCount:countDays,zeroExpenseDays,
+    avgExpensePerDay:expenseTotal/countDays,busiestDate,topCategories,
+    partial,uncertain,note,warnings
   };
 }
 function settlementDraftKey(ym){ return SETTLEMENT_DRAFT_PREFIX + String(ym || ''); }
@@ -2765,13 +3032,15 @@ function txRow(t){
   const cls = t.type==='수입' ? 'in' : 'out';
   const icoColor = catColorClass(t.cat);
   const readOnlyHistory = STATE.list && STATE.list.scope === 'all';
-  const safeRow = String(t.row || '').replace(/['\\]/g, '');
-  const txRef = String(t.txId || safeRow).replace(/['\\]/g, '');
+  // Server rows are numeric; pending rows and transaction IDs use safe token
+  // characters. Never interpolate a raw provider/user value into inline JS.
+  const safeRow = String(t.row || '').replace(/[^a-zA-Z0-9_-]/g, '');
+  const txRef = String(t.txId || safeRow).replace(/[^a-zA-Z0-9_-]/g, '');
   const isTemp = ['pending','sending','confirmed','error','attention'].includes(t.syncState) || String(t.row).startsWith('temp_');
   const tempEntry = isTemp ? (STATE.pending || []).find(row => row.clientId === (t.clientId || t.txId)) : null;
   const canCancelPending = isTemp && tempEntry && (tempEntry.status === 'queued' || tempEntry.status === 'rejected' || (!tempEntry.status && Number(tempEntry.attempts || 0) === 0));
   const repeatBtn = isTemp ? '' : `<button type="button" class="repeat-tx-btn" data-repeat-row="${esc(safeRow)}" title="이 거래를 오늘 날짜로 다시 입력" aria-label="${esc(t.desc || t.cat || '거래')} 다시 입력">↻ <span>다시 입력</span></button>`;
-  const editBtn = readOnlyHistory || isTemp ? '' : `<button type="button" class="edit-tx-btn" title="수정" onclick="event.stopPropagation(); editTx('${t.row}')">✏️</button>`;
+  const editBtn = readOnlyHistory || isTemp ? '' : `<button type="button" class="edit-tx-btn" data-edit-row="${esc(safeRow)}" title="수정" onclick="event.stopPropagation(); editTx(this.dataset.editRow)">✏️</button>`;
   const delBtn  = readOnlyHistory || (isTemp && !canCancelPending) ? '' : `<button type="button" class="del-tx-btn" data-delete-row="${esc(safeRow)}" title="${isTemp?'저장 대기 취소':'삭제'}" aria-label="${isTemp?'저장 대기 취소':'거래 삭제'}">${isTemp?'✕':'🗑️'}</button>`;
   const pendingLabel = t.syncState === 'confirmed' ? '서버 저장 확인 중' : t.syncState === 'sending' ? '전송됨 · 취소 불가' : t.syncState === 'attention' ? '확인 필요' : (t.syncState === 'error' ? '재시도 대기' : '저장 대기');
   const pendingBadge = isTemp ? `<span class="sync-badge ${t.syncState==='pending'?'':'error'}">${pendingLabel}</span>` : '';
@@ -2791,7 +3060,7 @@ function txRow(t){
     ${repeatBtn}${editBtn}${delBtn}`;
   }
 
-  return `<div class="tx" data-row="${safeRow}" ${bulkActive && !isTemp ? `onclick="const cb=this.querySelector('input[type=checkbox]'); if(cb) { cb.checked=!cb.checked; toggleBulkSelect('${txRef}', cb.checked); }"` : ''}>
+  return `<div class="tx" data-row="${esc(safeRow)}" ${bulkActive && !isTemp ? `onclick="const cb=this.querySelector('input[type=checkbox]'); if(cb) { cb.checked=!cb.checked; toggleBulkSelect('${txRef}', cb.checked); }"` : ''}>
     ${bulkActive ? actionHtml : ''}
     <div class="ico ${icoColor}">${emo(t.cat)}</div>
     <div class="mid"><div class="d">${esc(t.desc||t.cat||'(내역없음)')}</div>
@@ -2847,12 +3116,148 @@ function loadMoreTransactions(){
   else renderList();
 }
 
+// Display-only switches: neither handler touches search, server state or the
+// existing transaction writer. Whole-history always retains its normal list.
+function setSpendingCalendarMode(mode){
+  if(!STATE.list) return false;
+  const next=mode === 'calendar' ? 'calendar' : 'list';
+  if(next === 'calendar' && (STATE.list.scope === 'all' || STATE.bulkMode)) return false;
+  STATE.list.calendarMode=next;
+  renderList();
+  return true;
+}
+
+function spendingCalendarDefaultDate(ym){
+  const current=todayStr();
+  return current.slice(0,7) === ym ? current : ym+'-01';
+}
+
+function spendingCalendarValidDate(date,ym){
+  if(typeof date !== 'string' || !/^\d{4}-(0[1-9]|1[0-2])-([0-2]\d|3[01])$/.test(date) ||
+      date.slice(0,7) !== ym) return false;
+  const y=Number(date.slice(0,4)),m=Number(date.slice(5,7)),d=Number(date.slice(8,10));
+  const parsed=new Date(Date.UTC(y,m-1,d));
+  return parsed.getUTCFullYear()===y && parsed.getUTCMonth()===m-1 && parsed.getUTCDate()===d;
+}
+
+function selectSpendingCalendarDate(date){
+  if(!STATE.list || STATE.list.scope === 'all' || !spendingCalendarValidDate(date,STATE.ym)) return false;
+  STATE.list.calendarDate=date;
+  if(STATE.list.calendarMode === 'calendar') renderList();
+  return true;
+}
+
+function spendingCalendarSwitchHtml(){
+  const calendar=STATE.list && STATE.list.calendarMode === 'calendar';
+  return `<div class="spending-view-switch" role="group" aria-label="내역 보기 방식">
+    <button type="button" class="${calendar?'on':''}" aria-pressed="${calendar?'true':'false'}" onclick="setSpendingCalendarMode('calendar')" ${STATE.bulkMode?'disabled title="일괄 편집을 종료한 뒤 달력을 열 수 있어요"':''}>📅 소비 달력</button>
+    <button type="button" class="${calendar?'':'on'}" aria-pressed="${calendar?'false':'true'}" onclick="setSpendingCalendarMode('list')">🧾 거래 목록</button>
+  </div>`;
+}
+
+function renderSpendingCalendar(){
+  const ym=String(STATE.ym || '');
+  if(!/^\d{4}-(0[1-9]|1[0-2])$/.test(ym))
+    return '<div class="empty" role="status">확인할 달을 선택해줘.</div>';
+  if(!STATE.summary) return `<div class="empty" role="${STATE.monthLoadState==='error'?'alert':'status'}">${esc(ym)} 장부를 불러오지 못했어. ${STATE.monthLoadState==='error'?'<button type="button" onclick="retryMonthLoad()">다시 시도</button>':'상단에서 월을 선택하거나 새로고침해줘.'}</div>`;
+  if(typeof calculateSpendingCalendar !== 'function')
+    return '<div class="empty" role="status">소비 달력 데이터를 확인하고 있어요. 거래 목록으로 전환해줘.</div>';
+
+  const rows=Array.isArray(STATE.transactions) ? STATE.transactions : [];
+  const userFilter=STATE.userFilter || '';
+  const cal=calculateSpendingCalendar({ym,transactions:rows,summary:STATE.summary,userFilter});
+  if(!cal || !Array.isArray(cal.days))
+    return '<div class="empty" role="status">소비 달력을 표시할 수 없어. 거래 목록을 확인해줘.</div>';
+  const defaultDate=spendingCalendarDefaultDate(ym);
+  const selected=spendingCalendarValidDate(STATE.list.calendarDate,ym) ? STATE.list.calendarDate : defaultDate;
+  if(STATE.list.calendarDate !== selected) STATE.list.calendarDate=selected;
+  const monthParts=ym.split('-').map(Number);
+  const daysInMonth=new Date(Date.UTC(monthParts[0],monthParts[1],0)).getUTCDate();
+  const leading=(new Date(Date.UTC(monthParts[0],monthParts[1]-1,1)).getUTCDay()+6)%7;
+  const byDate=new Map(cal.days.map(day=>[String(day.date),day]));
+  const maxExpense=Math.max(0,Number(cal.maxDayExpense)||0);
+  const heading=`${monthParts[0]}년 ${monthParts[1]}월`;
+  const selectedDay=byDate.get(selected) || {};
+  // The pure helper has already enforced month/filter/pending policy. Use its
+  // original transactions for the detail so the day totals and rows agree.
+  const selectedRows=Array.isArray(selectedDay.transactions) ? selectedDay.transactions : [];
+  const weekDays=['월','화','수','목','금','토','일'];
+  const leadingCells=Array.from({length:leading},()=>'<span class="spending-day-placeholder" aria-hidden="true"></span>').join('');
+  const dayCells=Array.from({length:daysInMonth},(_,offset)=>{
+    const date=ym+'-'+String(offset+1).padStart(2,'0');
+    const day=byDate.get(date)||{};
+    const amount=Math.max(0,Number(day.expense)||0);
+    const count=Math.max(0,Number(day.count)||0);
+    const heat=maxExpense>0 && amount>0 ? Math.min(4,Math.max(1,Math.ceil(4*amount/maxExpense))) : 0;
+    const on=date===selected;
+    return `<button type="button" class="spending-day heat-${heat}${on?' selected':''}" data-date="${date}" onclick="selectSpendingCalendarDate(this.dataset.date)" aria-pressed="${on}" aria-label="${date} · 지출 ${fmt(amount)} · 거래 ${count}건" title="${date} · 지출 ${comma(amount)}원 · 거래 ${count}건">
+      <span class="spending-day-number">${offset+1}</span><span class="spending-day-amount">${amount ? fmt(amount) : '—'}</span>
+      ${count ? `<span class="spending-day-count">${count}건</span>` : '<span class="spending-day-count empty-count" aria-hidden="true">기록 없음</span>'}
+    </button>`;
+  }).join('');
+  const partial=!!cal.partial || !!cal.uncertain;
+  const coverage=partial ? '이 달 표시된 거래 기준 · 일부 내역이 누락될 수 있어요' : '이 달 기록된 거래 기준 · 계좌 실사용액과 다를 수 있어요';
+  const hasListFilters=!!(STATE.list.query || STATE.list.type || STATE.list.category);
+  const categoryRows=Array.isArray(cal.topCategories) ? cal.topCategories.slice(0,4) : [];
+  const topCatsHtml=categoryRows.length ? `<div class="spending-topcats"><h4>지출이 많은 분류</h4><div>${categoryRows.map(item=>{
+    const cat=String(item.cat || item.category || '미분류');
+    const amount=Number(item.amount ?? item.amt ?? item.expense ?? 0);
+    return `<span class="spending-cat-tag">${esc(cat)} <strong>${fmt(amount)}</strong></span>`;
+  }).join('')}</div></div>` : '<p class="spending-calendar-note">표시된 지출 분류가 없어요. 수입·저축 거래는 날짜 상세에서 확인해줘.</p>';
+  const maxDay=cal.days.filter(d=>Number(d.expense)>0).sort((a,b)=>Number(b.expense)-Number(a.expense))[0];
+  const topDayHtml=maxDay ? `<p class="spending-calendar-note">지출이 가장 큰 날: <strong>${esc(maxDay.date)} · ${fmt(maxDay.expense)}</strong></p>` : '';
+  const weekRows=Array.isArray(cal.weeks) ? cal.weeks : [];
+  const weeksHtml=weekRows.length ? `<div class="spending-week-summary"><h4>주간 합계 <small>월~일, 이 달 날짜만 집계</small></h4><div class="spending-week-grid">${weekRows.map(w=>`<div class="spending-week-row">
+    <span>${esc(String(w.start || ''))} ~ ${esc(String(w.end || ''))}</span>
+    <strong>지출 ${fmt(w.expense)}</strong><small>수입 ${fmt(w.income)} · 저축 ${fmt(w.saving)} · 상환 ${fmt(w.repayment)} · ${Number(w.count)||0}건</small>
+  </div>`).join('')}</div></div>` : '';
+  const totalsHtml=`<div class="spending-month-totals" aria-label="${esc(coverage)}">
+    <span>지출 <strong>${fmt(cal.expenseTotal)}</strong></span><span>수입 <strong>${fmt(cal.incomeTotal)}</strong></span>
+  </div>`;
+  const groups=[['지출','지출',selectedDay.expense],['수입','수입',selectedDay.income],['저축','저축',selectedDay.saving],['대출상환','상환',selectedDay.repayment]];
+  const unknownRows=selectedRows.filter(t=>!groups.some(([type])=>t.type===type));
+  const dailyTotals=groups.map(([type,label,amount])=>{
+    const count=selectedRows.filter(t=>t.type===type).length;
+    return `<span class="spending-detail-total">${label} <strong>${fmt(Number(amount)||0)}</strong> <small>${count}건</small></span>`;
+  }).join('');
+  const dailyRows=selectedRows.length ? groups.map(([type,label])=>{
+    const byType=selectedRows.filter(t=>t.type===type);
+    return byType.length ? `<section class="spending-detail-group" aria-label="${label} 거래">
+      <h4>${label} ${byType.length}건</h4>${byType.map(txRow).join('')}</section>` : '';
+  }).join('') + (unknownRows.length ? `<section class="spending-detail-group" aria-label="유형 미확인 거래"><h4>유형 미확인 ${unknownRows.length}건</h4>${unknownRows.map(txRow).join('')}</section>` : '')
+    : '<div class="empty">이 날짜에 표시된 거래가 없어. 기록하지 않은 소비는 집계되지 않아.</div>';
+  return `<section class="spending-calendar" aria-label="${esc(heading)} 소비 달력">
+    <div class="spending-calendar-heading"><h3>${esc(heading)} 소비 달력</h3><span>${userFilter ? esc(userFilter)+' 입력자 기준' : '전체 입력자 기준'}</span></div>
+    <p class="spending-calendar-note${partial?' caution':''}" role="${partial?'status':'note'}">${esc(coverage)}${cal.uncertain ? ' · 거래 기록을 확인해줘.' : ''} · 달 변경은 상단 월 선택을 이용해줘.</p>
+    ${hasListFilters ? '<p class="spending-calendar-note">달력은 목록의 검색·구분·분류 필터를 적용하지 않아요. 거래 목록으로 돌아가면 선택한 조건이 그대로 유지돼요.</p>' : ''}
+    ${totalsHtml}
+    <div class="spending-month-grid" role="group" aria-label="${esc(heading)} 날짜별 지출">
+      ${weekDays.map(day=>`<span class="spending-weekday" aria-hidden="true">${day}</span>`).join('')}
+      ${leadingCells}${dayCells}
+    </div>
+    <div class="spending-heat-legend" aria-label="지출 금액 상대 강도, 0에서 4단계"><span>지출 적음</span>${[0,1,2,3,4].map(i=>`<i class="heat-${i}" aria-hidden="true"></i>`).join('')}<span>많음</span></div>
+    ${weeksHtml}${topCatsHtml}${topDayHtml}
+    <section class="spending-day-detail" aria-live="polite" aria-label="선택한 날짜의 거래">
+      <div class="spending-detail-heading"><h3>${esc(selected)} 거래</h3><span>${selectedRows.length}건</span></div>
+      <div class="spending-detail-totals">${dailyTotals}</div>
+      ${dailyRows}
+    </section>
+  </section>`;
+}
+
 function renderList(){
   const el=document.getElementById('v-list');
   if(!el) return;
   const wholeHistory = STATE.list.scope === 'all';
   if (!wholeHistory && !STATE.summary && STATE.monthLoadState !== 'idle') {
     el.innerHTML = `<div class="empty" role="${STATE.monthLoadState === 'error' ? 'alert' : 'status'}">${esc(STATE.ym)} ${STATE.monthLoadState === 'error' ? '장부 불러오기 실패 · ' + esc(STATE.monthLoadError || '') : '장부 불러오는 중…'} ${STATE.monthLoadState === 'error' ? '<button type="button" onclick="retryMonthLoad()">다시 시도</button>' : ''}</div>`;
+    return;
+  }
+  if(!wholeHistory && STATE.list.calendarMode === 'calendar'){
+    el.innerHTML=`<div class="list-scope-toggle" role="group" aria-label="검색 기간">
+      <button type="button" class="on" onclick="setListScope('month')">${esc(STATE.ym || '')} 이달</button>
+      <button type="button" onclick="setListScope('all')">전체 기간</button>
+    </div>${spendingCalendarSwitchHtml()}${renderSpendingCalendar()}`;
     return;
   }
   let txs = wholeHistory ? (STATE.list.remoteRows || []) : (STATE.transactions || []);
@@ -2988,6 +3393,7 @@ function renderList(){
 
   el.innerHTML = `
     ${searchBarHtml}
+    ${wholeHistory ? '' : spendingCalendarSwitchHtml()}
     ${wholeHistory ? '<div class="list-readonly-note">전체 기간 결과는 조회 전용이에요 · 수정/삭제는 해당 월로 이동해서 해주세요.</div>' : ''}
     ${typeChipsHtml}
     <div class="cat-scroll-bar" style="margin-top:4px">${filterChipsHtml}</div>
