@@ -3,7 +3,7 @@
 <head>
 <base target="_top">
 <meta charset="utf-8">
-<meta name="app-version" content="2.3.12">
+<meta name="app-version" content="2.3.13">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, interactive-widget=resizes-content">
 <meta name="description" content="지수와 하콩이의 빠르고 편한 공동 가계부">
 <meta name="theme-color" content="#f5f5f7">
@@ -1063,9 +1063,9 @@ body.dark-mode .transfer-status.error{color:var(--gold)}
 <script>
 /* ============ 앱 글로벌 상태 (Store) ============ */
 /* @release:start — pwa-site/scripts/build-static.mjs 가 release.json 을 보고 자동으로 채운다. 손으로 고치지 말 것. */
-const APP_VERSION = '2.3.12';
-const APP_BUILT_AT = '2026-10-18T09:58:45+09:00';
-const APP_RELEASE_NOTES = [{"version":"2.3.12","date":"2026-10-18T09:58:45+09:00","notes":["공동자금 단일 장부: 개인/공동·입력자·실제 결제자·부담비율과 추가 옵션 접기를 제거하고 날짜·선택 계좌만 바로 입력","홈과 내역의 사람별 통계·필터·송금 정산 제안을 제거하고 소비 달력·예산·월정산은 전체 거래 기준으로 유지","기존 거래 수정 시 숨겨진 메모·고정비·소비성격 보존, 정기거래 중복 예약 방지, 감사 이력 및 오프라인 저장 호환 보강"]},{"version":"2.3.11","date":"2026-10-11T16:44:03+09:00","notes":["작은 개선과 오류 수정"]},{"version":"2.3.10","date":"2026-10-11T16:41:28+09:00","notes":["5차 안정화: 저장 응답 유실 및 새로고침 후 내부이체 요청 ID 복구·중복 기록 방지, 다른 월 이동 중 오래된 응답의 입력 초안 침범 차단","서비스워커·저장 보호: 내부이체 작성 중 앱 자동 새로고침 제한, 비앱 페이지/JSON 응답이 오프라인 앱 셸을 덮어쓰지 않도록 캐시 범위 제한","정합성 보강: 이체 금액 쉼표 형식 엄격 검사, 서로 다른 원장의 저축·이체 중복 후보 알림, 잘못된 거래 유형·중복 이체 ID·불완전 합계 및 수치 초과 경고","이체 서버 안전: 빈 기존 시트 헤더 초기화, 삭제된 거래 재요청 멱등 처리, 손상 날짜 데이터 완전성 표시와 삭제 표시만 한 칸 갱신, 독립 적대적 회귀 검사 보강"]},{"version":"2.3.9","date":"2026-10-11T15:10:36+09:00","notes":["5차 내부이체: 기존 지출·수입 원장과 분리된 계좌 간 이체 전용 기록, 출금계좌·입금계좌·금액·날짜·메모 입력 및 이력 조회","결제수단별 월 흐름: 거래 출처/계좌와 내부이체 입출금 흐름을 별도로 보고, 확인되지 않은 실제 잔액이나 카드 청구금액으로 오인하지 않게 안내","금융 안정성: 이체는 소비·수입·부부 공동부담 계산에 섞지 않고, 반복 요청 ID 멱등 처리·월마감 쓰기 차단·삭제기록 보존","안전한 도입: 기존 거래·자산 시트 값은 변경하지 않고 신규 이체 전용 장부만 사용, 오프라인 상태에서는 이체를 조용히 큐에 넣지 않음"]},{"version":"2.3.8","date":"2026-10-11T14:41:36+09:00","notes":["4차 공동생활비: 거래 입력자와 실제 결제자를 분리하고 개인·공동 지출 및 지수·하콩 부담비율을 기록","부부 정산: 월별 확정 공동지출에 따른 개인별 부담과 차액 송금 제안을 읽기 전용으로 표시","결제수단 기록: 기존 출처/계좌를 빠른 입력·수정에 연결하되 실제 계좌이체나 카드 잔액은 연동하지 않음","금융 데이터 보호: 기존 거래 분담비율 자동 추정 금지, 미확정 거래 제외, 닫힌 월 쓰기 차단·오프라인 동기화 보호 및 신규 회귀 테스트"]},{"version":"2.3.7","date":"2026-10-11T14:27:37+09:00","notes":["소비 달력 정합성: 서버 txId와 오프라인 clientId가 뒤늦게 연결되는 거래를 하나로 합산해 중복 지출 방지","릴리스 안전: 게시 HTML과 원본 코드·소스 해시를 직접 검증하고 불일치하면 정적 배포 중단"]},{"version":"2.3.6","date":"2026-10-11T14:02:04+09:00","notes":["생활형 화면 3차: 내역에서 월별 소비 달력과 날짜별 지출 히트맵을 확인하고 하루 거래를 바로 펼쳐 보기","주간 소비 요약: 월요일 시작 주간 지출·수입·저축/상환 흐름 및 많이 지출한 날·카테고리 비교","이용 편의: 모바일 내역 목록과 달력 전환, 날짜 선택·접근성·월 이동에 따른 안전한 초기화","집계 안전성: 오프라인 대기 내역 중복 계산 방지, 거래 1000건 제한 등 데이터 일부 누락시 추정임을 명시"]},{"version":"2.3.5","date":"2026-10-11T13:48:38+09:00","notes":["생활비 개편 2차: 현재 입력된 금액에서 아직 기록되지 않은 예정 정기지출·저축·상환을 제외한 생활비 여유액 추정","생활비 개편 2차: 오늘부터 월말까지의 하루·일주일 사용 가능액과 예약 고정비 내역을 구분해 표시","고정비 관리: 월간 지출·정기수입과 연간 환산 규모를 한눈에 비교하는 대시보드","계산 안전성: 이미 기록된 정기거래 중복 차감 방지, 예정 정기수입 선반영 금지, 미입력·불확실한 항목 명시"]}];
+const APP_VERSION = '2.3.13';
+const APP_BUILT_AT = '2026-10-18T12:04:35+09:00';
+const APP_RELEASE_NOTES = [{"version":"2.3.13","date":"2026-10-18T12:04:35+09:00","notes":["정기거래 중복 기록·저장 응답 유실 재시도·확정 대기 거래의 화면 이중 집계 위험을 보완","기존 정기거래 메모·고정구분 보존, 금액·날짜·거래종류·카테고리 검증과 날짜 HTML 출력 안전성 강화","월 이동·저장 응답 경합·생활비 예측 정합성을 수정하고 장애 재현 회귀 테스트 추가"]},{"version":"2.3.12","date":"2026-10-18T09:58:45+09:00","notes":["공동자금 단일 장부: 개인/공동·입력자·실제 결제자·부담비율과 추가 옵션 접기를 제거하고 날짜·선택 계좌만 바로 입력","홈과 내역의 사람별 통계·필터·송금 정산 제안을 제거하고 소비 달력·예산·월정산은 전체 거래 기준으로 유지","기존 거래 수정 시 숨겨진 메모·고정비·소비성격 보존, 정기거래 중복 예약 방지, 감사 이력 및 오프라인 저장 호환 보강"]},{"version":"2.3.11","date":"2026-10-11T16:44:03+09:00","notes":["작은 개선과 오류 수정"]},{"version":"2.3.10","date":"2026-10-11T16:41:28+09:00","notes":["5차 안정화: 저장 응답 유실 및 새로고침 후 내부이체 요청 ID 복구·중복 기록 방지, 다른 월 이동 중 오래된 응답의 입력 초안 침범 차단","서비스워커·저장 보호: 내부이체 작성 중 앱 자동 새로고침 제한, 비앱 페이지/JSON 응답이 오프라인 앱 셸을 덮어쓰지 않도록 캐시 범위 제한","정합성 보강: 이체 금액 쉼표 형식 엄격 검사, 서로 다른 원장의 저축·이체 중복 후보 알림, 잘못된 거래 유형·중복 이체 ID·불완전 합계 및 수치 초과 경고","이체 서버 안전: 빈 기존 시트 헤더 초기화, 삭제된 거래 재요청 멱등 처리, 손상 날짜 데이터 완전성 표시와 삭제 표시만 한 칸 갱신, 독립 적대적 회귀 검사 보강"]},{"version":"2.3.9","date":"2026-10-11T15:10:36+09:00","notes":["5차 내부이체: 기존 지출·수입 원장과 분리된 계좌 간 이체 전용 기록, 출금계좌·입금계좌·금액·날짜·메모 입력 및 이력 조회","결제수단별 월 흐름: 거래 출처/계좌와 내부이체 입출금 흐름을 별도로 보고, 확인되지 않은 실제 잔액이나 카드 청구금액으로 오인하지 않게 안내","금융 안정성: 이체는 소비·수입·부부 공동부담 계산에 섞지 않고, 반복 요청 ID 멱등 처리·월마감 쓰기 차단·삭제기록 보존","안전한 도입: 기존 거래·자산 시트 값은 변경하지 않고 신규 이체 전용 장부만 사용, 오프라인 상태에서는 이체를 조용히 큐에 넣지 않음"]},{"version":"2.3.8","date":"2026-10-11T14:41:36+09:00","notes":["4차 공동생활비: 거래 입력자와 실제 결제자를 분리하고 개인·공동 지출 및 지수·하콩 부담비율을 기록","부부 정산: 월별 확정 공동지출에 따른 개인별 부담과 차액 송금 제안을 읽기 전용으로 표시","결제수단 기록: 기존 출처/계좌를 빠른 입력·수정에 연결하되 실제 계좌이체나 카드 잔액은 연동하지 않음","금융 데이터 보호: 기존 거래 분담비율 자동 추정 금지, 미확정 거래 제외, 닫힌 월 쓰기 차단·오프라인 동기화 보호 및 신규 회귀 테스트"]},{"version":"2.3.7","date":"2026-10-11T14:27:37+09:00","notes":["소비 달력 정합성: 서버 txId와 오프라인 clientId가 뒤늦게 연결되는 거래를 하나로 합산해 중복 지출 방지","릴리스 안전: 게시 HTML과 원본 코드·소스 해시를 직접 검증하고 불일치하면 정적 배포 중단"]},{"version":"2.3.6","date":"2026-10-11T14:02:04+09:00","notes":["생활형 화면 3차: 내역에서 월별 소비 달력과 날짜별 지출 히트맵을 확인하고 하루 거래를 바로 펼쳐 보기","주간 소비 요약: 월요일 시작 주간 지출·수입·저축/상환 흐름 및 많이 지출한 날·카테고리 비교","이용 편의: 모바일 내역 목록과 달력 전환, 날짜 선택·접근성·월 이동에 따른 안전한 초기화","집계 안전성: 오프라인 대기 내역 중복 계산 방지, 거래 1000건 제한 등 데이터 일부 누락시 추정임을 명시"]}];
 /* @release:end */
 const DEFAULT_GAS_URL = 'https://script.google.com/macros/s/AKfycbwjFv7OSDc6T4vD0nUQA5E-W1QazAEU5dowQroEXard5DCMtP0FiMRlwtIjuEfDzo8phA/exec';
 const APP_CACHE_VERSION = 5;
@@ -3315,8 +3315,8 @@ function txGroupedRows(list, sumType){
   return dates.map(d=>{
     const g = groups[d];
     const header = `<div class="date-group-header">
-      <span class="date-title">${formatDateTitle(d)}</span>
-      <span class="date-total">${g.daySum > 0 ? dayType + ' ' + comma(g.daySum) + '원' : ''}</span>
+      <span class="date-title">${esc(formatDateTitle(d))}</span>
+      <span class="date-total">${g.daySum > 0 ? esc(dayType) + ' ' + comma(g.daySum) + '원' : ''}</span>
     </div>`;
     const rowsHtml = g.rows.map(txRow).join('');
     return header + rowsHtml;
@@ -4331,6 +4331,10 @@ function mergePendingTransactions(){
   STATE.recent = base.recent.slice();
   const existing = new Set([].concat(STATE.recent, STATE.transactions).map(t => String(t.clientId || t.txId || t.row)));
   (STATE.pending || []).forEach(entry => {
+    // A confirmed receipt is already reflected in server summary even if its
+    // row is outside the 1,000-row window. Keep the receipt for reconciliation,
+    // but never count or display it again as an optimistic transaction.
+    if (entry.status === 'confirmed') return;
     const tx = pendingAsTransaction(entry);
     if (String(tx.date || '').slice(0, 7) !== STATE.ym) return;
     if (existing.has(entry.clientId) || existing.has(tx.row)) return;
@@ -5043,6 +5047,26 @@ function closeActiveSheet(){
   else closeQuickEntryModal();
 }
 
+let PENDING_SHELL_REFRESH_CACHE='';
+function attemptSafeWorkerUpgrade(){
+  const cache=PENDING_SHELL_REFRESH_CACHE;
+  if(!cache)return false;
+  const key='sey_sw_reloaded_'+cache;
+  try{if(sessionStorage.getItem(key)){PENDING_SHELL_REFRESH_CACHE='';return false;}}catch(e){return false;}
+  const transfer=STATE.internalTransfers || {};
+  const filled=draft=>!!draft && ['fromAccount','toAccount','amount','memo'].some(k=>String(draft[k] || '').trim());
+  const anyDraft=filled(transfer.draft) || Object.values(transfer.draftsByMonth || {}).some(slot=>filled(slot && slot.draft));
+  const changed=Object.keys(transfer.transferDraftChangedMonths || {}).length>0;
+  let receipt;
+  try{receipt=readInternalTransferReceipt();}catch(e){return false;}
+  if(document.querySelector('.sheet.on') || transfer.busy || anyDraft || changed ||
+      transfer.pendingSave || !receipt.ok || receipt.receipt || STATE.undurableQuickTx || STATE.recurringSaveInFlight) return false;
+  try{sessionStorage.setItem(key,'1');}catch(e){return false;}
+  PENDING_SHELL_REFRESH_CACHE='';
+  location.reload();
+  return true;
+}
+
 function renderQuickEntrySourceOptions(){
   const options=document.getElementById('fSourceOptions');
   if(!options)return;
@@ -5260,6 +5284,7 @@ function closeQuickEntryModal(){
   // 수정 모드에서 숨긴 버튼 복원
   const continueBtn = document.getElementById('continueBtn');
   if(continueBtn) continueBtn.style.display = '';
+  attemptSafeWorkerUpgrade();
 }
 
 /* ============ 월초 일괄정산 작업대 ============ */
@@ -5970,6 +5995,10 @@ function quickTxSameData(a, b){
   }
   catch(e) { return false; }
 }
+function quickTxHiddenDifference(a,b){
+  return ['fixed','memo','spendingMood','user'].some(key=>
+    String(a && a[key] != null ? a[key] : '') !== String(b && b[key] != null ? b[key] : ''));
+}
 
 function finishQuickTxInputs(closeAfter, amtInp, descInp){
   if (closeAfter) closeQuickEntryModal();
@@ -6057,14 +6086,23 @@ function submitQuickTx(closeAfter){
 
   if (STATE.editing) {
     const editRow = STATE.editing.txId || STATE.editing.row;
+    const startedYm=STATE.ym;
+    const startedSeq=STATE.requestSeq;
+    const editing=STATE.editing;
     setTxSubmitBusy(true, '수정 저장 중…');
     renderSyncStatus('거래 수정 저장 중', 'syncing');
     api('updateTransaction', editRow, data, STATE.ym).then(result => {
-      applyMonthData(result);
-      saveMonthCache(result.ym || STATE.ym, result);
-      STATE.editing = null;
-      closeQuickEntryModal();
-      renderAll();
+      if(result && result.ym)saveMonthCache(result.ym,result);
+      // An ACK belongs to the month/edit that initiated it. It cannot take
+      // the user back to an old month after navigation or replace a new edit.
+      if(STATE.ym===startedYm && STATE.requestSeq===startedSeq && STATE.editing===editing){
+        applyMonthData(result);
+        closeQuickEntryModal();
+        renderAll();
+      }else if(STATE.editing===editing){
+        STATE.editing=null;
+        toast('거래 수정은 저장됐어. 현재 월은 그대로 유지했어.');
+      }
       renderSyncStatus('수정 저장 완료', 'saved');
       toast('✅ 거래 수정 완료');
     }).catch(err => {
@@ -6075,7 +6113,15 @@ function submitQuickTx(closeAfter){
   }
 
   const retry=STATE.undurableQuickTx;
-  const retryId=retry && quickTxSameData(retry.data,data) ? retry.clientId : '';
+  if(retry && !quickTxSameData(retry.data,data)){
+    // The earlier direct RPC might have committed before its ACK was lost.
+    // Different visible data must NEVER silently receive a new clientId.
+    toast('앞선 거래 저장 확인이 안 됐어. 원래 금액·날짜·내역으로 재시도하거나 새로고침 후 장부를 확인해줘.',true);
+    return;
+  }
+  if(retry && quickTxHiddenDifference(retry.data,data) &&
+      !confirm('앞선 저장 요청의 숨겨진 메모·고정비·작성자 값이 현재 입력과 달라. 중복 방지를 위해 이전 요청의 원래 값으로 다시 시도할까?')) return;
+  const retryId=retry ? retry.clientId : '';
   const entry = queueTransaction(retryId ? retry.data : data,retryId);
   if (!entry.durable) {
     saveUndurableQuickTx(entry,closeAfter,amtInp,descInp);
@@ -6247,12 +6293,7 @@ function deleteTxPrompt(row){
 
 function changeMonth(delta){
   if(!STATE.ym) return;
-  const parts = STATE.ym.split('-');
-  let y = Number(parts[0]);
-  let m = Number(parts[1]) + delta;
-  if (m < 1) { y--; m = 12; }
-  else if (m > 12) { y++; m = 1; }
-  const newYm = y + '-' + pad(m);
+  const newYm = shiftYmClient(STATE.ym, Number(delta));
 
   const requestId = ++STATE.requestSeq;
   STATE.monthMode = 'manual';
@@ -6522,21 +6563,32 @@ function applyQuickEntryText(){
       });
     }
 
+    const RECURRING_CREATE_RECEIPT_KEY='sey_recurring_create_receipt_v1';
+    function unconfirmedRecurringCreate(){
+      if(STATE.unconfirmedRecurringCreate)return STATE.unconfirmedRecurringCreate;
+      try{
+        const value=JSON.parse(localStorage.getItem(RECURRING_CREATE_RECEIPT_KEY)||'null');
+        if(value && value.id && value.createOnly===true)return value;
+      }catch(e){}
+      return null;
+    }
     function openRecurringModal() {
       openDialogSheet('recSheet','#rDay');
       document.getElementById('recSheetTitle').textContent = STATE.editingRecurring ? '고정거래 수정' : '새 고정거래 추가';
       
       if (!STATE.editingRecurring) {
-        document.getElementById('rId').value = '';
-        document.getElementById('rDay').value = '';
-        document.getElementById('rAmount').value = '';
-        document.getElementById('rDesc').value = '';
-        document.getElementById('rEnabled').checked = true;
-        document.getElementById('rEndYmToggle').checked = false;
-        document.getElementById('rEndYmContainer').style.display = 'none';
-        document.getElementById('rEndYm').value = '';
-        STATE.form.rType = '지출';
-        STATE.form.rCat = '식비';
+        const retry=unconfirmedRecurringCreate();
+        document.getElementById('rId').value = retry ? retry.id : '';
+        document.getElementById('rDay').value = retry ? String(retry.day) : '';
+        document.getElementById('rAmount').value = retry ? comma(retry.amount) : '';
+        document.getElementById('rDesc').value = retry ? retry.name : '';
+        document.getElementById('rEnabled').checked = retry ? retry.enabled !== false : true;
+        document.getElementById('rEndYmToggle').checked = !!(retry && retry.endYm);
+        document.getElementById('rEndYmContainer').style.display = retry && retry.endYm ? 'flex' : 'none';
+        document.getElementById('rEndYm').value = retry ? retry.endYm || '' : '';
+        STATE.form.rType = retry ? retry.type : '지출';
+        STATE.form.rCat = retry ? retry.cat : '식비';
+        if(retry)toast('앞선 정기거래의 저장 결과가 불확실해. 원래 내용 그대로 동일 ID로 확인·재시도해줘.');
       }
       
       document.getElementById('recDeleteBtn').style.display = STATE.editingRecurring ? 'block' : 'none';
@@ -6546,6 +6598,7 @@ function applyQuickEntryText(){
     function closeRecurringModal() {
       closeDialogSheet('recSheet');
       STATE.editingRecurring = null;
+      attemptSafeWorkerUpgrade();
     }
 
     function renderRecurringFormChips() {
@@ -6583,8 +6636,9 @@ function applyQuickEntryText(){
       
       if(endYmToggle && !endYm) return toast('종료월(만료월)을 선택하세요.', true);
       
+      const creating=!STATE.editingRecurring;
       const rec = {
-        id: id || '',
+        id: id || (creating ? 'RC-'+createClientId().replace(/^web_/,'') : ''),
         name: desc,
         type: STATE.form.rType,
         cat: STATE.form.rCat,
@@ -6595,19 +6649,37 @@ function applyQuickEntryText(){
       };
       // Existing recurring.user stays in the server row (including blanks).
       // Matching previously posted recurring expenses depends on this value.
-      if(!STATE.editingRecurring) rec.user=STATE.sessionUser || '하콩';
+      if(creating){
+        rec.user=STATE.sessionUser || '하콩';
+        rec.createOnly=true;
+        const previous=unconfirmedRecurringCreate();
+        if(previous && JSON.stringify(previous)!==JSON.stringify(rec)){
+          toast('앞선 정기거래 저장 여부가 불확실해. 내용 수정 대신 원래 요청을 먼저 재시도해줘.',true);
+          return;
+        }
+        if(!safeSet(RECURRING_CREATE_RECEIPT_KEY,JSON.stringify(rec),{critical:true})){
+          toast('정기거래 요청 ID를 기기에 보관하지 못했어. 중복 방지를 위해 저장을 보류했어.',true);
+          return;
+        }
+        STATE.unconfirmedRecurringCreate=rec;
+      }
       
+      STATE.recurringSaveInFlight=true;
       closeRecurringModal();
       toast('🔄 고정거래 저장 중...');
       api('saveRecurring', rec).then(res => {
+        if(creating && STATE.unconfirmedRecurringCreate && STATE.unconfirmedRecurringCreate.id===rec.id){
+          safeRemove(RECURRING_CREATE_RECEIPT_KEY);
+          STATE.unconfirmedRecurringCreate=null;
+        }
         STATE.recurrings = (res && (res.rows || res.recurrings)) || [];
         if (res && res.status) STATE.recurringStatus = res.status;
         renderRecurring();
         renderHome();
         toast('✅ 저장 완료');
       }).catch(e => {
-        toast('⚠️ 저장 실패', true);
-      });
+        toast('⚠️ 저장 결과를 확인하지 못했어. 새로 추가하지 말고 같은 정기거래를 다시 열어 재시도해줘.', true);
+      }).finally(()=>{STATE.recurringSaveInFlight=false;attemptSafeWorkerUpgrade();});
     }
 
     function editRecurring(id) {
@@ -7533,26 +7605,13 @@ function bindApp(){
     navigator.serviceWorker.addEventListener('message', event => {
       const msg = event.data || {};
       if (msg.type !== 'sw-updated' || !msg.cache) return;
-      let key = '';
-      try {
-        key = 'sey_sw_reloaded_' + msg.cache;
-        if (sessionStorage.getItem(key)) return;   // 같은 버전으로는 한 번만
-      } catch(e) { return; }
-      // A transfer draft is not an ordinary modal sheet; never discard it or an
-      // unresolved durable receipt, even when the transfer view is not active.
-      const transfer=STATE.internalTransfers;
-      const filled=draft=>!!draft && ['fromAccount','toAccount','amount','memo'].some(k=>String(draft[k] || '').trim());
-      const anyDraft=filled(transfer.draft) || Object.values(transfer.draftsByMonth || {}).some(slot=>filled(slot && slot.draft));
-      const changedDateOrOtherInput=Object.keys(transfer.transferDraftChangedMonths || {}).length>0;
-      const receipt=readInternalTransferReceipt();
-      if(document.querySelector('.sheet.on') || transfer.busy || anyDraft || changedDateOrOtherInput ||
-          transfer.pendingSave || !receipt.ok || receipt.receipt){
-        toast('새 버전이 준비됐어. 입력과 이체 요청을 확인한 뒤 직접 새로고침해줘.');
-        return;
-      }
-      try { sessionStorage.setItem(key, '1'); } catch(e) { return; }
-      location.reload();
+      PENDING_SHELL_REFRESH_CACHE=String(msg.cache);
+      if(!attemptSafeWorkerUpgrade())toast('새 버전이 준비됐어. 입력·이체를 마친 뒤 안전할 때 자동으로 새로고침할게.');
     });
+    // A deferred SW update must be reconsidered when a modal is dismissed or
+    // a transfer draft is resolved, not just when the SW sends one message.
+    document.addEventListener('click',()=>setTimeout(attemptSafeWorkerUpgrade,0),true);
+    window.addEventListener('focus',attemptSafeWorkerUpgrade);
   }
 
   const addBtn = document.getElementById('addBtn');
