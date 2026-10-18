@@ -3,7 +3,7 @@
 <head>
 <base target="_top">
 <meta charset="utf-8">
-<meta name="app-version" content="2.3.11">
+<meta name="app-version" content="2.3.12">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, interactive-widget=resizes-content">
 <meta name="description" content="지수와 하콩이의 빠르고 편한 공동 가계부">
 <meta name="theme-color" content="#f5f5f7">
@@ -147,11 +147,6 @@ main{padding:18px 16px 0}
 .speed-light.safe{background:rgba(52,199,89,.22);color:#34c759}
 .speed-light.warning{background:rgba(255,159,10,.25);color:#ff9f0a}
 .speed-light.danger{background:rgba(255,59,48,.25);color:#ff3b30}
-.couple-card{margin-top:16px}
-.couple-head{display:flex;justify-content:space-between;font-size:13px;font-weight:800;margin-bottom:8px}
-.couple-track{height:10px;background:var(--line-soft);border-radius:999px;overflow:hidden;display:flex}
-.couple-fill-j{height:100%;background:var(--forest);border-radius:999px 0 0 999px}
-.couple-fill-h{height:100%;background:var(--gold);border-radius:0 999px 999px 0}
 .dday-strip{display:flex;gap:8px;overflow-x:auto;padding:4px 0 2px;-webkit-overflow-scrolling:touch}
 .dday-strip::-webkit-scrollbar{display:none}
 .dday-chip{flex:0 0 auto;padding:10px 15px;border-radius:14px;background:var(--card);box-shadow:var(--shadow);border:1px solid var(--line-soft);font-size:13px;font-weight:800;display:flex;align-items:center;gap:8px}
@@ -174,10 +169,8 @@ main{padding:18px 16px 0}
 .asset-goal-track{height:12px;background:var(--line-soft);border-radius:999px;overflow:hidden}
 .asset-goal-fill{height:100%;background:linear-gradient(90deg,var(--forest),var(--green));border-radius:999px}
 
-.user-switcher-strip{display:flex;gap:6px;background:var(--line-soft);padding:4px;border-radius:16px;margin-bottom:16px}
 .user-switch-chip{flex:1;padding:9px 0;border-radius:12px;font-size:13px;font-weight:800;color:var(--muted);text-align:center;transition:.15s;border:none;background:none;cursor:pointer}
 .user-switch-chip.on{background:var(--card);color:var(--ink);box-shadow:0 4px 12px rgba(0,0,0,.05)}
-.filter-caption{margin:0 4px 7px;color:var(--muted);font-size:11.5px;font-weight:800}
 
 .summary-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:12px}
 .summary-grid .mini{padding:12px 6px;box-shadow:none}
@@ -375,49 +368,7 @@ body.dark-mode .tabbar{background:rgba(28,28,30,0.85);border-top-color:rgba(255,
 .quick-amt-chips button.reset{background:#fbe9e6;color:var(--expense);flex:0 0 42px}
 .compact-chips{margin-top:8px}
 .compact-chips:first-of-type{margin-top:0}
-.extra-fields{margin:2px 0 0;border-top:1px solid var(--line-soft);border-bottom:1px solid var(--line-soft)}
-.extra-fields>summary{min-height:52px;display:flex;align-items:center;justify-content:space-between;gap:10px;cursor:pointer;list-style:none;font-size:14px;font-weight:900;color:var(--ink)}
-.extra-fields>summary::-webkit-details-marker{display:none}
-.extra-fields>summary span{font-size:11.5px;font-weight:700;color:var(--muted)}
-.extra-fields>summary::after{content:'+';font-size:20px;color:var(--muted);font-weight:500}
-.extra-fields[open]>summary::after{content:'−'}
-.extra-fields-body{padding-top:8px}
-
-/* 4차 공동생활비: 작성자/실제 결제자/부담율을 명시적으로 분리 */
-.household-entry{margin:12px 0 16px;padding:14px;border:1px solid var(--line);border-radius:15px;background:var(--card)}
-.household-entry[hidden],.household-choice[hidden]{display:none!important}
-.household-entry h3{font-size:14px;font-weight:900;color:var(--ink);margin:0 0 6px}
 .household-entry-help{font-size:11px;line-height:1.6;font-weight:700;color:var(--muted);margin:4px 0 8px;overflow-wrap:anywhere}
-.household-choice{padding:9px 0;border-top:1px solid var(--line-soft)}
-.household-choice .chips{display:flex;flex-wrap:wrap;gap:7px}
-.household-label{display:block;margin-bottom:8px;font-size:12px;font-weight:850;color:var(--ink)}
-.household-share-row{display:flex;gap:10px;align-items:center}
-.household-share-row input{width:104px;min-height:42px;flex:0 0 104px;text-align:center;font-size:16px;font-weight:900;color:var(--ink)}
-.household-share-row span{font-size:11px;font-weight:700;color:var(--muted)}
-.household-share-quick{display:flex;gap:6px;margin-top:8px}
-.household-share-quick .chip{min-width:58px;min-height:36px}
-.household-month-card{margin:14px 0 18px;padding:16px;background:var(--card);border:1px solid var(--line-soft);border-radius:17px;box-shadow:var(--shadow)}
-.household-month-header{display:flex;align-items:center;justify-content:space-between;gap:7px;flex-wrap:wrap}
-.household-month-header h3{margin:0;font-size:15px;font-weight:900;color:var(--ink)}
-.household-month-header>span{font-size:10.5px;font-weight:800;color:var(--muted)}
-.household-month-note{margin:7px 0 0;line-height:1.6;color:var(--muted);font-size:11px}
-.household-month-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;margin:12px 0}
-.household-month-grid>div{min-width:0;border-radius:11px;padding:11px 12px;background:var(--bg)}
-.household-month-grid span,.household-month-grid strong,.household-month-grid small{display:block;overflow-wrap:anywhere}
-.household-month-grid span{font-size:11px;font-weight:750;color:var(--muted)}
-.household-month-grid strong{font-size:15px;margin:4px 0 2px;font-weight:900;color:var(--ink);font-variant-numeric:tabular-nums}
-.household-month-grid small{font-size:10px;line-height:1.4;color:var(--muted)}
-.household-transfer{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px;padding:10px 12px;border-radius:12px;background:var(--line-soft);font-size:12px}
-.household-transfer span{font-weight:800;color:var(--muted)}
-.household-transfer div{font-weight:800;color:var(--ink)}
-.household-transfer strong{color:var(--forest);font-variant-numeric:tabular-nums}
-.household-month-warning{margin:9px 0 0;color:var(--expense);font-size:11px;line-height:1.6;font-weight:750}
-.household-tx-tag.shared{background:color-mix(in srgb,var(--forest) 15%,var(--card));color:var(--forest)}
-.household-tx-tag.personal{background:var(--line-soft);color:var(--muted)}
-.household-tx-tag.unknown{background:color-mix(in srgb,var(--gold) 15%,var(--card));color:var(--ink)}
-.household-tx-tag.payer{background:var(--bg);color:var(--ink)}
-.household-entry button:focus-visible,.household-share-row input:focus-visible,.household-share-quick button:focus-visible{outline:3px solid var(--forest);outline-offset:2px}
-@media(max-width:420px){.household-month-card,.household-entry{padding:12px}.household-month-grid strong{font-size:13px}.household-month-header h3{font-size:13px}.household-share-row input{flex-basis:88px;width:88px}.household-transfer{font-size:11px}}
 
 .more-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:14px;margin-bottom:24px}
 .more-item{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:12px;
@@ -594,7 +545,7 @@ body.dark-mode #toast{background:rgba(58,58,60,0.92)}
 .settlement-hero p,.settlement-help,.settlement-close-card p{margin:8px 0 0;color:var(--muted);font-size:13px;line-height:1.6;font-weight:650}.settlement-metrics{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:18px}.settlement-metrics>div{padding:11px;border-radius:14px;background:color-mix(in srgb,var(--card) 82%,transparent);border:1px solid var(--line-soft)}.settlement-metrics span{display:block;color:var(--muted);font-size:11px;font-weight:750}.settlement-metrics strong{display:block;margin-top:3px;font-size:16px;letter-spacing:-.02em}
 .settlement-card{margin-bottom:16px;padding:20px;border-radius:20px;background:var(--card);border:1px solid var(--line-soft);box-shadow:var(--shadow)}.settlement-section-head{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-bottom:14px}.settlement-section-head>div:first-child{display:flex;align-items:center;gap:9px}.settlement-section-head h2{margin:0;font-size:17px;letter-spacing:-.035em}.settlement-step{display:inline-flex;align-items:center;justify-content:center;width:23px;height:23px;border-radius:50%;background:var(--forest);color:#fff;font-size:12px;font-weight:900}.settlement-section-head button,.settlement-actions button,.settlement-paste button{min-height:34px;padding:7px 10px;border:1px solid var(--line);border-radius:10px;background:var(--bg);color:var(--ink);font-size:12px;font-weight:850;cursor:pointer}.settlement-section-head button:disabled,.settlement-actions button:disabled{opacity:.42;cursor:not-allowed}
 .settlement-actions{display:flex;gap:6px;flex-wrap:wrap;justify-content:flex-end}.settlement-actions.bottom{margin-top:12px}.settlement-paste{margin:0 0 12px;padding:12px;border:1px dashed var(--line);border-radius:14px;background:var(--bg)}.settlement-paste summary{cursor:pointer;font-size:13px;font-weight:850}.settlement-paste p{margin:8px 0;color:var(--muted);font-size:12px;line-height:1.5}.settlement-paste textarea{display:block;width:100%;min-height:72px;margin:8px 0;padding:10px;border:1px solid var(--line);border-radius:10px;resize:vertical;background:var(--card);color:var(--ink);font:12px/1.45 ui-monospace,SFMono-Regular,Consolas,monospace}
-.settlement-draft-list{display:grid;gap:10px}.settlement-tx-row{padding:12px;border:1px solid var(--line-soft);border-radius:14px;background:var(--bg)}.settlement-row-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:9px;font-size:12px;color:var(--muted)}.settlement-remove{border:0;background:transparent;color:var(--muted);font-size:11px;font-weight:800;cursor:pointer}.settlement-remove:hover{color:var(--expense)}.settlement-grid{display:grid;gap:8px}.settlement-grid-main{grid-template-columns:1fr 1.25fr .8fr 1fr 1.5fr 1fr .75fr}.settlement-grid label,.recon-row label,.investment-row label{display:grid;gap:4px;min-width:0;color:var(--muted);font-size:10.5px;font-weight:800}.settlement-grid input,.settlement-grid select,.recon-row input,.investment-row input{width:100%;min-width:0;height:35px;padding:0 9px;border:1px solid var(--line);border-radius:9px;background:var(--card);color:var(--ink);font:inherit;font-size:12px;outline:none}.settlement-grid input:focus,.settlement-grid select:focus,.recon-row input:focus,.investment-row input:focus{border-color:var(--forest);box-shadow:0 0 0 3px color-mix(in srgb,var(--forest) 12%,transparent)}.settlement-desc{min-width:110px}.settlement-empty,.settlement-empty-inline{padding:22px 14px;border:1px dashed var(--line);border-radius:14px;color:var(--muted);font-size:13px;text-align:center}.settlement-empty strong,.settlement-empty span{display:block}.settlement-empty span{margin-top:5px;font-size:12px}.settlement-empty-inline{padding:13px;text-align:left}.settlement-savebar{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-top:12px;padding-top:12px;border-top:1px solid var(--line-soft);color:var(--muted);font-size:12px;font-weight:700}.settlement-savebar .primary,.settlement-close-card .primary{border:0;border-radius:12px;background:var(--forest);color:#fff;font-weight:900;cursor:pointer;padding:11px 14px}.settlement-savebar .primary:disabled{opacity:.45;cursor:not-allowed}
+.settlement-draft-list{display:grid;gap:10px}.settlement-tx-row{padding:12px;border:1px solid var(--line-soft);border-radius:14px;background:var(--bg)}.settlement-row-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:9px;font-size:12px;color:var(--muted)}.settlement-remove{border:0;background:transparent;color:var(--muted);font-size:11px;font-weight:800;cursor:pointer}.settlement-remove:hover{color:var(--expense)}.settlement-grid{display:grid;gap:8px}.settlement-grid-main{grid-template-columns:1fr 1.25fr .8fr 1fr 1.5fr 1fr}.settlement-grid label,.recon-row label,.investment-row label{display:grid;gap:4px;min-width:0;color:var(--muted);font-size:10.5px;font-weight:800}.settlement-grid input,.settlement-grid select,.recon-row input,.investment-row input{width:100%;min-width:0;height:35px;padding:0 9px;border:1px solid var(--line);border-radius:9px;background:var(--card);color:var(--ink);font:inherit;font-size:12px;outline:none}.settlement-grid input:focus,.settlement-grid select:focus,.recon-row input:focus,.investment-row input:focus{border-color:var(--forest);box-shadow:0 0 0 3px color-mix(in srgb,var(--forest) 12%,transparent)}.settlement-desc{min-width:110px}.settlement-empty,.settlement-empty-inline{padding:22px 14px;border:1px dashed var(--line);border-radius:14px;color:var(--muted);font-size:13px;text-align:center}.settlement-empty strong,.settlement-empty span{display:block}.settlement-empty span{margin-top:5px;font-size:12px}.settlement-empty-inline{padding:13px;text-align:left}.settlement-savebar{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-top:12px;padding-top:12px;border-top:1px solid var(--line-soft);color:var(--muted);font-size:12px;font-weight:700}.settlement-savebar .primary,.settlement-close-card .primary{border:0;border-radius:12px;background:var(--forest);color:#fff;font-weight:900;cursor:pointer;padding:11px 14px}.settlement-savebar .primary:disabled{opacity:.45;cursor:not-allowed}
 .settlement-source-list{display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:8px;margin-bottom:12px}.settlement-source{display:grid;grid-template-columns:1fr auto;gap:2px;padding:10px;border:1px solid var(--line-soft);border-radius:12px;background:var(--bg)}.settlement-source span{font-size:12px;font-weight:800}.settlement-source strong{font-size:14px}.settlement-source small{font-size:10px;color:var(--muted)}.recon-list,.investment-list,.holding-list{display:grid;gap:8px}.recon-row{display:grid;grid-template-columns:minmax(90px,1.1fr) minmax(90px,.9fr) minmax(108px,1fr) minmax(130px,1.25fr) 110px;align-items:end;gap:8px;padding:10px;border:1px solid var(--line-soft);border-radius:12px}.recon-row>div:first-child{display:grid;gap:4px}.recon-row strong{font-size:13px}.recon-row small{font-size:11px;color:var(--muted)}.recon-diff{min-height:35px;display:flex;align-items:center;justify-content:flex-end;color:var(--muted);font-size:12px;font-weight:850}.recon-diff.ok{color:var(--forest)}.recon-diff.warn{color:#b15c00}.investment-row{display:grid;grid-template-columns:minmax(100px,1.2fr) repeat(3,minmax(86px,1fr)) minmax(92px,.9fr) auto;align-items:end;gap:8px;padding:10px;border:1px solid var(--line-soft);border-radius:12px}.investment-row>input{align-self:end}.holding-row{display:grid;grid-template-columns:1fr .7fr 1.2fr repeat(3,minmax(75px,.8fr)) minmax(90px,.9fr) auto;align-items:end;gap:8px;padding:10px;border:1px solid var(--line-soft);border-radius:12px}.holding-row>input{width:100%;min-width:0;height:35px;padding:0 9px;border:1px solid var(--line);border-radius:9px;background:var(--card);color:var(--ink);font:inherit;font-size:12px;outline:none}.holding-row>input:focus{border-color:var(--forest);box-shadow:0 0 0 3px color-mix(in srgb,var(--forest) 12%,transparent)}.valuation{height:35px;display:flex;align-items:center;justify-content:flex-end;color:var(--forest);font-size:12px}.valuation.minus,.investment-total .minus{color:var(--expense)}.investment-total{display:flex;justify-content:space-between;gap:10px;margin-top:10px;padding-top:10px;border-top:1px solid var(--line-soft);font-size:12px;color:var(--muted)}.investment-total strong{color:var(--forest)}.settlement-close-card{border-color:color-mix(in srgb,var(--forest) 24%,var(--line))}.settlement-close-card .primary.close{margin-top:14px;width:100%;min-height:46px}
 .settlement-import-preview,.settlement-batches,.settlement-holdings{margin-top:12px;padding:12px;border:1px solid var(--line-soft);border-radius:14px;background:var(--bg)}.settlement-import-preview>strong,.settlement-import-preview>span{display:block}.settlement-import-preview>strong{font-size:13px}.settlement-import-preview>span,.settlement-import-preview>div{margin-top:5px;color:var(--muted);font-size:12px;line-height:1.55}.settlement-batches summary,.settlement-holdings summary{cursor:pointer;font-size:13px;font-weight:850}.settlement-batch{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-top:10px;padding-top:10px;border-top:1px solid var(--line-soft)}.settlement-batch strong,.settlement-batch span{display:block}.settlement-batch strong{font-size:12px}.settlement-batch span{margin-top:3px;color:var(--muted);font-size:11px}.settlement-batch button{flex:0 0 auto;border:1px solid var(--line);border-radius:9px;background:var(--card);color:var(--expense);font-size:11px;font-weight:800;padding:7px 8px;cursor:pointer}.settlement-holdings p{margin:8px 0 10px;color:var(--muted);font-size:12px;line-height:1.5}.settlement-checklist{display:grid;gap:9px;margin-top:14px;padding:13px;border-radius:14px;background:var(--bg);border:1px solid var(--line-soft)}.settlement-checklist>label{display:flex;align-items:flex-start;gap:8px;color:var(--ink);font-size:12px;font-weight:750;line-height:1.45}.settlement-checklist input[type=checkbox]{width:17px;height:17px;margin:0;accent-color:var(--forest)}.settlement-checklist .settlement-check-reason{display:grid;gap:5px;margin-top:2px;color:var(--muted)}.settlement-check-reason input{height:35px;padding:0 9px;border:1px solid var(--line);border-radius:9px;background:var(--card);color:var(--ink);font:inherit;font-size:12px;outline:none}.settlement-check-reason input:focus{border-color:var(--forest)}
 .source-tag{margin-left:4px;background:color-mix(in srgb,var(--forest) 11%,var(--line-soft));color:var(--forest)}
@@ -707,9 +658,6 @@ body.dark-mode #toast{background:rgba(58,58,60,0.92)}
 .pwa-tip-icon{font-size:24px;flex-shrink:0}
 .pwa-tip-text strong{display:block;font-size:13px;color:var(--ink);margin-bottom:2px}
 .pwa-tip-text span{display:block;font-size:11.5px;color:var(--muted);line-height:1.45}
-
-/* 🔁 정기거래 결제자 배지 */
-.rec-user-badge{display:inline-flex;align-items:center;padding:2px 8px;border-radius:999px;font-size:11px;font-weight:800;background:var(--line-soft);color:var(--ink);margin-left:6px}
 
 /* 🏷️ 버전 표시 · 업데이트 알림 */
 .gate-version{position:absolute;left:0;right:0;bottom:calc(18px + var(--safe-b));font-size:11.5px;font-weight:700;color:var(--muted);opacity:.8;font-variant-numeric:tabular-nums}
@@ -962,29 +910,12 @@ body.dark-mode .transfer-status.error{color:var(--gold)}
     <div class="field"><label id="descLabel">내역</label><input class="in-text" id="fDesc" type="text" placeholder="예: 점심, 커피, 마트"><div class="recommend-box" id="recommendBox"></div></div>
     <div class="repeat-entry-notice" id="repeatEntryNotice" role="status" hidden></div>
     <div class="field"><label>분류</label><div class="chips compact-chips" id="typeChips"></div><div class="chips compact-chips" id="catChips"></div></div>
-    <section class="household-entry" id="householdEntryField" aria-labelledby="householdEntryTitle">
-      <h3 id="householdEntryTitle">지출 부담 구분</h3>
-      <p class="household-entry-help">입력자는 장부 작성자예요. 아래 결제자는 실제 돈을 낸 사람으로 별도 기록해요.</p>
-      <div class="household-choice"><span class="household-label" id="expenseScopeLabel">개인 / 공동</span><div class="chips compact-chips" id="expenseScopeChips" role="group" aria-labelledby="expenseScopeLabel"></div></div>
-      <div class="household-choice"><span class="household-label" id="paidByLabel">실제 결제자</span><div class="chips compact-chips" id="paidByChips" role="group" aria-labelledby="paidByLabel"></div></div>
-      <div class="household-choice" id="sharePercentField"><label class="household-label" for="fSharePercent">공동 지출 · 지수 부담율 (%)</label><div class="household-share-row"><input id="fSharePercent" class="in-text" type="number" inputmode="numeric" min="0" max="100" step="1" value="50" oninput="updateHouseholdSharePercent(this.value)" aria-describedby="sharePercentHelp"><span>나머지는 하콩 부담</span></div><div class="household-share-quick" id="sharePercentQuick"></div><p id="sharePercentHelp" class="household-entry-help">50%는 반반 부담이에요. 0~100 사이 정수만 저장할 수 있어요.</p></div>
-      <p id="householdEntryNotice" class="household-entry-help" role="status" aria-live="polite"></p>
-    </section>
-    <details class="extra-fields" id="extraFields">
-      <summary>추가 옵션 <span>날짜 · 입력자 · 메모</span></summary>
-      <div class="extra-fields-body">
-        <div class="field" id="moodFieldWrap"><label>소비성격</label><div class="chips" id="moodChips"></div><div class="mood-hint" id="moodHint"></div></div>
-        <div class="row2">
-          <div class="field"><label id="userChipsLabel">입력자</label><div class="chips" id="userChips"></div></div>
-          <div class="field" id="fixFieldWrap"><label id="fixChipsLabel">고정/변동</label><div class="chips" id="fixChips"></div></div>
-        </div>
-        <div class="row2">
-          <div class="field"><label>날짜</label><input class="in-text" id="fDate" type="date"></div>
-          <div class="field"><label>메모 (선택)</label><input class="in-text" id="fMemo" type="text" placeholder="-"></div>
-        </div>
-        <div class="field"><label for="fSource">결제수단 / 계좌 (선택)</label><input class="in-text" id="fSource" type="text" maxlength="80" placeholder="예: 신용카드, 생활비 통장" autocomplete="off"><p class="household-entry-help">결제 방식 기록용이에요. 실제 계좌 잔액·이체와 연결되지는 않아요.</p></div>
-      </div>
-    </details>
+    <div class="row2">
+      <div class="field"><label for="fDate">날짜</label><input class="in-text" id="fDate" type="date"></div>
+      <div class="field"><label for="fSource">결제수단 / 계좌 (선택)</label><input class="in-text" id="fSource" type="text" list="fSourceOptions" maxlength="80" placeholder="예: 생활비 통장" autocomplete="off"><datalist id="fSourceOptions"></datalist></div>
+    </div>
+    <!-- 과거 거래의 메모는 표시하지 않아도 수정·재입력 시 원래 값으로 유지한다. -->
+    <input id="fMemo" type="hidden">
     <div class="sheet-actions tx-sheet-actions" id="txSheetActions">
       <button class="continue-btn" id="continueBtn">저장 후 계속</button>
       <button class="submit" id="submitBtn">저장</button>
@@ -1018,11 +949,6 @@ body.dark-mode .transfer-status.error{color:var(--gold)}
     <div class="f-grp">
       <div class="label">대분류</div>
       <div class="chips" id="rCatChips"></div>
-    </div>
-
-    <div class="f-grp">
-      <div class="label">결제자 (누구 돈으로?)</div>
-      <div class="chips" id="rUserChips"></div>
     </div>
 
     <div class="f-grp">
@@ -1137,9 +1063,9 @@ body.dark-mode .transfer-status.error{color:var(--gold)}
 <script>
 /* ============ 앱 글로벌 상태 (Store) ============ */
 /* @release:start — pwa-site/scripts/build-static.mjs 가 release.json 을 보고 자동으로 채운다. 손으로 고치지 말 것. */
-const APP_VERSION = '2.3.11';
-const APP_BUILT_AT = '2026-10-11T16:44:03+09:00';
-const APP_RELEASE_NOTES = [{"version":"2.3.11","date":"2026-10-11T16:44:03+09:00","notes":["작은 개선과 오류 수정"]},{"version":"2.3.10","date":"2026-10-11T16:41:28+09:00","notes":["5차 안정화: 저장 응답 유실 및 새로고침 후 내부이체 요청 ID 복구·중복 기록 방지, 다른 월 이동 중 오래된 응답의 입력 초안 침범 차단","서비스워커·저장 보호: 내부이체 작성 중 앱 자동 새로고침 제한, 비앱 페이지/JSON 응답이 오프라인 앱 셸을 덮어쓰지 않도록 캐시 범위 제한","정합성 보강: 이체 금액 쉼표 형식 엄격 검사, 서로 다른 원장의 저축·이체 중복 후보 알림, 잘못된 거래 유형·중복 이체 ID·불완전 합계 및 수치 초과 경고","이체 서버 안전: 빈 기존 시트 헤더 초기화, 삭제된 거래 재요청 멱등 처리, 손상 날짜 데이터 완전성 표시와 삭제 표시만 한 칸 갱신, 독립 적대적 회귀 검사 보강"]},{"version":"2.3.9","date":"2026-10-11T15:10:36+09:00","notes":["5차 내부이체: 기존 지출·수입 원장과 분리된 계좌 간 이체 전용 기록, 출금계좌·입금계좌·금액·날짜·메모 입력 및 이력 조회","결제수단별 월 흐름: 거래 출처/계좌와 내부이체 입출금 흐름을 별도로 보고, 확인되지 않은 실제 잔액이나 카드 청구금액으로 오인하지 않게 안내","금융 안정성: 이체는 소비·수입·부부 공동부담 계산에 섞지 않고, 반복 요청 ID 멱등 처리·월마감 쓰기 차단·삭제기록 보존","안전한 도입: 기존 거래·자산 시트 값은 변경하지 않고 신규 이체 전용 장부만 사용, 오프라인 상태에서는 이체를 조용히 큐에 넣지 않음"]},{"version":"2.3.8","date":"2026-10-11T14:41:36+09:00","notes":["4차 공동생활비: 거래 입력자와 실제 결제자를 분리하고 개인·공동 지출 및 지수·하콩 부담비율을 기록","부부 정산: 월별 확정 공동지출에 따른 개인별 부담과 차액 송금 제안을 읽기 전용으로 표시","결제수단 기록: 기존 출처/계좌를 빠른 입력·수정에 연결하되 실제 계좌이체나 카드 잔액은 연동하지 않음","금융 데이터 보호: 기존 거래 분담비율 자동 추정 금지, 미확정 거래 제외, 닫힌 월 쓰기 차단·오프라인 동기화 보호 및 신규 회귀 테스트"]},{"version":"2.3.7","date":"2026-10-11T14:27:37+09:00","notes":["소비 달력 정합성: 서버 txId와 오프라인 clientId가 뒤늦게 연결되는 거래를 하나로 합산해 중복 지출 방지","릴리스 안전: 게시 HTML과 원본 코드·소스 해시를 직접 검증하고 불일치하면 정적 배포 중단"]},{"version":"2.3.6","date":"2026-10-11T14:02:04+09:00","notes":["생활형 화면 3차: 내역에서 월별 소비 달력과 날짜별 지출 히트맵을 확인하고 하루 거래를 바로 펼쳐 보기","주간 소비 요약: 월요일 시작 주간 지출·수입·저축/상환 흐름 및 많이 지출한 날·카테고리 비교","이용 편의: 모바일 내역 목록과 달력 전환, 날짜 선택·접근성·월 이동에 따른 안전한 초기화","집계 안전성: 오프라인 대기 내역 중복 계산 방지, 거래 1000건 제한 등 데이터 일부 누락시 추정임을 명시"]},{"version":"2.3.5","date":"2026-10-11T13:48:38+09:00","notes":["생활비 개편 2차: 현재 입력된 금액에서 아직 기록되지 않은 예정 정기지출·저축·상환을 제외한 생활비 여유액 추정","생활비 개편 2차: 오늘부터 월말까지의 하루·일주일 사용 가능액과 예약 고정비 내역을 구분해 표시","고정비 관리: 월간 지출·정기수입과 연간 환산 규모를 한눈에 비교하는 대시보드","계산 안전성: 이미 기록된 정기거래 중복 차감 방지, 예정 정기수입 선반영 금지, 미입력·불확실한 항목 명시"]},{"version":"2.3.4","date":"2026-10-11T13:30:40+09:00","notes":["편의 개선 1차: 한 줄 문장에서 금액과 내역을 추출해 빠른 입력 칸에 미리 채우기","편의 개선 1차: 사용자가 붙여넣은 카드 승인 문자의 금액·가맹점·날짜를 확인 후 적용","편의 개선 1차: 기존 거래의 분류를 활용한 가맹점 추천과 거래 다시 입력","입력 안전성: 취소 알림·모호한 금액·중복 저장 위험을 자동 등록 없이 검토하고 기존 오프라인 대기열 보호 유지"]}];
+const APP_VERSION = '2.3.12';
+const APP_BUILT_AT = '2026-10-18T09:58:45+09:00';
+const APP_RELEASE_NOTES = [{"version":"2.3.12","date":"2026-10-18T09:58:45+09:00","notes":["공동자금 단일 장부: 개인/공동·입력자·실제 결제자·부담비율과 추가 옵션 접기를 제거하고 날짜·선택 계좌만 바로 입력","홈과 내역의 사람별 통계·필터·송금 정산 제안을 제거하고 소비 달력·예산·월정산은 전체 거래 기준으로 유지","기존 거래 수정 시 숨겨진 메모·고정비·소비성격 보존, 정기거래 중복 예약 방지, 감사 이력 및 오프라인 저장 호환 보강"]},{"version":"2.3.11","date":"2026-10-11T16:44:03+09:00","notes":["작은 개선과 오류 수정"]},{"version":"2.3.10","date":"2026-10-11T16:41:28+09:00","notes":["5차 안정화: 저장 응답 유실 및 새로고침 후 내부이체 요청 ID 복구·중복 기록 방지, 다른 월 이동 중 오래된 응답의 입력 초안 침범 차단","서비스워커·저장 보호: 내부이체 작성 중 앱 자동 새로고침 제한, 비앱 페이지/JSON 응답이 오프라인 앱 셸을 덮어쓰지 않도록 캐시 범위 제한","정합성 보강: 이체 금액 쉼표 형식 엄격 검사, 서로 다른 원장의 저축·이체 중복 후보 알림, 잘못된 거래 유형·중복 이체 ID·불완전 합계 및 수치 초과 경고","이체 서버 안전: 빈 기존 시트 헤더 초기화, 삭제된 거래 재요청 멱등 처리, 손상 날짜 데이터 완전성 표시와 삭제 표시만 한 칸 갱신, 독립 적대적 회귀 검사 보강"]},{"version":"2.3.9","date":"2026-10-11T15:10:36+09:00","notes":["5차 내부이체: 기존 지출·수입 원장과 분리된 계좌 간 이체 전용 기록, 출금계좌·입금계좌·금액·날짜·메모 입력 및 이력 조회","결제수단별 월 흐름: 거래 출처/계좌와 내부이체 입출금 흐름을 별도로 보고, 확인되지 않은 실제 잔액이나 카드 청구금액으로 오인하지 않게 안내","금융 안정성: 이체는 소비·수입·부부 공동부담 계산에 섞지 않고, 반복 요청 ID 멱등 처리·월마감 쓰기 차단·삭제기록 보존","안전한 도입: 기존 거래·자산 시트 값은 변경하지 않고 신규 이체 전용 장부만 사용, 오프라인 상태에서는 이체를 조용히 큐에 넣지 않음"]},{"version":"2.3.8","date":"2026-10-11T14:41:36+09:00","notes":["4차 공동생활비: 거래 입력자와 실제 결제자를 분리하고 개인·공동 지출 및 지수·하콩 부담비율을 기록","부부 정산: 월별 확정 공동지출에 따른 개인별 부담과 차액 송금 제안을 읽기 전용으로 표시","결제수단 기록: 기존 출처/계좌를 빠른 입력·수정에 연결하되 실제 계좌이체나 카드 잔액은 연동하지 않음","금융 데이터 보호: 기존 거래 분담비율 자동 추정 금지, 미확정 거래 제외, 닫힌 월 쓰기 차단·오프라인 동기화 보호 및 신규 회귀 테스트"]},{"version":"2.3.7","date":"2026-10-11T14:27:37+09:00","notes":["소비 달력 정합성: 서버 txId와 오프라인 clientId가 뒤늦게 연결되는 거래를 하나로 합산해 중복 지출 방지","릴리스 안전: 게시 HTML과 원본 코드·소스 해시를 직접 검증하고 불일치하면 정적 배포 중단"]},{"version":"2.3.6","date":"2026-10-11T14:02:04+09:00","notes":["생활형 화면 3차: 내역에서 월별 소비 달력과 날짜별 지출 히트맵을 확인하고 하루 거래를 바로 펼쳐 보기","주간 소비 요약: 월요일 시작 주간 지출·수입·저축/상환 흐름 및 많이 지출한 날·카테고리 비교","이용 편의: 모바일 내역 목록과 달력 전환, 날짜 선택·접근성·월 이동에 따른 안전한 초기화","집계 안전성: 오프라인 대기 내역 중복 계산 방지, 거래 1000건 제한 등 데이터 일부 누락시 추정임을 명시"]},{"version":"2.3.5","date":"2026-10-11T13:48:38+09:00","notes":["생활비 개편 2차: 현재 입력된 금액에서 아직 기록되지 않은 예정 정기지출·저축·상환을 제외한 생활비 여유액 추정","생활비 개편 2차: 오늘부터 월말까지의 하루·일주일 사용 가능액과 예약 고정비 내역을 구분해 표시","고정비 관리: 월간 지출·정기수입과 연간 환산 규모를 한눈에 비교하는 대시보드","계산 안전성: 이미 기록된 정기거래 중복 차감 방지, 예정 정기수입 선반영 금지, 미입력·불확실한 항목 명시"]}];
 /* @release:end */
 const DEFAULT_GAS_URL = 'https://script.google.com/macros/s/AKfycbwjFv7OSDc6T4vD0nUQA5E-W1QazAEU5dowQroEXard5DCMtP0FiMRlwtIjuEfDzo8phA/exec';
 const APP_CACHE_VERSION = 5;
@@ -1164,7 +1090,7 @@ const STATE = {
   aiReady: false, aiHistory: [], closeHistory: [], insight: null, descDict: {},
   editing: null, form: { type: null, cat: null, fixed: '변동', user: '', catManual: false },
   list: {
-    mode: 'month', scope: 'month', query: '', writer: '', type: '', category: '', meaning: '', minAmount: '', maxAmount: '',
+    mode: 'month', scope: 'month', query: '', type: '', category: '', meaning: '', minAmount: '', maxAmount: '',
     rows: [], count: 0, pageSize: 40, remoteRows: [], remoteCount: 0, remoteLoading: false, remoteError: '', remoteRequestSeq: 0
   },
   settlement: null, settlementDraft: null, settlementDraftSync: { state:'idle', updatedAt:0 },
@@ -1679,8 +1605,7 @@ function calculateLivingAllowance(input){
     normalize(tx.type)===normalize(rec.type) &&
     normalize(tx.cat)===normalize(rec.cat) &&
     normalize(tx.desc)===normalize(rec.desc || rec.name) &&
-    amountSame(tx.amount,rec.amount) &&
-    normalize(tx.user)===normalize(rec.user);
+    amountSame(tx.amount,rec.amount);
   const reservedItems=[],settledItems=[],pendingItems=[],excludedItems=[],incomeItems=[],subscriptionCandidates=[];
   let reserved=0,scheduledIncome=0,monthlyOutflow=0;
   const seenRecurringIds=new Set();
@@ -1722,9 +1647,8 @@ function calculateLivingAllowance(input){
     const candidateTx=txs.filter(row=>!usedTx.has(row.key) && !row.isPending &&
       normalize(row.tx.type)===type && row.date.slice(0,7)===ym);
     const strongTag=candidateTx.filter(row=>tagName(row.tx)===name);
-    // 태그가 붙은 거래에서 금액/입력자가 달라졌다면 과거 실적을 가정하지 않고 예치한다.
-    const tagged=strongTag.find(row=>amountSame(row.tx.amount,amount) &&
-      normalize(row.tx.user)===user);
+    // 입력자 구분과 무관하게 공동 장부에서 확인된 거래인지 비교한다.
+    const tagged=strongTag.find(row=>amountSame(row.tx.amount,amount));
     // 다른 정기명으로 명시된 거래를 내역·금액이 우연히 같다는 이유로 가로채지 않는다.
     const exact=candidateTx.find(row=>!tagName(row.tx) &&
       sameShape(Object.assign({},r,{amount,type,cat,user}),row.tx,dueDate));
@@ -1732,8 +1656,7 @@ function calculateLivingAllowance(input){
     const match=tagged ? 'tag' : (exact ? 'exact' : '');
     const pendingMatch=txs.find(row=>!usedTx.has(row.key) && row.isPending &&
       normalize(row.tx.type)===type &&
-      (tagName(row.tx)===name && amountSame(row.tx.amount,amount) &&
-       normalize(row.tx.user)===user ||
+      (tagName(row.tx)===name && amountSame(row.tx.amount,amount) ||
        (!tagName(row.tx) && sameShape(Object.assign({},r,{amount,type,cat,user}),row.tx,dueDate))));
     const hadRun=normalize(r.lastRunYm)===ym;
     if(matched){
@@ -1766,7 +1689,7 @@ function calculateLivingAllowance(input){
       normalize(row.tx.type)===type && normalize(row.tx.cat)===cat)));
     if(related || strongTag.length){
       uncertain=true;
-      warnings.push(name+'의 유사 거래가 있지만 금액·날짜·입력자 등이 달라 미기록으로 예약했어.');
+      warnings.push(name+'의 유사 거래가 있지만 금액·날짜 등이 달라 미기록으로 예약했어.');
     }
     if(type==='수입'){
       scheduledIncome+=amount;
@@ -1808,7 +1731,7 @@ function calculateLivingAllowance(input){
  * 특히 0원 날짜는 기록 기준 무지출이며 실제 무소비가 증명된 날짜가 아니다.
  *
  * days에는 해당 달 모든 날짜(0원 포함), weeks에는 월요일~일요일 주간의
- * 선택 월 안쪽 경계만 포함한다. userFilter는 공백일 때 전체, 그 외 입력자 정확 일치.
+ * 선택 월 안쪽 경계만 포함한다. 전체 공동 장부 기준으로 집계한다.
  * 거래의 cat/desc 등은 평문 데이터로만 반환하며 HTML escaping은 호출 UI의 책임.
  */
 function calculateSpendingCalendar(input){
@@ -1853,8 +1776,7 @@ function calculateSpendingCalendar(input){
     const y=Number(match[1]),mo=Number(match[2]),d=Number(match[3]);
     return d<=new Date(Date.UTC(y,mo,0)).getUTCDate() ? {ym:match[1]+'-'+match[2],day:d} : null;
   };
-  // summary.count는 서버 전체 월 거래 건수다. 입력자 필터를 먼저 적용하면
-  // 정상적으로 일부만 선택한 상태도 누락으로 오인하므로 필터 전 raw month로 비교.
+  // summary.count는 서버 전체 월 거래 건수다.
   const rawMonthRows=inputRows.filter(tx=>tx && String(tx.date || '').slice(0,7)===ym);
   const summaryCount=summary && summary.count;
   if(summary && (summaryCount==null || String(summaryCount).trim()==='' ||
@@ -1867,8 +1789,6 @@ function calculateSpendingCalendar(input){
     uncertain=true;
     warnings.push('월 전체 거래 건수보다 전달된 거래가 적어 부분 조회일 수 있어.');
   }
-  const isFiltered=opt.userFilter!=null && String(opt.userFilter)!=='';
-  const userFilter=isFiltered ? String(opt.userFilter) : '';
   const selected=[];
   const indexById=new Map();
   const identityTokens=tx=>[tx.txId,tx.clientId]
@@ -1915,11 +1835,10 @@ function calculateSpendingCalendar(input){
     keys.forEach(key=>indexById.set(key,index));
   });
   const distinct=selected.filter(Boolean);
-  const filtered=isFiltered ? distinct.filter(tx=>String(tx.user == null ? '' : tx.user)===userFilter) : distinct;
   const catMap=new Map();
   let expenseTotal=0,incomeTotal=0,savingTotal=0,repaymentTotal=0;
   const typeKey={'지출':'expense','수입':'income','저축':'saving','대출상환':'repayment'};
-  filtered.forEach(tx=>{
+  distinct.forEach(tx=>{
     if(tx.deleted===true || tx.deleted==='TRUE' || tx.deleted===1) return;
     const parsed=validDate(tx.date);
     if(!parsed || parsed.ym!==ym) return;
@@ -1989,8 +1908,7 @@ function calculateSpendingCalendar(input){
   // summary.count는 pending overlay 시 증가하지 않을 수 있어 '전체가 더 적은'
   // 경우는 누락으로 단정하지 않는다. 반대로 실제 월 summary 지출/수입 합계가
   // 전달된 모든 거래 합계보다 유의미하게 크면 조회 누락 경고만 제공한다.
-  // 입력자 필터가 설정된 경우에는 합계 비교 자체를 건너뛴다.
-  if(!isFiltered && summary && typeof summary==='object'){
+  if(summary && typeof summary==='object'){
     const comparisons=[
       ['expense',expenseTotal],['income',incomeTotal],
       ['save',savingTotal],['repay',repaymentTotal]
@@ -2016,115 +1934,6 @@ function calculateSpendingCalendar(input){
     avgExpensePerDay:expenseTotal/countDays,busiestDate,topCategories,
     partial,uncertain,note,warnings
   };
-}
-/**
- * 4차 공동생활비: 실제 결제자와 부담 비율로 월말 정산 *제안*만 계산한다.
- * 과거 거래의 분담 구분이 비어 있으면 추측하지 않고 정산에서 제외한다.
- * 서버 미확정 대기 거래도 추천 송금액에 섞지 않는다. 금융 API/상태/시계를 사용하지 않는다.
- */
-function calculateHouseholdSplit(input){
-  const opt=input || {};
-  const ym=String(opt.ym == null ? '' : opt.ym).trim();
-  const empty={ym,sharedTotal:0,sharedCount:0,jisuPaid:0,hakongPaid:0,
-    jisuShare:0,hakongShare:0,personalTotal:0,personalCount:0,
-    pendingSharedAmount:0,pendingSharedCount:0,unclassifiedAmount:0,unclassifiedCount:0,
-    excludedCount:0,transferFrom:'',transferTo:'',transferAmount:0,
-    partial:false,uncertain:false,warnings:[],
-    note:'확정된 공동지출 기록에 기반한 정산 제안이야. 실제 송금이나 은행 잔액을 뜻하지 않아.'};
-  const result={...empty,warnings:[]};
-  if(!/^\d{4}-(0[1-9]|1[0-2])$/.test(ym) || Number(ym.slice(0,4))<1000){
-    result.partial=true;result.uncertain=true;
-    result.warnings.push('대상 월 형식이 올바르지 않아.');
-    return result;
-  }
-  if(!Array.isArray(opt.transactions) || !opt.summary || typeof opt.summary!=='object'){
-    result.partial=true;result.uncertain=true;
-    result.warnings.push('월 거래 또는 전체 집계가 없어서 정산 정보를 확정할 수 없어.');
-  }
-  const rows=Array.isArray(opt.transactions)?opt.transactions:[];
-  const monthRows=rows.filter(t=>t && typeof t==='object' && String(t.date||'').slice(0,7)===ym);
-  const count=opt.summary && Number(opt.summary.count);
-  if(rows.length>=1000 || (opt.summary && (!Number.isSafeInteger(count) || count<0 || count>monthRows.length))){
-    result.partial=true;result.uncertain=true;
-    result.warnings.push('월별 거래의 일부만 표시되어 정산 합계가 누락됐을 수 있어.');
-  }
-  const distinct=[],byId=new Map();
-  const pending=t=>!!String(t.syncState||'') || String(t.row||'').startsWith('temp_');
-  // 서버 거래/대기 거래가 두 개 이상의 별칭(txId, clientId)으로 연결되기도 한다.
-  // 같은 날짜와 금액만으로 다른 실제 결제를 임의로 합치지는 않는다.
-  monthRows.forEach(tx=>{
-    const ids=[tx.txId,tx.clientId].map(id=>String(id==null?'':id).trim())
-      .filter(Boolean).map(id=>'id:'+id);
-    const occupied=[...new Set(ids.filter(id=>byId.has(id)).map(id=>byId.get(id)))];
-    if(!occupied.length){
-      const index=distinct.length;distinct.push(tx);ids.forEach(id=>byId.set(id,index));return;
-    }
-    const winner=occupied[0];
-    occupied.slice(1).forEach(loser=>{
-      if(!distinct[loser])return;
-      if(distinct[winner] && pending(distinct[winner]) && !pending(distinct[loser]))distinct[winner]=distinct[loser];
-      distinct[loser]=null;
-      byId.forEach((index,id)=>{if(index===loser)byId.set(id,winner);});
-    });
-    if(distinct[winner] && pending(distinct[winner]) && !pending(tx))distinct[winner]=tx;
-    ids.forEach(id=>byId.set(id,winner));
-  });
-  const add=(key,amount)=>{
-    const next=result[key]+amount;
-    if(!Number.isSafeInteger(next)){result.uncertain=true;return false;}
-    result[key]=next;return true;
-  };
-  distinct.filter(Boolean).forEach(tx=>{
-    if(tx.deleted===true || tx.deleted===1 || String(tx.deleted).toUpperCase()==='TRUE')return;
-    if(tx.type!=='지출')return; // 수입·저축·상환/내부자산이동은 공동소비가 아니다.
-    const date=String(tx.date||'');
-    const parts=date.match(/^(\d{4})-(\d{2})-(\d{2})$/);
-    if(!parts || date.slice(0,7)!==ym || Number(parts[3])<1 ||
-      Number(parts[3])>new Date(Date.UTC(Number(parts[1]),Number(parts[2]),0)).getUTCDate()){
-      result.uncertain=true;result.excludedCount++;return;
-    }
-    const raw=String(tx.amount==null?'':tx.amount).trim();
-    if(!/^(?:[1-9]\d*|[1-9]\d{0,2}(?:,\d{3})+)$/.test(raw)){
-      result.uncertain=true;result.excludedCount++;return;
-    }
-    const amount=Number(raw.replace(/,/g,''));
-    if(!Number.isSafeInteger(amount)||amount<=0){result.uncertain=true;result.excludedCount++;return;}
-    const scope=String(tx.expenseScope||'').trim();
-    if(scope==='개인'){
-      if(add('personalTotal',amount))result.personalCount++;
-      return;
-    }
-    if(!scope){
-      if(add('unclassifiedAmount',amount))result.unclassifiedCount++;
-      return;
-    }
-    if(scope!=='공동'){result.uncertain=true;result.excludedCount++;return;}
-    const payer=String(tx.paidBy||'').trim();
-    const share=tx.sharePercent;
-    if(!['지수','하콩'].includes(payer) || share==null || String(share).trim()==='' ||
-       !/^\d{1,3}$/.test(String(share)) || Number(share)>100){
-      result.uncertain=true;result.excludedCount++;return;
-    }
-    if(pending(tx)){
-      if(add('pendingSharedAmount',amount))result.pendingSharedCount++;
-      return;
-    }
-    const jisu=Number(BigInt(amount)*BigInt(Number(share))/100n);
-    const hakong=amount-jisu;
-    const payKey=payer==='지수'?'jisuPaid':'hakongPaid';
-    const safe=['sharedTotal','jisuShare','hakongShare',payKey].every(key=>
-      Number.isSafeInteger(result[key]+(key==='sharedTotal'||key===payKey?amount:key==='jisuShare'?jisu:hakong)));
-    if(!safe){result.uncertain=true;result.excludedCount++;return;}
-    result.sharedTotal+=amount;result.jisuShare+=jisu;result.hakongShare+=hakong;
-    result[payKey]+=amount;result.sharedCount++;
-  });
-  const net=result.jisuPaid-result.jisuShare;
-  if(net>0){result.transferFrom='하콩';result.transferTo='지수';result.transferAmount=net;}
-  if(net<0){result.transferFrom='지수';result.transferTo='하콩';result.transferAmount=-net;}
-  if(result.pendingSharedCount)result.warnings.push('동기화 대기 중인 공동지출은 확정 송금 제안에서 제외했어.');
-  if(result.unclassifiedCount)result.warnings.push('기존 거래 중 공동/개인 구분이 없는 내역은 임의로 분담하지 않았어.');
-  if(result.uncertain)result.warnings.push('입력 오류 또는 조회 제한이 있어 일부 거래를 제외했어.');
-  return result;
 }
 function settlementDraftKey(ym){ return SETTLEMENT_DRAFT_PREFIX + String(ym || ''); }
 const SETTLEMENT_DRAFT_SYNC_META = Object.create(null);
@@ -2652,7 +2461,6 @@ function settlementTxRow(row, index){
   const type = row.type || '지출';
   const cats = settlementCategories(type, row.cat || '');
   const types = ((STATE.config && STATE.config.types) || ['지출','수입','저축','대출상환']);
-  const users = ['하콩','지수'];
   return `<div class="settlement-tx-row" data-draft-index="${index}">
     <div class="settlement-row-top"><strong>${index + 1}</strong><button type="button" class="settlement-remove" onclick="removeSettlementDraftRow(${index})" aria-label="${index + 1}번 초안 행 삭제">삭제</button></div>
     <div class="settlement-grid settlement-grid-main">
@@ -2662,7 +2470,6 @@ function settlementTxRow(row, index){
       <label>분류<select onchange="updateSettlementDraftRow(${index},'cat',this.value)">${cats.map(c=>`<option value="${esc(c)}" ${c===(row.cat || cats[0])?'selected':''}>${esc(c)}</option>`).join('')}</select></label>
       <label class="settlement-desc">내역<input type="text" value="${esc(row.desc || '')}" placeholder="예: 마트, 카드 결제" oninput="updateSettlementDraftRow(${index},'desc',this.value)"></label>
       <label>금액<input inputmode="numeric" value="${row.amount ? comma(row.amount) : ''}" placeholder="0" oninput="updateSettlementAmount(${index},this)"></label>
-      <label>입력자<select onchange="updateSettlementDraftRow(${index},'user',this.value)">${users.map(u=>`<option value="${u}" ${u===(row.user || STATE.sessionUser || '하콩')?'selected':''}>${u}</option>`).join('')}</select></label>
     </div>
   </div>`;
 }
@@ -2843,12 +2650,7 @@ function renderHome(){
   }).join('') : `<div class="empty"><span class="e">🍃</span>이번 달 지출이 아직 없어</div>`;
 
   const monthRows = STATE.transactions || [];
-  let recent5Src = monthRows.slice(0,5);
-  // 입력자 필터는 거래 목록에만 적용하고 공동 잔액은 항상 전체 합계를 유지한다.
-  if (STATE.userFilter) {
-    recent5Src = monthRows.filter(t => t.user === STATE.userFilter).slice(0,5);
-  }
-  let recent5 = recent5Src.map(txRow).join('') ||
+  let recent5 = monthRows.slice(0,5).map(txRow).join('') ||
     `<div class="empty"><span class="e">📭</span>아직 입력된 거래가 없어</div>`;
 
   // Calendar-local Seoul dates: UTC or host timezone may differ at midnight.
@@ -2919,28 +2721,14 @@ function renderHome(){
     <p class="living-caution ${allowance.uncertain || Number(allowance.availableNow) < 0 || !(STATE.recurrings || []).length ? 'warn' : ''}">${Number(allowance.availableNow) < 0 ? '⚠️ 예정 지출을 예약하면 여유가 부족해요. ' : ''}${esc(allowance.note || '등록된 정기거래와 장부 기록을 바탕으로 계산한 추정값이에요.')}${!(STATE.recurrings || []).length ? ' ⚠️ 정기거래 등록 정보가 없어 예상 지출을 충분히 반영하지 못했을 수 있어요.' : ''}${pendingItems.length ? ' 전송 대기 중인 항목은 장부 잔액에 반영된 것으로 보고 예약에서 다시 빼지 않았어요.' : ''}${Number(allowance.scheduledIncome) > 0 ? ` 예정 정기수입 ${fmt(allowance.scheduledIncome)}은 실제 입금 전이라 더하지 않았어요.` : ' 향후 수입은 실제 입금되기 전에는 반영하지 않아요.'}</p>
   </section>` : '';
 
-  // 지수 vs 하콩 부부 분담 계산 (지출 & 수입)
-  let jisooSpent = 0, hayoungSpent = 0;
-  let jisooIncome = 0, hayoungIncome = 0;
+  // 한 공동 장부의 전체 수입을 카테고리별로 집계한다.
   const incomeCatsMap = {};
   (monthRows || []).forEach(t => {
-    if (t.type === '지출') {
-      if (t.user === '지수') jisooSpent += Number(t.amount || 0);
-      else if (t.user === '하콩') hayoungSpent += Number(t.amount || 0);
-    } else if (t.type === '수입') {
-      if (t.user === '지수') jisooIncome += Number(t.amount || 0);
-      else if (t.user === '하콩') hayoungIncome += Number(t.amount || 0);
+    if (t.type === '수입') {
       const c = t.cat || '기타수입';
       incomeCatsMap[c] = (incomeCatsMap[c] || 0) + Number(t.amount || 0);
     }
   });
-  const totalCoupleSpent = jisooSpent + hayoungSpent;
-  const jisooPct = totalCoupleSpent ? Math.round((jisooSpent / totalCoupleSpent) * 100) : 0;
-  const hayoungPct = totalCoupleSpent ? 100 - jisooPct : 0;
-
-  const totalCoupleIncome = jisooIncome + hayoungIncome;
-  const jisooIncomePct = totalCoupleIncome ? Math.round((jisooIncome / totalCoupleIncome) * 100) : 0;
-  const hayoungIncomePct = totalCoupleIncome ? 100 - jisooIncomePct : 0;
 
   const incomeCats = Object.keys(incomeCatsMap).map(k => ({ cat: k, amt: incomeCatsMap[k] })).sort((a,b) => b.amt - a.amt);
   const maxIncomeCat = incomeCats.length ? incomeCats[0].amt : 1;
@@ -2965,15 +2753,6 @@ function renderHome(){
     }
   }
 
-  const currentFilter = STATE.userFilter || '';
-  const switcherHtml = `
-    <div class="filter-caption">거래 입력자 보기</div>
-    <div class="user-switcher-strip">
-      <button class="user-switch-chip ${!currentFilter?'on':''}" onclick="setUserFilter('')">전체</button>
-      <button class="user-switch-chip ${currentFilter==='지수'?'on':''}" onclick="setUserFilter('지수')">지수</button>
-      <button class="user-switch-chip ${currentFilter==='하콩'?'on':''}" onclick="setUserFilter('하콩')">하콩</button>
-    </div>
-  `;
 
   // Forecast only FUTURE variable spending. Recorded fixed expenses, savings,
   // repayment and unrecorded reserves are already in availableNow; subtracting
@@ -3024,7 +2803,6 @@ function renderHome(){
   el.innerHTML = `
     ${settlementEntryHtml}
     ${closedMonthHtml}
-    ${switcherHtml}
     <div class="balance">
       <div class="lab">${isCurrentMonth ? '이번 달 남은 돈' : isPastMonth ? monthLabel + ' 결산 잔액' : monthLabel + ' 계획 잔액'}</div>
       <div class="big ${minus?'minus':''}">${fmt(s.left)}</div>
@@ -3039,7 +2817,7 @@ function renderHome(){
     </div>
 
     <div class="home-section-head">
-      <div class="sec-title">${currentFilter ? currentFilter + '의 최근 거래' : '최근 거래'}</div>
+      <div class="sec-title">최근 거래</div>
       <button class="text-action" onclick="switchView('list')">전체 내역</button>
     </div>
     <div class="card">${recent5}</div>
@@ -3054,46 +2832,12 @@ function renderHome(){
           ${ddayWarning}
           <button class="text-action" onclick="switchView('recurring')" style="margin-top:10px">정기거래 관리</button>
         </div>` : ''}
-        <div class="insight-block">
-          <div class="insight-title">입력자별 수입 (총 ${fmt(totalCoupleIncome)})</div>
-          <div class="couple-card">
-            <div class="couple-head">
-              <span>지수 ${fmt(jisooIncome)} (${jisooIncomePct}%)</span>
-              <span>하콩 ${fmt(hayoungIncome)} (${hayoungIncomePct}%)</span>
-            </div>
-            <div class="couple-track">
-              <div class="couple-fill-j" style="width:${jisooIncomePct}%"></div>
-              <div class="couple-fill-h" style="width:${hayoungIncomePct}%"></div>
-            </div>
-          </div>
-        </div>
-        <div class="insight-block">
-          <div class="insight-title">입력자별 지출 (총 ${fmt(totalCoupleSpent)})</div>
-          <div class="couple-card">
-            <div class="couple-head">
-              <span>지수 ${fmt(jisooSpent)} (${jisooPct}%)</span>
-              <span>하콩 ${fmt(hayoungSpent)} (${hayoungPct}%)</span>
-            </div>
-            <div class="couple-track">
-              <div class="couple-fill-j" style="width:${jisooPct}%"></div>
-              <div class="couple-fill-h" style="width:${hayoungPct}%"></div>
-            </div>
-          </div>
-        </div>
         ${budgetGaugesHtml ? `<div class="insight-block"><div class="insight-title">카테고리 예산</div>${budgetGaugesHtml}</div>` : ''}
         <div class="insight-block"><div class="insight-title">지출 TOP 3</div><div class="bars">${bars}</div></div>
         <div class="insight-block"><div class="insight-title">수입원 분석</div><div class="bars">${incomeBars}</div></div>
       </div>
     </details>
   `;
-}
-
-function setUserFilter(user){
-  STATE.userFilter = user;
-  renderHome();
-  if (typeof refreshTransactionList === 'function') refreshTransactionList();
-  else renderList();
-  toast(user ? `${user}가 입력한 거래만 표시해요` : '전체 거래를 표시해요');
 }
 
 /* ============ 앱 버전 · 업데이트 내역 ============
@@ -3188,7 +2932,7 @@ function renderTransfers(){
     const id=String(item.id == null ? '' : item.id);
     return `<article class="transfer-entry" role="listitem">
       <div class="transfer-entry-main">
-        <span class="transfer-entry-date">${esc(item.date || '')} · ${esc(item.user || '입력자 미상')}</span>
+        <span class="transfer-entry-date">${esc(item.date || '')}</span>
         <strong>${esc(item.fromAccount || '출금 계좌 미상')} <span aria-hidden="true">→</span> ${esc(item.toAccount || '입금 계좌 미상')}</strong>
         ${item.memo?`<p class="transfer-entry-memo">${esc(item.memo)}</p>`:''}
         ${item.createdAt?`<small class="transfer-entry-created">등록 ${esc(item.createdAt)}</small>`:''}
@@ -3226,7 +2970,7 @@ function renderTransfers(){
         <datalist id="internalTransferAccountNames">${getSourceNames().map(name=>`<option value="${esc(name)}"></option>`).join('')}</datalist>
         <label>이체 금액 (원)<input id="internalTransferAmount" name="amount" type="text" inputmode="numeric" pattern="[0-9,]+" required placeholder="예: 100000" value="${esc(draft.amount)}" oninput="updateInternalTransferDraft('amount',this.value)" ${actionBlocked?'disabled':''}></label>
         <label class="transfer-wide">메모 (선택)<input id="internalTransferMemo" name="memo" type="text" maxlength="300" placeholder="예: 적금 계좌로 이동" value="${esc(draft.memo)}" oninput="updateInternalTransferDraft('memo',this.value)" ${actionBlocked?'disabled':''}></label>
-        <div class="transfer-submit-row"><span>기록자: ${esc(STATE.sessionUser || '하콩')} · 일반 거래 합계에 미포함</span>
+        <div class="transfer-submit-row"><span>일반 거래 합계에 미포함</span>
           <button class="transfer-submit" type="submit" ${actionBlocked?'disabled':''}>${store.busy?'처리 중…':receipt||store.pendingSave?'같은 요청 ID로 저장 확인':'이체 기록 저장'}</button></div>
       </form>
     </section>
@@ -3457,7 +3201,6 @@ function renderRecurring() {
           <span class="tag">매월 ${esc(String(r.day || '?'))}일</span>
           <span class="tag">${esc(r.cat)}</span>
           <span class="tag rec-schedule-state">${esc(scheduleState)}</span>
-          ${r.user ? `<span class="rec-user-badge">${r.user === '지수' ? '🧔 지수' : '👧 하콩'}</span>` : ''}
           ${r.endYm ? `<span class="tag" style="background:#fbe9e6;color:var(--expense);">~${esc(String(r.endYm).replace('-','.'))} 종료</span>` : ''}
         </div>
       </div>
@@ -3529,13 +3272,6 @@ function txRow(t){
   const delBtn  = readOnlyHistory || (isTemp && !canCancelPending) ? '' : `<button type="button" class="del-tx-btn" data-delete-row="${esc(safeRow)}" title="${isTemp?'저장 대기 취소':'삭제'}" aria-label="${isTemp?'저장 대기 취소':'거래 삭제'}">${isTemp?'✕':'🗑️'}</button>`;
   const pendingLabel = t.syncState === 'confirmed' ? '서버 저장 확인 중' : t.syncState === 'sending' ? '전송됨 · 취소 불가' : t.syncState === 'attention' ? '확인 필요' : (t.syncState === 'error' ? '재시도 대기' : '저장 대기');
   const pendingBadge = isTemp ? `<span class="sync-badge ${t.syncState==='pending'?'':'error'}">${pendingLabel}</span>` : '';
-  const householdBadges = t.type==='지출' ? (()=>{
-    const scope=t.expenseScope==='공동'?'공동':t.expenseScope==='개인'?'개인':'미분류';
-    const payer=['지수','하콩'].includes(t.paidBy) ? t.paidBy : '미지정';
-    const ratio=t.expenseScope==='공동' && /^\d{1,3}$/.test(String(t.sharePercent)) && Number(t.sharePercent)<=100
-      ? ` · 지수 ${Number(t.sharePercent)}%` : '';
-    return `<span class="tag household-tx-tag ${scope==='공동'?'shared':scope==='개인'?'personal':'unknown'}">${esc(scope)} 지출${ratio}</span><span class="tag household-tx-tag payer">결제 ${esc(payer)}</span>`;
-  })() : '';
   const bulkActive = STATE.bulkMode && !readOnlyHistory;
   let actionHtml = '';
   if (bulkActive) {
@@ -3557,7 +3293,7 @@ function txRow(t){
     <div class="ico ${icoColor}">${emo(t.cat)}</div>
     <div class="mid"><div class="d">${esc(t.desc||t.cat||'(내역없음)')}</div>
       <div class="s">
-        <span class="tag">${esc(t.cat)}</span>${householdBadges}${t.source ? `<span class="tag source-tag">${esc(t.source)}</span>` : ''}
+        <span class="tag">${esc(t.cat)}</span>${t.source ? `<span class="tag source-tag">${esc(t.source)}</span>` : ''}
       </div>
     </div>
     ${bulkActive ? '' : actionHtml}
@@ -3656,8 +3392,7 @@ function renderSpendingCalendar(){
     return '<div class="empty" role="status">소비 달력 데이터를 확인하고 있어요. 거래 목록으로 전환해줘.</div>';
 
   const rows=Array.isArray(STATE.transactions) ? STATE.transactions : [];
-  const userFilter=STATE.userFilter || '';
-  const cal=calculateSpendingCalendar({ym,transactions:rows,summary:STATE.summary,userFilter});
+  const cal=calculateSpendingCalendar({ym,transactions:rows,summary:STATE.summary});
   if(!cal || !Array.isArray(cal.days))
     return '<div class="empty" role="status">소비 달력을 표시할 수 없어. 거래 목록을 확인해줘.</div>';
   const defaultDate=spendingCalendarDefaultDate(ym);
@@ -3719,7 +3454,7 @@ function renderSpendingCalendar(){
   }).join('') + (unknownRows.length ? `<section class="spending-detail-group" aria-label="유형 미확인 거래"><h4>유형 미확인 ${unknownRows.length}건</h4>${unknownRows.map(txRow).join('')}</section>` : '')
     : '<div class="empty">이 날짜에 표시된 거래가 없어. 기록하지 않은 소비는 집계되지 않아.</div>';
   return `<section class="spending-calendar" aria-label="${esc(heading)} 소비 달력">
-    <div class="spending-calendar-heading"><h3>${esc(heading)} 소비 달력</h3><span>${userFilter ? esc(userFilter)+' 입력자 기준' : '전체 입력자 기준'}</span></div>
+    <div class="spending-calendar-heading"><h3>${esc(heading)} 소비 달력</h3><span>공동 장부 전체</span></div>
     <p class="spending-calendar-note${partial?' caution':''}" role="${partial?'status':'note'}">${esc(coverage)}${cal.uncertain ? ' · 거래 기록을 확인해줘.' : ''} · 달 변경은 상단 월 선택을 이용해줘.</p>
     ${hasListFilters ? '<p class="spending-calendar-note">달력은 목록의 검색·구분·분류 필터를 적용하지 않아요. 거래 목록으로 돌아가면 선택한 조건이 그대로 유지돼요.</p>' : ''}
     ${totalsHtml}
@@ -3737,31 +3472,6 @@ function renderSpendingCalendar(){
   </section>`;
 }
 
-function renderHouseholdSummary(){
-  if(!STATE.summary || typeof calculateHouseholdSplit!=='function') return '';
-  const result=calculateHouseholdSplit({ym:STATE.ym,transactions:STATE.transactions || [],summary:STATE.summary});
-  if(!result) return '';
-  const money=value=>fmt(Number(value)||0);
-  const transfer=Number(result.transferAmount)>0 && ['지수','하콩'].includes(result.transferFrom) && ['지수','하콩'].includes(result.transferTo)
-    ? `${esc(result.transferFrom)} → ${esc(result.transferTo)} <strong>${money(result.transferAmount)}</strong>` : '확정된 공동지출 기준 송금 제안 없음';
-  const warning=result.partial || result.uncertain || Number(result.unclassifiedCount)>0 || Number(result.pendingSharedCount)>0;
-  const warnings=Array.isArray(result.warnings)?result.warnings:[];
-  return `<section class="household-month-card" aria-labelledby="householdMonthTitle">
-    <div class="household-month-header"><h3 id="householdMonthTitle">🏡 이번 달 공동생활비 정산</h3><span>${esc(STATE.ym||'')} · 전체 입력자 기준</span></div>
-    <p class="household-month-note">정산 제안 · 실제 송금 아님. 확정된 공동지출만 계산하며 카드·은행 잔액과 연결되지 않아요.</p>
-    <div class="household-month-grid">
-      <div><span>공동지출 확정</span><strong>${money(result.sharedTotal)}</strong><small>${Number(result.sharedCount)||0}건</small></div>
-      <div><span>지수 실제 결제</span><strong>${money(result.jisuPaid)}</strong><small>부담 몫 ${money(result.jisuShare)}</small></div>
-      <div><span>하콩 실제 결제</span><strong>${money(result.hakongPaid)}</strong><small>부담 몫 ${money(result.hakongShare)}</small></div>
-      <div><span>개인 지출</span><strong>${money(result.personalTotal)}</strong><small>공동 정산 제외 · ${Number(result.personalCount)||0}건</small></div>
-    </div>
-    <div class="household-transfer" aria-label="공동생활비 송금 제안"><span>차액 정산 제안</span><div>${transfer}</div></div>
-    ${Number(result.pendingSharedCount)>0 ? `<p class="household-month-note">⏳ 동기화 대기 공동지출 ${money(result.pendingSharedAmount)} · ${Number(result.pendingSharedCount)}건은 송금 제안에서 제외했어요.</p>` : ''}
-    ${Number(result.unclassifiedCount)>0 ? `<p class="household-month-note">미분류 과거 지출 ${money(result.unclassifiedAmount)} · ${Number(result.unclassifiedCount)}건은 추정 분담하지 않았어요.</p>` : ''}
-    ${warning ? `<p class="household-month-warning" role="status">⚠️ ${esc(result.partial?'일부 거래가 누락됐을 수 있어요. ':'')}${esc(warnings.join(' ') || '기록 상태와 송금 전 원장을 직접 확인해줘.')}</p>` : ''}
-  </section>`;
-}
-
 function renderList(){
   const el=document.getElementById('v-list');
   if(!el) return;
@@ -3774,13 +3484,10 @@ function renderList(){
     el.innerHTML=`<div class="list-scope-toggle" role="group" aria-label="검색 기간">
       <button type="button" class="on" onclick="setListScope('month')">${esc(STATE.ym || '')} 이달</button>
       <button type="button" onclick="setListScope('all')">전체 기간</button>
-    </div>${spendingCalendarSwitchHtml()}${renderHouseholdSummary()}${renderSpendingCalendar()}`;
+    </div>${spendingCalendarSwitchHtml()}${renderSpendingCalendar()}`;
     return;
   }
   let txs = wholeHistory ? (STATE.list.remoteRows || []) : (STATE.transactions || []);
-  if (!wholeHistory && STATE.userFilter) {
-    txs = txs.filter(t => t.user === STATE.userFilter);
-  }
   const query = String(STATE.list.query || '').trim().toLowerCase();
   if (!wholeHistory && query) {
     txs = txs.filter(t => {
@@ -3872,7 +3579,7 @@ function renderList(){
 
   const listHeadHtml = `
     <div class="list-head" style="display:flex;align-items:center;justify-content:space-between;margin:16px 4px 12px">
-      <div class="sec-title" style="margin:0; display:flex; align-items:center; gap:8px;">${wholeHistory ? '전체 기간 거래' : (STATE.userFilter ? STATE.userFilter + ' 거래' : '거래 내역')}
+      <div class="sec-title" style="margin:0; display:flex; align-items:center; gap:8px;">${wholeHistory ? '전체 기간 거래' : '거래 내역'}
         ${wholeHistory ? '' : `<button class="user-switch-chip ${STATE.bulkMode?'on':''}" style="font-size:11px; padding:4px 8px; margin:0;" onclick="toggleBulkMode()">☑️ 일괄 편집</button>`}
       </div>
       <div class="list-count" style="font-size:13px;font-weight:800;color:var(--muted);background:var(--line-soft);padding:3px 10px;border-radius:999px">${totalCount}건</div>
@@ -3911,7 +3618,6 @@ function renderList(){
   el.innerHTML = `
     ${searchBarHtml}
     ${wholeHistory ? '' : spendingCalendarSwitchHtml()}
-    ${wholeHistory ? '' : renderHouseholdSummary()}
     ${wholeHistory ? '<div class="list-readonly-note">전체 기간 결과는 조회 전용이에요 · 수정/삭제는 해당 월로 이동해서 해주세요.</div>' : ''}
     ${typeChipsHtml}
     <div class="cat-scroll-bar" style="margin-top:4px">${filterChipsHtml}</div>
@@ -5337,6 +5043,21 @@ function closeActiveSheet(){
   else closeQuickEntryModal();
 }
 
+function renderQuickEntrySourceOptions(){
+  const options=document.getElementById('fSourceOptions');
+  if(!options)return;
+  const names=new Set();
+  const add=value=>{
+    const name=String(value == null ? '' : value).trim();
+    if(name && name.length<=80 && !/[\r\n\t]/.test(name))names.add(name);
+  };
+  (STATE.transactions || []).concat(STATE.recent || []).forEach(tx=>add(tx && tx.source));
+  const transfers=STATE.internalTransfers && STATE.internalTransfers.rows || [];
+  transfers.forEach(tx=>{add(tx && tx.fromAccount);add(tx && tx.toAccount);});
+  options.innerHTML=Array.from(names).sort((a,b)=>a.localeCompare(b,'ko'))
+    .map(name=>`<option value="${esc(name)}"></option>`).join('');
+}
+
 function openQuickEntryModal(){
   if(!STATE.authToken){ toast('로그인이 필요해'); return; }
   openDialogSheet('sheet','#fAmount');
@@ -5344,8 +5065,6 @@ function openQuickEntryModal(){
   const titleEl = document.getElementById('sheetTitle');
   const isSettlementMonth = STATE.settlement && !STATE.settlement.isClosed && STATE.settlement.ym === STATE.ym && STATE.ym !== todayStr().slice(0,7);
   if(titleEl) titleEl.textContent = STATE.editing ? '거래 수정' : (isSettlementMonth ? STATE.ym + ' 정산 거래 추가' : '빠른 입력');
-  const extraFields = document.getElementById('extraFields');
-  if (extraFields) extraFields.open = !!STATE.editing || !!isSettlementMonth;
 
   if (!STATE.editing) {
     document.getElementById('fAmount').value = '';
@@ -5359,11 +5078,8 @@ function openQuickEntryModal(){
     STATE.form.type = STATE.form.type || '지출';
     STATE.form.cat = null;
     STATE.form.fixed = '변동';
-    STATE.form.user = STATE.form.user || STATE.sessionUser || '하콩';
+    STATE.form.user = STATE.sessionUser || '하콩';
     STATE.form.mood = '';
-    STATE.form.expenseScope = '개인';
-    STATE.form.paidBy = STATE.form.user;
-    STATE.form.sharePercent = 50;
     STATE.form.catManual = false; // 수동 터치 초기화
     STATE.form.typeManual = false;
     clearQuickEntryPreview();
@@ -5373,6 +5089,7 @@ function openQuickEntryModal(){
     if(repeatNotice){repeatNotice.hidden=true;repeatNotice.textContent='';}
   }
 
+  renderQuickEntrySourceOptions();
   const dateInp = document.getElementById('fDate');
   if(dateInp && !dateInp.value){
     // 정산 중인 과거 월은 날짜를 숨기지 않고, 해당 월 마지막 일을 시작값으로 제시한다.
@@ -5465,51 +5182,7 @@ function renderFormChips(){
     else descInp.placeholder = '예: 점심, 커피, 마트';
   }
 
-  // 소비성격(Mood) 필드는 지출일 때만 표시 (수입/저축/대출상환은 숨김)
-  const moodWrap = document.getElementById('moodFieldWrap');
-  if (moodWrap) {
-    moodWrap.style.display = (currentType === '지출') ? '' : 'none';
-  }
-  // 숨긴 채로 남은 소비성격이 수입·저축 거래에 같이 저장되지 않게 한다. (기존 거래 수정 시엔 그대로 둔다)
-  if (currentType !== '지출' && !STATE.editing) STATE.form.mood = '';
-  renderHouseholdEntryFields(currentType);
-
-  // 라벨 동적 변경 (입력자 -> 수입자)
-  const userLabel = document.getElementById('userChipsLabel');
-  if (userLabel) {
-    userLabel.textContent = (currentType === '수입') ? '수입자 (누구 수입?)' : '입력자';
-  }
-  const fixLabel = document.getElementById('fixChipsLabel');
-  if (fixLabel) {
-    fixLabel.textContent = (currentType === '수입') ? '정기/비정기' : '고정/변동';
-  }
-
-  const fixEl = document.getElementById('fixChips');
-  if(fixEl){
-    const fixes = ['변동','고정'];
-    const currentFix = STATE.form.fixed || '변동';
-    fixEl.innerHTML = fixes.map(f=>
-      `<button type="button" class="chip ${currentFix===f?'on':''}" data-v="${esc(f)}" onclick="selectFormChip('fixed',this.dataset.v)">${esc(f)}</button>`
-    ).join('');
-  }
-
-  const userEl = document.getElementById('userChips');
-  if(userEl){
-    const users = ['하콩', '지수'];
-    const currentUser = STATE.form.user || '하콩';
-    userEl.innerHTML = users.map(u=>
-      `<button type="button" class="chip ${currentUser===u?'on':''}" data-v="${esc(u)}" onclick="selectFormChip('user',this.dataset.v)">${u==='지수'?'🧔 지수':'👧 하콩'}</button>`
-    ).join('');
-  }
-
-  const moodEl = document.getElementById('moodChips');
-  if(moodEl && currentType === '지출'){
-    const moods = ['필수소비','계획소비','충동소비','감성소비','투자성'];
-    const currentMood = STATE.form.mood || '';
-    moodEl.innerHTML = moods.map(m=>
-      `<button type="button" class="chip ${currentMood===m?'on':''}" data-v="${esc(m)}" onclick="selectFormChip('mood',this.dataset.v)">${esc(m)}</button>`
-    ).join('');
-  }
+  // 소비성격 선택 UI는 없지만 과거 거래 재입력·수정값은 상태에 남겨둔다.
 
   // 자주 쓰는 거래 템플릿 칩
   const templateEl = document.getElementById('templateChips');
@@ -5527,64 +5200,6 @@ function renderFormChips(){
   }
 }
 
-function renderHouseholdEntryFields(type){
-  const section=document.getElementById('householdEntryField');
-  if(section) section.hidden=type !== '지출';
-  if(type !== '지출') return;
-  const isLegacy=!!STATE.editing && !STATE.form.expenseScope;
-  const scope=STATE.form.expenseScope || '';
-  const payer=STATE.form.paidBy || '';
-  const scopeChips=document.getElementById('expenseScopeChips');
-  if(scopeChips) scopeChips.innerHTML=(isLegacy ? [{value:'',label:'미분류 · 기존값 유지'}] : [])
-    .concat([{value:'개인',label:'개인 지출'},{value:'공동',label:'공동 지출'}])
-    .map(item=>`<button type="button" class="chip ${scope===item.value?'on':''}" aria-pressed="${scope===item.value}" data-v="${esc(item.value)}" onclick="selectFormChip('expenseScope',this.dataset.v)">${esc(item.label)}</button>`).join('');
-  const paidByChips=document.getElementById('paidByChips');
-  if(paidByChips) paidByChips.innerHTML=[{value:'',label:'미지정 · 기존값 유지'},
-    {value:'지수',label:'🧔 지수'},{value:'하콩',label:'👧 하콩'}]
-    .filter(item=>item.value!=='' || !!STATE.editing)
-    .map(item=>`<button type="button" class="chip ${payer===item.value?'on':''}" aria-pressed="${payer===item.value}" data-v="${esc(item.value)}" onclick="selectFormChip('paidBy',this.dataset.v)">${esc(item.label)}</button>`).join('');
-  const percentWrap=document.getElementById('sharePercentField');
-  if(percentWrap) percentWrap.hidden=scope!=='공동';
-  const percentInp=document.getElementById('fSharePercent');
-  if(percentInp && scope==='공동') percentInp.value=String(STATE.form.sharePercent == null || STATE.form.sharePercent === '' ? 50 : STATE.form.sharePercent);
-  const percentQuick=document.getElementById('sharePercentQuick');
-  if(percentQuick) percentQuick.innerHTML=[0,50,100].map(value=>
-    `<button type="button" class="chip ${Number(STATE.form.sharePercent)===value?'on':''}" data-v="${value}" onclick="selectFormChip('sharePercent',this.dataset.v)">${value}%</button>`).join('');
-  const notice=document.getElementById('householdEntryNotice');
-  if(notice) notice.textContent=isLegacy ? '이전 거래의 공동/개인 값이 비어 있어요. 선택하지 않으면 미분류로 그대로 유지해요.' :
-    (scope==='공동' ? '공동 지출은 지수와 하콩이 부담율로 분담해요. 정산은 실제 송금과 달라요.' : '개인 지출은 공동 정산 합계에서 제외해요.');
-}
-
-function updateHouseholdSharePercent(value){
-  // Keep a custom number when a category/payer chip re-renders the form.
-  STATE.form.sharePercent=String(value);
-}
-
-function householdFieldsForSave(type){
-  if(type!=='지출') return {};
-  // Programmatic/legacy callers of submitQuickTx may not have opened the new
-  // sheet yet; the new-entry defaults mirror the visible initial chips.
-  // Existing edit rows NEVER receive these defaults.
-  const scope=STATE.form.expenseScope || (STATE.editing ? '' : '개인');
-  const paidBy=STATE.form.paidBy || (STATE.editing ? '' : (STATE.form.user || STATE.sessionUser || '하콩'));
-  if(scope && scope!=='개인' && scope!=='공동') return null;
-  if(paidBy && paidBy!=='지수' && paidBy!=='하콩') return null;
-  if(!STATE.editing && (!scope || !paidBy)) return null;
-  if(scope==='공동' && !paidBy) return null;
-  const result={expenseScope:scope,paidBy};
-  if(scope==='공동'){
-    const input=document.getElementById('fSharePercent');
-    const raw=input ? String(input.value).trim() : String(STATE.form.sharePercent == null ? '' : STATE.form.sharePercent);
-    if(!/^\d{1,3}$/.test(raw)||Number(raw)>100) return null;
-    result.sharePercent=Number(raw);
-    STATE.form.sharePercent=result.sharePercent;
-  }else if(STATE.editing && !scope && STATE.editing.sharePercent!=null && STATE.editing.sharePercent!==''){
-    // Preserve previously stored values when editing an unclassified legacy row.
-    result.sharePercent=STATE.editing.sharePercent;
-  }
-  return result;
-}
-
 function selectFormChip(field, value){
   if(field === 'type'){
     STATE.form.type = value;
@@ -5595,28 +5210,6 @@ function selectFormChip(field, value){
   } else if(field === 'cat'){
     STATE.form.cat = value;
     STATE.form.catManual = true; // 수동 조작
-    renderFormChips();
-  } else if(field === 'fixed'){
-    STATE.form.fixed = value;
-    renderFormChips();
-  } else if(field === 'user'){
-    STATE.form.user = value;
-    renderFormChips();
-  } else if(field === 'expenseScope'){
-    if(!['','개인','공동'].includes(value)) return;
-    STATE.form.expenseScope=value;
-    if(value==='공동' && (STATE.form.sharePercent == null || STATE.form.sharePercent==='')) STATE.form.sharePercent=50;
-    renderHouseholdEntryFields(STATE.form.type || '지출');
-  } else if(field === 'paidBy'){
-    if(!['','지수','하콩'].includes(value)) return;
-    STATE.form.paidBy=value;
-    renderHouseholdEntryFields(STATE.form.type || '지출');
-  } else if(field === 'sharePercent'){
-    if(!['0','50','100'].includes(String(value))) return;
-    STATE.form.sharePercent=Number(value);
-    renderHouseholdEntryFields(STATE.form.type || '지출');
-  } else if(field === 'mood'){
-    STATE.form.mood = STATE.form.mood === value ? '' : value;
     renderFormChips();
   }
 }
@@ -5645,7 +5238,7 @@ function applyTemplateByIndex(index){
 function closeQuickEntryModal(){
   closeDialogSheet('sheet');
   // 폼 상태 완전 초기화 (편집 모드 포함)
-  STATE.form = { type: null, cat: null, fixed: '변동', user: STATE.form.user || '하콩', catManual: false, typeManual: false, mood: '', expenseScope:'', paidBy:'', sharePercent:50 };
+  STATE.form = { type: null, cat: null, fixed: '변동', user: STATE.sessionUser || '하콩', catManual: false, typeManual: false, mood: '' };
   STATE.editing = null;
   const amtInp = document.getElementById('fAmount');
   const descInp = document.getElementById('fDesc');
@@ -5662,8 +5255,6 @@ function closeQuickEntryModal(){
   if(smartField) smartField.style.display='';
   const repeatNotice=document.getElementById('repeatEntryNotice');
   if(repeatNotice){repeatNotice.hidden=true;repeatNotice.textContent='';}
-  const extraFields = document.getElementById('extraFields');
-  if(extraFields) extraFields.open = false;
   const titleEl = document.getElementById('sheetTitle');
   if(titleEl) titleEl.textContent = '빠른 입력';
   // 수정 모드에서 숨긴 버튼 복원
@@ -5861,7 +5452,9 @@ function submitSettlementDraft(){
     return api('addTransactionsFast', chunk.map(row => ({
       clientId: row.clientId,
       dedupe: row.imported === true && row.forceDuplicate !== true,
-      data: Object.assign({}, row, { settlementBatch: batchId })
+      // Older shared drafts keep their recorded writer; drafts without one
+      // use the authenticated session as backend metadata.
+      data: Object.assign({}, row, { user:row.user || STATE.sessionUser || '하콩', settlementBatch: batchId })
     }))).then(res => {
       (res.results || []).forEach(result => { if (result && result.ok) { completed.add(result.clientId); if(result.duplicate) duplicateCount++; } });
       return sendNext();
@@ -6206,7 +5799,7 @@ function submitQuickTxLegacy(closeAfter){
   const type = STATE.form.type || '지출';
   const cat = STATE.form.cat || '식비';
   const fixed = STATE.form.fixed || '변동';
-  const user = STATE.form.user || '하콩';
+  const user = STATE.sessionUser || '하콩';
   const mood = STATE.form.mood || '';
 
   // ===== 편집 모드 =====
@@ -6367,7 +5960,14 @@ function setTxSubmitBusy(busy, label){
 }
 
 function quickTxSameData(a, b){
-  try { return JSON.stringify(a || {}) === JSON.stringify(b || {}); }
+  // Older undurable attempts can contain household/hidden fields no longer
+  // exposed by the form. Match visible values and reuse the original payload
+  // with its clientId, so a lost server acknowledgement cannot double-post.
+  try {
+    if(!a || !b)return false;
+    return ['date','type','cat','amount','desc','source']
+      .every(key=>String(a[key] == null ? '' : a[key])===String(b[key] == null ? '' : b[key]));
+  }
   catch(e) { return false; }
 }
 
@@ -6376,6 +5976,11 @@ function finishQuickTxInputs(closeAfter, amtInp, descInp){
   else {
     if (amtInp) { amtInp.value = ''; amtInp.focus(); }
     if (descInp) descInp.value = '';
+    // Saving another entry must not silently copy an invisible note/meaning.
+    const memoInp=document.getElementById('fMemo');
+    if(memoInp)memoInp.value='';
+    STATE.form.fixed='변동';
+    STATE.form.mood='';
   }
 }
 
@@ -6437,18 +6042,18 @@ function submitQuickTx(closeAfter){
     cat: cat,
     amount: amount,
     desc: (descInp && descInp.value.trim()) || cat,
-    fixed: STATE.form.fixed || '변동',
-    user: STATE.form.user || STATE.sessionUser || '하콩',
-    memo: (memoInp && memoInp.value.trim()) || '',
-    spendingMood: STATE.form.mood || '',
     source
   };
-  const household=householdFieldsForSave(type);
-  if(household===null){
-    toast('개인/공동, 실제 결제자와 공동 부담율(0~100 정수)을 확인해줘.',true);
-    return;
+  if(!STATE.editing){
+    // Only new records need metadata defaults. Editing an old record omits
+    // hidden columns; the server keeps their original bytes, including blanks.
+    Object.assign(data,{
+      fixed: STATE.form.fixed || '변동',
+      user: STATE.sessionUser || '하콩',
+      memo: (memoInp && memoInp.value.trim()) || '',
+      spendingMood: STATE.form.mood || ''
+    });
   }
-  Object.assign(data,household);
 
   if (STATE.editing) {
     const editRow = STATE.editing.txId || STATE.editing.row;
@@ -6471,7 +6076,7 @@ function submitQuickTx(closeAfter){
 
   const retry=STATE.undurableQuickTx;
   const retryId=retry && quickTxSameData(retry.data,data) ? retry.clientId : '';
-  const entry = queueTransaction(data,retryId);
+  const entry = queueTransaction(retryId ? retry.data : data,retryId);
   if (!entry.durable) {
     saveUndurableQuickTx(entry,closeAfter,amtInp,descInp);
     return;
@@ -6506,11 +6111,8 @@ function editTx(row){
   STATE.form.type = tx.type || '지출';
   STATE.form.cat  = tx.cat  || '식비';
   STATE.form.fixed = tx.fixed || '변동';
-  STATE.form.user  = tx.user || '하콩';
+  STATE.form.user  = STATE.sessionUser || '하콩';
   STATE.form.mood  = tx.spendingMood || '';
-  STATE.form.expenseScope=tx.type==='지출' ? (tx.expenseScope || '') : '';
-  STATE.form.paidBy=tx.type==='지출' ? (tx.paidBy || '') : '';
-  STATE.form.sharePercent=tx.sharePercent == null || tx.sharePercent==='' ? 50 : tx.sharePercent;
   STATE.form.catManual = true;
   STATE.form.typeManual = true;
 
@@ -6535,8 +6137,6 @@ function editTx(row){
   if(memoInp) memoInp.value = tx.memo || '';
   const sourceInp=document.getElementById('fSource');
   if(sourceInp) sourceInp.value=tx.source || '';
-  const extraFields = document.getElementById('extraFields');
-  if(extraFields) extraFields.open = true;
 
   // 계속/닫기 버튼 숨기고 수정 완료 버튼만 표시
   const continueBtn = document.getElementById('continueBtn');
@@ -6560,11 +6160,8 @@ function repeatTransaction(row){
   STATE.form.type=tx.type || '지출';
   STATE.form.cat=tx.cat || null;
   STATE.form.fixed=tx.fixed || '변동';
-  STATE.form.user=tx.user || STATE.sessionUser || '하콩';
+  STATE.form.user=STATE.sessionUser || '하콩';
   STATE.form.mood=tx.spendingMood || '';
-  STATE.form.expenseScope=tx.type==='지출' ? (tx.expenseScope || '') : '';
-  STATE.form.paidBy=tx.type==='지출' ? (tx.paidBy || '') : '';
-  STATE.form.sharePercent=tx.sharePercent == null || tx.sharePercent==='' ? 50 : tx.sharePercent;
   STATE.form.typeManual=true;
   STATE.form.catManual=true;
   const amount=document.getElementById('fAmount');
@@ -6578,8 +6175,6 @@ function repeatTransaction(row){
   if(date) date.value=todayStr();
   if(memo) memo.value=tx.memo || '';
   if(source) source.value=tx.source || '';
-  const extra=document.getElementById('extraFields');
-  if(extra) extra.open=true;
   const title=document.getElementById('sheetTitle');
   if(title) title.textContent='거래 다시 입력 · 오늘 날짜';
   const note=document.getElementById('repeatEntryNotice');
@@ -6942,7 +6537,6 @@ function applyQuickEntryText(){
         document.getElementById('rEndYm').value = '';
         STATE.form.rType = '지출';
         STATE.form.rCat = '식비';
-        STATE.form.rUser = STATE.sessionUser || '하콩';
       }
       
       document.getElementById('recDeleteBtn').style.display = STATE.editingRecurring ? 'block' : 'none';
@@ -6971,14 +6565,6 @@ function applyQuickEntryText(){
         `<button type="button" class="chip ${currentCat===c?'on':''}" data-v="${esc(c)}" onclick="STATE.form.rCat=this.dataset.v; renderRecurringFormChips();">${emo(c)} ${esc(c)}</button>`
       ).join('');
 
-      const rUserEl = document.getElementById('rUserChips');
-      if (rUserEl) {
-        const users = ['하콩', '지수'];
-        const currentRUser = STATE.form.rUser || '하콩';
-        rUserEl.innerHTML = users.map(u =>
-          `<button type="button" class="chip ${currentRUser===u?'on':''}" data-v="${esc(u)}" onclick="STATE.form.rUser=this.dataset.v; renderRecurringFormChips();">${u==='지수'?'🧔 지수':'👧 하콩'}</button>`
-        ).join('');
-      }
     }
 
     function submitRecurring() {
@@ -7004,10 +6590,12 @@ function applyQuickEntryText(){
         cat: STATE.form.rCat,
         amount: Number(amtStr.replace(/[^0-9]/g, '')),
         day: Number(day),
-        user: STATE.form.rUser || STATE.sessionUser || '하콩',
         enabled: enabled,
         endYm: endYm
       };
+      // Existing recurring.user stays in the server row (including blanks).
+      // Matching previously posted recurring expenses depends on this value.
+      if(!STATE.editingRecurring) rec.user=STATE.sessionUser || '하콩';
       
       closeRecurringModal();
       toast('🔄 고정거래 저장 중...');
@@ -7044,7 +6632,6 @@ function applyQuickEntryText(){
       
       STATE.form.rType = rec.type || '지출';
       STATE.form.rCat = rec.cat || '';
-      STATE.form.rUser = rec.user || STATE.sessionUser || '하콩';
       openRecurringModal();
     }
 
@@ -7464,7 +7051,8 @@ function listServerSearchOptions(){
   const opt={
     mode:'search', allMonths:true, limit:Number(list.pageSize || 40),
     query:String(list.query || '').trim(),
-    writer:STATE.userFilter || list.writer || '',
+    // The ledger is shared; historical searches never filter by writer.
+    writer:'',
     type:list.type || '', category:list.category || '', meaning:list.meaning || ''
   };
   if(String(list.minAmount || '').trim() !== '') {
@@ -8026,7 +7614,6 @@ function bindApp(){
       const dict=(STATE.descDict || {})[val];
       if(dict && dict.type && !STATE.form.typeManual && availableQuickEntryCategories(dict.type).includes(dict.cat)){
         STATE.form.type=dict.type;
-        STATE.form.fixed=dict.fixed || STATE.form.fixed || '변동';
       }
       const cat=suggestQuickEntryCategory(val,STATE.form.type || '지출');
       if(cat){
