@@ -3,7 +3,7 @@
 <head>
 <base target="_top">
 <meta charset="utf-8">
-<meta name="app-version" content="2.3.14">
+<meta name="app-version" content="2.3.15">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, interactive-widget=resizes-content">
 <meta name="description" content="지수와 하콩이의 빠르고 편한 공동 가계부">
 <meta name="theme-color" content="#f5f5f7">
@@ -1063,9 +1063,9 @@ body.dark-mode .transfer-status.error{color:var(--gold)}
 <script>
 /* ============ 앱 글로벌 상태 (Store) ============ */
 /* @release:start — pwa-site/scripts/build-static.mjs 가 release.json 을 보고 자동으로 채운다. 손으로 고치지 말 것. */
-const APP_VERSION = '2.3.14';
-const APP_BUILT_AT = '2026-10-19T10:03:44+09:00';
-const APP_RELEASE_NOTES = [{"version":"2.3.14","date":"2026-10-19T10:03:44+09:00","notes":["과거 정기거래 이름이 서로 비슷할 때 다른 거래를 이미 실행한 것으로 잘못 인식하는 오류 수정","자동 정기입력 중복 복구와 월말 정기거래 예약 계산의 구형 메모 태그를 완전 일치로 검증","구형 메모에 정기거래 태그가 여러 개 있어 출처가 불분명하면 자동입력·완료처리를 보류하고 확인 안내","기존 원장·정기거래 메모 형식은 변경하지 않고 관련 장애 재현 테스트 추가"]},{"version":"2.3.13","date":"2026-10-18T12:04:35+09:00","notes":["정기거래 중복 기록·저장 응답 유실 재시도·확정 대기 거래의 화면 이중 집계 위험을 보완","기존 정기거래 메모·고정구분 보존, 금액·날짜·거래종류·카테고리 검증과 날짜 HTML 출력 안전성 강화","월 이동·저장 응답 경합·생활비 예측 정합성을 수정하고 장애 재현 회귀 테스트 추가"]},{"version":"2.3.12","date":"2026-10-18T09:58:45+09:00","notes":["공동자금 단일 장부: 개인/공동·입력자·실제 결제자·부담비율과 추가 옵션 접기를 제거하고 날짜·선택 계좌만 바로 입력","홈과 내역의 사람별 통계·필터·송금 정산 제안을 제거하고 소비 달력·예산·월정산은 전체 거래 기준으로 유지","기존 거래 수정 시 숨겨진 메모·고정비·소비성격 보존, 정기거래 중복 예약 방지, 감사 이력 및 오프라인 저장 호환 보강"]},{"version":"2.3.11","date":"2026-10-11T16:44:03+09:00","notes":["작은 개선과 오류 수정"]},{"version":"2.3.10","date":"2026-10-11T16:41:28+09:00","notes":["5차 안정화: 저장 응답 유실 및 새로고침 후 내부이체 요청 ID 복구·중복 기록 방지, 다른 월 이동 중 오래된 응답의 입력 초안 침범 차단","서비스워커·저장 보호: 내부이체 작성 중 앱 자동 새로고침 제한, 비앱 페이지/JSON 응답이 오프라인 앱 셸을 덮어쓰지 않도록 캐시 범위 제한","정합성 보강: 이체 금액 쉼표 형식 엄격 검사, 서로 다른 원장의 저축·이체 중복 후보 알림, 잘못된 거래 유형·중복 이체 ID·불완전 합계 및 수치 초과 경고","이체 서버 안전: 빈 기존 시트 헤더 초기화, 삭제된 거래 재요청 멱등 처리, 손상 날짜 데이터 완전성 표시와 삭제 표시만 한 칸 갱신, 독립 적대적 회귀 검사 보강"]},{"version":"2.3.9","date":"2026-10-11T15:10:36+09:00","notes":["5차 내부이체: 기존 지출·수입 원장과 분리된 계좌 간 이체 전용 기록, 출금계좌·입금계좌·금액·날짜·메모 입력 및 이력 조회","결제수단별 월 흐름: 거래 출처/계좌와 내부이체 입출금 흐름을 별도로 보고, 확인되지 않은 실제 잔액이나 카드 청구금액으로 오인하지 않게 안내","금융 안정성: 이체는 소비·수입·부부 공동부담 계산에 섞지 않고, 반복 요청 ID 멱등 처리·월마감 쓰기 차단·삭제기록 보존","안전한 도입: 기존 거래·자산 시트 값은 변경하지 않고 신규 이체 전용 장부만 사용, 오프라인 상태에서는 이체를 조용히 큐에 넣지 않음"]},{"version":"2.3.8","date":"2026-10-11T14:41:36+09:00","notes":["4차 공동생활비: 거래 입력자와 실제 결제자를 분리하고 개인·공동 지출 및 지수·하콩 부담비율을 기록","부부 정산: 월별 확정 공동지출에 따른 개인별 부담과 차액 송금 제안을 읽기 전용으로 표시","결제수단 기록: 기존 출처/계좌를 빠른 입력·수정에 연결하되 실제 계좌이체나 카드 잔액은 연동하지 않음","금융 데이터 보호: 기존 거래 분담비율 자동 추정 금지, 미확정 거래 제외, 닫힌 월 쓰기 차단·오프라인 동기화 보호 및 신규 회귀 테스트"]},{"version":"2.3.7","date":"2026-10-11T14:27:37+09:00","notes":["소비 달력 정합성: 서버 txId와 오프라인 clientId가 뒤늦게 연결되는 거래를 하나로 합산해 중복 지출 방지","릴리스 안전: 게시 HTML과 원본 코드·소스 해시를 직접 검증하고 불일치하면 정적 배포 중단"]}];
+const APP_VERSION = '2.3.15';
+const APP_BUILT_AT = '2026-10-19T12:56:06+09:00';
+const APP_RELEASE_NOTES = [{"version":"2.3.15","date":"2026-10-19T12:56:06+09:00","notes":["같은 이름·금액의 서로 다른 정기거래가 각각 정확히 기록되도록 고정 ID 귀속 수정","여러 탭의 오프라인 거래 대기열 보존 및 로그아웃 후 오래된 캐시·인증 응답 보호","예산 특수 카테고리 소실·NaN, 수식형 입력, 정기 저장 중간 장애 리비전 복구 보완","정기거래 등록 확인증·거래 삭제 월 이동·지연된 응답으로 입력값이 지워지는 문제 수정"]},{"version":"2.3.14","date":"2026-10-19T10:03:44+09:00","notes":["과거 정기거래 이름이 서로 비슷할 때 다른 거래를 이미 실행한 것으로 잘못 인식하는 오류 수정","자동 정기입력 중복 복구와 월말 정기거래 예약 계산의 구형 메모 태그를 완전 일치로 검증","구형 메모에 정기거래 태그가 여러 개 있어 출처가 불분명하면 자동입력·완료처리를 보류하고 확인 안내","기존 원장·정기거래 메모 형식은 변경하지 않고 관련 장애 재현 테스트 추가"]},{"version":"2.3.13","date":"2026-10-18T12:04:35+09:00","notes":["정기거래 중복 기록·저장 응답 유실 재시도·확정 대기 거래의 화면 이중 집계 위험을 보완","기존 정기거래 메모·고정구분 보존, 금액·날짜·거래종류·카테고리 검증과 날짜 HTML 출력 안전성 강화","월 이동·저장 응답 경합·생활비 예측 정합성을 수정하고 장애 재현 회귀 테스트 추가"]},{"version":"2.3.12","date":"2026-10-18T09:58:45+09:00","notes":["공동자금 단일 장부: 개인/공동·입력자·실제 결제자·부담비율과 추가 옵션 접기를 제거하고 날짜·선택 계좌만 바로 입력","홈과 내역의 사람별 통계·필터·송금 정산 제안을 제거하고 소비 달력·예산·월정산은 전체 거래 기준으로 유지","기존 거래 수정 시 숨겨진 메모·고정비·소비성격 보존, 정기거래 중복 예약 방지, 감사 이력 및 오프라인 저장 호환 보강"]},{"version":"2.3.11","date":"2026-10-11T16:44:03+09:00","notes":["작은 개선과 오류 수정"]},{"version":"2.3.10","date":"2026-10-11T16:41:28+09:00","notes":["5차 안정화: 저장 응답 유실 및 새로고침 후 내부이체 요청 ID 복구·중복 기록 방지, 다른 월 이동 중 오래된 응답의 입력 초안 침범 차단","서비스워커·저장 보호: 내부이체 작성 중 앱 자동 새로고침 제한, 비앱 페이지/JSON 응답이 오프라인 앱 셸을 덮어쓰지 않도록 캐시 범위 제한","정합성 보강: 이체 금액 쉼표 형식 엄격 검사, 서로 다른 원장의 저축·이체 중복 후보 알림, 잘못된 거래 유형·중복 이체 ID·불완전 합계 및 수치 초과 경고","이체 서버 안전: 빈 기존 시트 헤더 초기화, 삭제된 거래 재요청 멱등 처리, 손상 날짜 데이터 완전성 표시와 삭제 표시만 한 칸 갱신, 독립 적대적 회귀 검사 보강"]},{"version":"2.3.9","date":"2026-10-11T15:10:36+09:00","notes":["5차 내부이체: 기존 지출·수입 원장과 분리된 계좌 간 이체 전용 기록, 출금계좌·입금계좌·금액·날짜·메모 입력 및 이력 조회","결제수단별 월 흐름: 거래 출처/계좌와 내부이체 입출금 흐름을 별도로 보고, 확인되지 않은 실제 잔액이나 카드 청구금액으로 오인하지 않게 안내","금융 안정성: 이체는 소비·수입·부부 공동부담 계산에 섞지 않고, 반복 요청 ID 멱등 처리·월마감 쓰기 차단·삭제기록 보존","안전한 도입: 기존 거래·자산 시트 값은 변경하지 않고 신규 이체 전용 장부만 사용, 오프라인 상태에서는 이체를 조용히 큐에 넣지 않음"]},{"version":"2.3.8","date":"2026-10-11T14:41:36+09:00","notes":["4차 공동생활비: 거래 입력자와 실제 결제자를 분리하고 개인·공동 지출 및 지수·하콩 부담비율을 기록","부부 정산: 월별 확정 공동지출에 따른 개인별 부담과 차액 송금 제안을 읽기 전용으로 표시","결제수단 기록: 기존 출처/계좌를 빠른 입력·수정에 연결하되 실제 계좌이체나 카드 잔액은 연동하지 않음","금융 데이터 보호: 기존 거래 분담비율 자동 추정 금지, 미확정 거래 제외, 닫힌 월 쓰기 차단·오프라인 동기화 보호 및 신규 회귀 테스트"]}];
 /* @release:end */
 const DEFAULT_GAS_URL = 'https://script.google.com/macros/s/AKfycbwjFv7OSDc6T4vD0nUQA5E-W1QazAEU5dowQroEXard5DCMtP0FiMRlwtIjuEfDzo8phA/exec';
 const APP_CACHE_VERSION = 5;
@@ -1075,6 +1075,11 @@ const DEVICE_ID_KEY = 'sey_device_id_v1';
 const BOOT_CACHE_KEY = 'sey_boot_cache_v5';
 const MONTH_CACHE_PREFIX = 'sey_month_cache_v5_';
 const PENDING_QUEUE_KEY = 'sey_pending_tx_v2';
+// The legacy aggregate remains readable, but individual transaction journals
+// avoid lost updates when two open tabs serialize different STATE.pending arrays.
+const PENDING_ROW_PREFIX = 'sey_pending_row_v3_';
+const PENDING_ACK_PREFIX = 'sey_pending_ack_v3_';
+const PENDING_GONE_PREFIX = 'sey_pending_done_v3_';
 const PENDING_RETRY_DELAYS = [5000, 15000, 60000, 300000];
 const SETTLEMENT_DRAFT_PREFIX = 'sey_settlement_draft_v1_';
 const NOTIF_SETTINGS_KEY = 'sey_notif_settings_v1';
@@ -1336,10 +1341,13 @@ function srv(fn){ return function(){
 function api(fn){
   const args = Array.prototype.slice.call(arguments,1);
   if (!STATE.authToken) return Promise.reject(new Error('로그인이 필요해.'));
-  args.unshift(STATE.authToken);
+  const requestToken = STATE.authToken;
+  args.unshift(requestToken);
   return srv(fn).apply(null,args).catch(err => {
     const text = (err && err.message) || '';
-    if (/세션|로그인이 필요/.test(text) && typeof showLoginGate === 'function') showLoginGate(text);
+    // A timed-out request from an earlier login must not log out a newer one.
+    if (STATE.authToken === requestToken && /세션|로그인이 필요/.test(text) &&
+        typeof showLoginGate === 'function') showLoginGate(text);
     throw err;
   });
 }
@@ -1376,11 +1384,17 @@ function clearSession(){
   };
 }
 
+function cacheOwner(){
+  const saved=loadSession();
+  if(STATE.authToken && STATE.sessionUser)return String(STATE.sessionUser);
+  return saved && saved.user ? String(saved.user) : '';
+}
+function cacheOwnerKey(user){return encodeURIComponent(user);}
 function cacheEnvelope(data){
-  return { version: APP_CACHE_VERSION, savedAt: Date.now(), revision: Number(data.revision || 0), data: data };
+  return { version: APP_CACHE_VERSION, owner:cacheOwner(), savedAt: Date.now(), revision: Number(data.revision || 0), data: data };
 }
 
-function readCache(key){
+function readCache(key,owner){
   try {
     const item = JSON.parse(localStorage.getItem(key) || 'null');
     if (!item || item.version !== APP_CACHE_VERSION || !item.data || Date.now() - item.savedAt > CACHE_MAX_AGE) {
@@ -1389,35 +1403,178 @@ function readCache(key){
       if (item) safeRemove(key);
       return null;
     }
+    if(owner && item.owner !== owner)return null;
     return item.data;
   } catch(e) { return null; }
 }
 
 function saveBootCache(data){
-  if (!data) return;
-  safeSet(BOOT_CACHE_KEY, JSON.stringify(cacheEnvelope(data)), { keepYm: data.ym });
+  const owner=cacheOwner();
+  // Stale GET after logout may not recreate a former user's cached ledger.
+  if (!data || !STATE.authToken || !owner || (data.sessionUser && data.sessionUser!==owner)) return;
+  safeSet(BOOT_CACHE_KEY+'_'+cacheOwnerKey(owner), JSON.stringify(cacheEnvelope(data)), { keepYm: data.ym });
   if (data.ym) saveMonthCache(data.ym, data);
 }
 
-function loadBootCache(){ return readCache(BOOT_CACHE_KEY); }
-function saveMonthCache(ym, data){ safeSet(MONTH_CACHE_PREFIX + ym, JSON.stringify(cacheEnvelope(data)), { keepYm: ym }); }
-function loadMonthCache(ym){ return readCache(MONTH_CACHE_PREFIX + ym); }
+function loadBootCache(){
+  const owner=cacheOwner();
+  if(!owner)return null;
+  const scoped=readCache(BOOT_CACHE_KEY+'_'+cacheOwnerKey(owner),owner);
+  if(scoped)return scoped;
+  const legacy=readCache(BOOT_CACHE_KEY);
+  return legacy && legacy.sessionUser===owner ? legacy : null;
+}
+function saveMonthCache(ym,data){
+  const owner=cacheOwner();
+  if(!STATE.authToken || !owner || !ym || !data || (data.sessionUser && data.sessionUser!==owner))return;
+  safeSet(MONTH_CACHE_PREFIX+cacheOwnerKey(owner)+'_'+ym,JSON.stringify(cacheEnvelope(data)),{keepYm:ym});
+}
+function loadMonthCache(ym){
+  const owner=cacheOwner();
+  if(!owner || !ym)return null;
+  const scoped=readCache(MONTH_CACHE_PREFIX+cacheOwnerKey(owner)+'_'+ym,owner);
+  if(scoped)return scoped;
+  // Legacy snapshots without an explicit owner must not leak between authors.
+  const legacy=readCache(MONTH_CACHE_PREFIX+ym);
+  return legacy && legacy.sessionUser===owner ? legacy : null;
+}
 function clearCachedViews(){
   localStorage.removeItem(BOOT_CACHE_KEY);
-  Object.keys(localStorage).filter(key => key.indexOf(MONTH_CACHE_PREFIX) === 0).forEach(key => localStorage.removeItem(key));
+  // logout calls clearSession BEFORE this, so the former owner is unknown.
+  // Clear every scoped boot snapshot, not just the current/new login owner.
+  Object.keys(localStorage).filter(key => key.indexOf(BOOT_CACHE_KEY+'_')===0 ||
+    key.indexOf(MONTH_CACHE_PREFIX)===0).forEach(key => localStorage.removeItem(key));
 }
 
-function loadPendingQueue(){
+let PENDING_KNOWN_ROWS = new Map();
+const PENDING_LOCAL_KEYS = new Set();
+function pendingJournalId(row){
+  return row && typeof row.clientId === 'string' ? row.clientId.trim() : '';
+}
+function pendingJournalKey(prefix,id){ return prefix + encodeURIComponent(id); }
+function pendingJournalKeys(){
   try {
-    const rows = JSON.parse(localStorage.getItem(PENDING_QUEUE_KEY) || '[]');
-    return Array.isArray(rows) ? rows : [];
-  } catch(e) { return []; }
+    if (typeof localStorage.length === 'number' && typeof localStorage.key === 'function') {
+      const keys=[];
+      for(let i=0;i<localStorage.length;i++)keys.push(localStorage.key(i));
+      return [...new Set(keys.concat([...PENDING_LOCAL_KEYS]))];
+    }
+    return [...new Set(Object.keys(localStorage).concat([...PENDING_LOCAL_KEYS]))];
+  } catch(e) { return [...PENDING_LOCAL_KEYS]; }
 }
-
+function readPendingStorage(){
+  const rows=new Map();
+  try {
+    const legacy=JSON.parse(localStorage.getItem(PENDING_QUEUE_KEY) || '[]');
+    if(Array.isArray(legacy))legacy.forEach(row=>{
+      const id=pendingJournalId(row);
+      if(id)rows.set(id,row);
+    });
+  } catch(e) { /* retain independently journaled rows */ }
+  // Journal values override any older aggregate snapshot for the same ID.
+  const keys=pendingJournalKeys();
+  keys.filter(key=>key && key.indexOf(PENDING_ROW_PREFIX)===0).forEach(key=>{
+    try {
+      const row=JSON.parse(localStorage.getItem(key)||'null');
+      const id=pendingJournalId(row);
+      if(id && key===pendingJournalKey(PENDING_ROW_PREFIX,id))rows.set(id,row);
+    }catch(e){}
+  });
+  // Per-ID server ACK is monotonic even when two tabs race to write the same
+  // row status. A stale 'sent' write can never undo this independent marker.
+  keys.filter(key=>key && key.indexOf(PENDING_ACK_PREFIX)===0).forEach(key=>{
+    try {
+      const row=rows.get(decodeURIComponent(key.slice(PENDING_ACK_PREFIX.length)));
+      if(row){row.status='confirmed';row.lastError='';row.nextRetryAt=0;}
+    }catch(e){}
+  });
+  // A durable removal marker wins over *every* stale tab/snapshot. Never
+  // resurrect a confirmed ACK or cancelled transaction from an older tab.
+  keys.filter(key=>key && key.indexOf(PENDING_GONE_PREFIX)===0).forEach(key=>{
+    try { rows.delete(decodeURIComponent(key.slice(PENDING_GONE_PREFIX.length))); } catch(e){}
+  });
+  return Array.from(rows.values());
+}
+function rememberPendingRows(rows){
+  PENDING_KNOWN_ROWS=new Map((rows||[]).map(row=>[pendingJournalId(row),JSON.stringify(row)])
+    .filter(([id])=>!!id));
+}
+function loadPendingQueue(){
+  const rows=readPendingStorage();
+  rememberPendingRows(rows);
+  return rows;
+}
 function persistPendingQueue(){
-  const saved = safeSet(PENDING_QUEUE_KEY, JSON.stringify(STATE.pending || []), { critical: true });
+  const localRows=Array.isArray(STATE.pending)?STATE.pending:[];
+  const desired=new Map(localRows.map(row=>[pendingJournalId(row),row]).filter(([id])=>!!id));
+  let ok=true;
+  let changed=0;
+  // Distinguish an actual local removal from a transaction created by another
+  // tab after this one last loaded the queue. Only known-and-removed IDs get
+  // tombstones; absent foreign IDs must not be deleted.
+  PENDING_KNOWN_ROWS.forEach((_,id)=>{
+    if(desired.has(id))return;
+    changed++;
+    const key=pendingJournalKey(PENDING_GONE_PREFIX,id);
+    PENDING_LOCAL_KEYS.add(key);
+    if(!safeSet(key,String(Date.now()),{critical:true}))ok=false;
+  });
+  desired.forEach((row,id)=>{
+    if(row.status==='confirmed'){
+      const key=pendingJournalKey(PENDING_ACK_PREFIX,id);
+      PENDING_LOCAL_KEYS.add(key);
+      if(!safeSet(key,String(Date.now()),{critical:true}))ok=false;
+    }
+    const known=PENDING_KNOWN_ROWS.get(id);
+    if(known===JSON.stringify(row))return;
+    let gone=false;
+    try { gone=localStorage.getItem(pendingJournalKey(PENDING_GONE_PREFIX,id))!==null; } catch(e){ok=false;gone=true;}
+    if(gone)return;
+    // A different tab may have confirmed an identical clientId in the interim.
+    // The lower state must not regress the durable server acknowledgment.
+    try {
+      const disk=JSON.parse(localStorage.getItem(pendingJournalKey(PENDING_ROW_PREFIX,id))||'null');
+      if(disk && disk.status==='confirmed' && row.status!=='confirmed')return;
+    }catch(e){}
+    changed++;
+    const key=pendingJournalKey(PENDING_ROW_PREFIX,id);
+    PENDING_LOCAL_KEYS.add(key);
+    if(!safeSet(key,JSON.stringify(row),{critical:true}))ok=false;
+  });
+  const merged=readPendingStorage();
+  // Preserve in-flight object references used by App's batch callbacks.
+  const own=new Map(localRows.map(row=>[pendingJournalId(row),row]));
+  STATE.pending=merged.map(row=>{
+    const local=own.get(pendingJournalId(row));
+    if(local && JSON.stringify(local)===JSON.stringify(row))return local;
+    if(local) { Object.keys(local).forEach(key=>{if(!(key in row))delete local[key];}); Object.assign(local,row);return local; }
+    return row;
+  });
+  rememberPendingRows(STATE.pending);
+  // Compatibility mirror for cached clients; correctness depends on per-ID
+  // journal + tombstones, not the racy aggregate last-writer-wins snapshot.
+  const mirrorSaved=safeSet(PENDING_QUEUE_KEY,JSON.stringify(STATE.pending),{critical:false});
+  // If nothing changed, even the mirror must remain writable: otherwise App
+  // could proceed while browser storage has become unusable.
+  if(!changed && !mirrorSaved)ok=false;
   renderSyncStatus();
-  return saved;
+  return ok;
+}
+// Reading a foreign-tab journal event is non-mutating: no finance request.
+// A tab currently sending a batch reconciles at its next persist instead.
+if(typeof window!=='undefined' && typeof window.addEventListener==='function'){
+  window.addEventListener('storage',event=>{
+    const key=event && event.key;
+    if(!key || (key!==PENDING_QUEUE_KEY && key.indexOf(PENDING_ROW_PREFIX)!==0 &&
+        key.indexOf(PENDING_ACK_PREFIX)!==0 && key.indexOf(PENDING_GONE_PREFIX)!==0) ||
+        (STATE.sync && STATE.sync.inFlight))return;
+    const rows=readPendingStorage();
+    STATE.pending=rows;
+    rememberPendingRows(rows);
+    if(typeof renderSyncStatus==='function')renderSyncStatus();
+    if(typeof mergePendingTransactions==='function')mergePendingTransactions();
+    if(typeof renderAll==='function')renderAll();
+  });
 }
 
 function getDeviceId(){
@@ -1595,11 +1752,39 @@ function calculateLivingAllowance(input){
   const usedTx=new Set();
   const normalize=v=>String(v == null ? '' : v).trim();
   const amountSame=(a,b)=>Number(a)===Number(b) && Number.isFinite(Number(a));
+  const flaggedMemoRows=new Set();
   const tagName=tx=>{
     const memo=normalize(tx.memo);
     const marker='🔁 정기거래: ';
     const pos=memo.indexOf(marker);
-    return pos<0 ? '' : memo.slice(pos+marker.length).split(/\s+\/\s+/)[0].trim();
+    if(pos<0){
+      // RC-TX hashes are derived from recurringId + month on the server;
+      // their owner cannot be guessed from a similar amount/description.
+      if(/^RC-TX-/.test(normalize(tx.txId))){
+        if(!flaggedMemoRows.has(tx)){
+          flaggedMemoRows.add(tx);
+          uncertain=true;
+          warnings.push('자동 정기거래 ID의 원본 이름 태그가 없어 다른 예정항목에 연결하지 않았어.');
+        }
+        return '\u0000unknown-rc-tx-owner';
+      }
+      return '';
+    }
+    const taggedName=memo.slice(pos+marker.length).trim();
+    // Keep parity with server recurringMemoTagMatches_: only one exact final
+    // marker, optionally preceded by a legacy user memo and ' / ', is valid.
+    // A nonempty sentinel (rather than '') prevents the untagged fallback from
+    // misattributing an ambiguous RC-TX ledger row to the wrong schedule.
+    if(memo.indexOf(marker,pos+marker.length)>=0 || !taggedName ||
+        !(memo===marker+taggedName || memo.endsWith(' / '+marker+taggedName))){
+      if(!flaggedMemoRows.has(tx)){
+        flaggedMemoRows.add(tx);
+        uncertain=true;
+        warnings.push('정기거래 메모 출처가 중복되거나 불명확해 자동기록 확정 여부를 판단하지 않았어.');
+      }
+      return '\u0000ambiguous-recurring-tag';
+    }
+    return taggedName;
   };
   const sameShape=(rec,tx,dueDate)=>tx.date===dueDate &&
     normalize(tx.type)===normalize(rec.type) &&
@@ -3943,6 +4128,22 @@ function renderBudgetItems(items){
 
 let LAST_DIALOG_TRIGGER = null;
 let DIALOG_APP_WAS_INERT = false;
+// A logout/login invalidates every asynchronous response started by the old session.
+let APP_AUTH_EPOCH = 0;
+let QUICK_TX_FORM_EPOCH = 0;
+function appAuthSnapshot(){ return {epoch:APP_AUTH_EPOCH,token:STATE.authToken}; }
+function appAuthCurrent(snapshot){
+  return !!snapshot && !!snapshot.token && snapshot.epoch===APP_AUTH_EPOCH && snapshot.token===STATE.authToken;
+}
+function invalidateAppAuth(){
+  APP_AUTH_EPOCH++;
+  STATE.sync.bootPromise=null;
+  STATE.sync.inFlight=false;
+  // The durable recurring create receipt remains saved under its author.
+  // Do not let a stale promise pin a later session's save button forever.
+  STATE.recurringSaveInFlight=false;
+  STATE.requestSeq++;
+}
 function rememberDialogTrigger(){
   if (document.activeElement && document.activeElement !== document.body) LAST_DIALOG_TRIGGER = document.activeElement;
 }
@@ -4017,6 +4218,7 @@ function openGate(){
   const savedSession = loadSession();
   if (savedSession) {
     STATE.authToken = savedSession.token;
+    APP_AUTH_EPOCH++;
     STATE.sessionUser = savedSession.user || '하콩';
     STATE.form.user = STATE.sessionUser;
     if (cachedData) {
@@ -4029,14 +4231,16 @@ function openGate(){
     } else {
       btn.disabled = true;
       btn.textContent = '장부 여는 중…';
+      const auth=appAuthSnapshot();
       api('getBoot').then(data => {
+        if(!appAuthCurrent(auth))return;
         applyBootData(data);
         saveBootCache(data);
         showMainApp();
         mergePendingTransactions();
         renderAll();
         flushPendingQueue();
-      }).catch(err => handleSessionError(err, msg, btn));
+      }).catch(err => { if(appAuthCurrent(auth))handleSessionError(err, msg, btn); });
     }
     return;
   }
@@ -4052,6 +4256,7 @@ function openGate(){
     srv('createSessionAndGetBoot')(val, user, remember, getDeviceId()).then(result => {
       const session = result.session;
       STATE.authToken = session.token;
+      APP_AUTH_EPOCH++;
       STATE.sessionUser = session.user || user;
       STATE.form.user = STATE.sessionUser;
       saveSession(session, remember);
@@ -4140,6 +4345,7 @@ function openReleaseNotes(){
 }
 
 function showLoginGate(message){
+  invalidateAppAuth();
   clearSession();
   const app = document.getElementById('app');
   const gate = document.getElementById('gate');
@@ -4165,15 +4371,21 @@ function handleSessionError(err, msgEl, btn){
 }
 
 function logout(){
-  if ((STATE.pending || []).length) {
+  if ((STATE.pending || []).some(entry => entry && entry.status !== 'confirmed')) {
     toast('저장 대기 중인 입력을 먼저 동기화해줘.', true);
     flushPendingQueue();
+    return;
+  }
+  if (STATE.undurableQuickTx || STATE.recurringSaveInFlight || unconfirmedRecurringCreate() ||
+      (typeof readInternalTransferReceipt==='function' && (!readInternalTransferReceipt().ok || readInternalTransferReceipt().receipt))) {
+    toast('저장 여부를 아직 확인하지 못한 요청이 있어. 원래 요청 ID로 확인·재시도한 뒤 로그아웃해줘.',true);
     return;
   }
   if(!confirm('로그아웃하고 자동 로그인을 해제할까요?')) return;
   const revokePromise = STATE.authToken
     ? api('revokeCurrentSession').catch(() => null)
     : Promise.resolve(null);
+  invalidateAppAuth();
   clearSession();
   clearCachedViews();
   toast('👋 로그아웃되었습니다.');
@@ -4181,21 +4393,30 @@ function logout(){
 }
 
 function logoutAllDevices(){
-  if ((STATE.pending || []).length) {
+  if ((STATE.pending || []).some(entry => entry && entry.status !== 'confirmed')) {
     toast('저장 대기 중인 입력을 먼저 동기화해줘.', true);
     flushPendingQueue();
+    return;
+  }
+  if (STATE.undurableQuickTx || STATE.recurringSaveInFlight || unconfirmedRecurringCreate() ||
+      (typeof readInternalTransferReceipt==='function' && (!readInternalTransferReceipt().ok || readInternalTransferReceipt().receipt))) {
+    toast('저장 여부를 확인하지 못한 요청을 먼저 확인·재시도해줘.',true);
     return;
   }
   if (!STATE.authToken) return showLoginGate('다시 로그인한 뒤 모든 기기 로그아웃을 실행해줘.');
   if (!confirm('이 계정으로 로그인된 모든 기기의 세션을 해제할까요?\n\n다른 기기에서도 다시 PIN 로그인이 필요해요.')) return;
   toast('🔐 모든 기기 로그인 해제 중...');
+  const auth=appAuthSnapshot();
   api('revokeAllSessions').then(res => {
+    if(!appAuthCurrent(auth))return;
+    invalidateAppAuth();
     clearSession();
     clearCachedViews();
     const count=Number((res && res.revokedCount) || 0);
     toast('✅ 모든 기기 로그인을 해제했어' + (count ? ' · ' + count + '개 세션' : ''));
     setTimeout(() => location.reload(), 450);
   }).catch(err => {
+    if(!appAuthCurrent(auth))return;
     toast('모든 기기 로그아웃 실패: ' + ((err && err.message) || '다시 시도해줘.'), true);
   });
 }
@@ -4425,6 +4646,7 @@ function schedulePendingRetry(){
 function flushPendingQueue(options){
   const opt=options || {};
   if (!STATE.authToken || !(STATE.pending || []).length) return Promise.resolve();
+  const auth=appAuthSnapshot();
   if (opt.manual === true) {
     (STATE.pending || []).forEach(row => {
       if (row.status === 'confirmed') return;
@@ -4464,6 +4686,7 @@ function flushPendingQueue(options){
   renderAll();
   renderSyncStatus(batch.length + '건 장부에 저장 중', 'syncing');
   return api('addTransactionsFast', batch.map(row => ({ clientId: row.clientId, data: row.data }))).then(res => {
+    if(!appAuthCurrent(auth))return;
     const completed = new Set();
     const answered = new Set();
     (res.results || []).forEach(result => {
@@ -4498,6 +4721,7 @@ function flushPendingQueue(options){
     // 재시작 직후의 낡은 summary/cache가 남을 수 있다. 한 번은 full snapshot으로 맞춘다.
     if (completed.size) refreshVisibleMonth(true,{ forceFull:true }).catch(()=>{});
   }).catch(err => {
+    if(!appAuthCurrent(auth))return;
     const retryable=isRetryablePendingError(err);
     batch.forEach(row => markPendingFailure(
       row,
@@ -4509,6 +4733,7 @@ function flushPendingQueue(options){
     renderAll();
     renderSyncStatus(retryable ? pendingQueueStatusMessage() : '저장 오류 확인 필요 · 동기화 버튼으로 수동 재시도', 'pending');
   }).finally(() => {
+    if(!appAuthCurrent(auth))return;
     STATE.sync.inFlight = false;
     schedulePendingRetry();
   });
@@ -4517,7 +4742,9 @@ function flushPendingQueue(options){
 function refreshBootData(silent){
   if (STATE.sync.bootPromise) return STATE.sync.bootPromise;
   const startedYm = STATE.ym;
-  STATE.sync.bootPromise = api('getBoot').then(data => {
+  const auth=appAuthSnapshot();
+  const promise = api('getBoot').then(data => {
+    if(!appAuthCurrent(auth))return data;
     saveBootCache(data);
     const otherMonth = STATE.monthMode === 'manual' && (data.ym !== startedYm || STATE.ym !== startedYm);
     if (STATE.monthMode !== 'manual') applyBootData(data);
@@ -4532,6 +4759,7 @@ function refreshBootData(silent){
     if (otherMonth && STATE.ym === startedYm) refreshVisibleMonth(true, { forceFull:true }).catch(()=>{});
     return data;
   }).catch(err => {
+    if(!appAuthCurrent(auth))return;
     const text = (err && err.message) || '동기화 실패';
     if (/세션|로그인이 필요/.test(text)) {
       showLoginGate(text);
@@ -4540,20 +4768,23 @@ function refreshBootData(silent){
     renderSyncStatus('오프라인 화면 · 변경사항은 기기에 보관', 'pending');
     if (!silent) toast(text, true);
   }).finally(() => {
-    STATE.sync.bootPromise = null;
-    flushPendingQueue();
+    if(STATE.sync.bootPromise===promise)STATE.sync.bootPromise=null;
+    if(appAuthCurrent(auth))flushPendingQueue();
   });
-  return STATE.sync.bootPromise;
+  STATE.sync.bootPromise=promise;
+  return promise;
 }
 
 function refreshVisibleMonth(silent, options){
   if (!STATE.ym || !STATE.authToken) return Promise.resolve();
+  const auth=appAuthSnapshot();
   const opt=options || {};
   const ym = STATE.ym;
   const requestId = ++STATE.requestSeq;
   const knownRevision=!opt.forceFull && Number(STATE.revision || 0) > 0 ? Number(STATE.revision) : 0;
   const request=knownRevision ? api('getMonthData',ym,knownRevision) : api('getMonthData',ym);
   return request.then(data => {
+    if(!appAuthCurrent(auth))return data;
     if (requestId !== STATE.requestSeq || STATE.ym !== ym) return data;
     if (data && data.notModified === true) {
       STATE.revision=Number(data.revision || STATE.revision || 0);
@@ -4572,6 +4803,7 @@ function refreshVisibleMonth(silent, options){
     if (!silent) toast('✅ ' + ym + ' 최신 데이터');
     return data;
   }).catch(err => {
+    if(!appAuthCurrent(auth))return;
     if (requestId !== STATE.requestSeq || STATE.ym !== ym) throw err;
     if (!STATE.summary) {
       STATE.monthLoadState='error';
@@ -5084,6 +5316,7 @@ function renderQuickEntrySourceOptions(){
 
 function openQuickEntryModal(){
   if(!STATE.authToken){ toast('로그인이 필요해'); return; }
+  QUICK_TX_FORM_EPOCH++;
   openDialogSheet('sheet','#fAmount');
   
   const titleEl = document.getElementById('sheetTitle');
@@ -5260,6 +5493,7 @@ function applyTemplateByIndex(index){
 }
 
 function closeQuickEntryModal(){
+  QUICK_TX_FORM_EPOCH++;
   closeDialogSheet('sheet');
   // 폼 상태 완전 초기화 (편집 모드 포함)
   STATE.form = { type: null, cat: null, fixed: '변동', user: STATE.sessionUser || '하콩', catManual: false, typeManual: false, mood: '' };
@@ -6022,10 +6256,13 @@ function saveUndurableQuickTx(entry, closeAfter, amtInp, descInp){
   }
   setTxSubmitBusy(true, '장부에 직접 저장 중…');
   renderSyncStatus('기기 저장 실패 · 장부에 직접 저장 중', 'syncing');
+  const formEpoch=QUICK_TX_FORM_EPOCH;
+  const auth=appAuthSnapshot();
   api('addTransactionsFast', [{ clientId:entry.clientId, data:entry.data }]).then(res => {
+    if(!appAuthCurrent(auth))return;
     const result=(res && res.results && res.results[0]) || null;
     if (!result || !result.ok) throw new Error((result && result.error) || '장부 저장을 확인하지 못했어.');
-    STATE.undurableQuickTx = null;
+    if(STATE.undurableQuickTx===entry)STATE.undurableQuickTx = null;
     const tx=result.transaction;
     if (tx && String(tx.date || '').slice(0,7) === STATE.ym) {
       const exists=(STATE.transactions || []).some(item => String(item.txId || item.clientId || '') === String(result.clientId));
@@ -6039,12 +6276,24 @@ function saveUndurableQuickTx(entry, closeAfter, amtInp, descInp){
     renderAll();
     renderSyncStatus('장부 직접 저장 완료', 'saved');
     toast('✅ 장부에 안전하게 저장했어.');
-    finishQuickTxInputs(closeAfter,amtInp,descInp);
-    refreshVisibleMonth(true).catch(()=>{});
+    const sameDraft=QUICK_TX_FORM_EPOCH===formEpoch &&
+      String((amtInp && amtInp.value) || '').replace(/,/g,'').trim()===String(entry.data.amount) &&
+      String((descInp && descInp.value) || '').trim()===String(entry.data.desc || '') &&
+      String(document.getElementById('fDate')?.value || '')===String(entry.data.date || '') &&
+      String(document.getElementById('fSource')?.value || '').trim()===String(entry.data.source || '') &&
+      String(document.getElementById('fMemo')?.value || '').trim()===String(entry.data.memo || '') &&
+      (STATE.form.type || '지출')===entry.data.type &&
+      (STATE.form.cat || '식비')===entry.data.cat &&
+      (STATE.form.fixed || '변동')===(entry.data.fixed || '변동') &&
+      (STATE.form.mood || '')===(entry.data.spendingMood || '');
+    if(sameDraft)finishQuickTxInputs(closeAfter,amtInp,descInp);
+    else toast('이전 거래만 저장됐어. 이후 변경한 입력칸은 그대로 유지했어.');
+    refreshVisibleMonth(true,{forceFull:true}).catch(()=>{});
   }).catch(err => {
+    if(!appAuthCurrent(auth))return;
     renderSyncStatus('기기 저장 실패 · 입력 유지됨', 'pending');
     toast((err && err.message ? err.message + ' · ' : '') + '입력은 그대로 두었어. 다시 저장해줘.', true);
-  }).finally(() => setTxSubmitBusy(false));
+  }).finally(() => { if(appAuthCurrent(auth))setTxSubmitBusy(false); });
 }
 
 function submitQuickTx(closeAfter){
@@ -6278,14 +6527,23 @@ function deleteTxPrompt(row){
     return;
   }
   renderSyncStatus('거래 삭제 저장 중', 'syncing');
+  const startedYm=STATE.ym;
+  const startedSeq=STATE.requestSeq;
+  const auth=appAuthSnapshot();
   const deleteRef = (tx && tx.txId) || row;
-  api('deleteTransaction', deleteRef, STATE.ym).then(data => {
-    applyMonthData(data);
-    saveMonthCache(data.ym || STATE.ym, data);
-    renderAll();
+  api('deleteTransaction', deleteRef, startedYm).then(data => {
+    if(!appAuthCurrent(auth))return;
+    if(data && data.ym)saveMonthCache(data.ym,data);
+    if(STATE.ym===startedYm && STATE.requestSeq===startedSeq){
+      applyMonthData(data);
+      renderAll();
+    }else{
+      toast('거래는 삭제됐어. 현재 보고 있는 달은 그대로 유지했어.');
+    }
     renderSyncStatus('삭제 저장 완료', 'saved');
     toast('✅ 거래 삭제 완료');
   }).catch(err => {
+    if(!appAuthCurrent(auth))return;
     renderSyncStatus('삭제 저장 실패', 'pending');
     toast((err && err.message) || '삭제하지 못했어.', true);
   });
@@ -6564,11 +6822,28 @@ function applyQuickEntryText(){
     }
 
     const RECURRING_CREATE_RECEIPT_KEY='sey_recurring_create_receipt_v1';
+    function recurringCreateReceiptKey(){
+      // Preserve each user's unresolved create receipt across sign-out; never
+      // reuse another household user's ID/payload during a new login.
+      return RECURRING_CREATE_RECEIPT_KEY+'_user_'+encodeURIComponent(String(STATE.sessionUser || '하콩'));
+    }
+    function recurringReceiptValid(value){
+      return !!(value && typeof value==='object' && value.createOnly===true &&
+        /^RC-[A-Za-z0-9._:-]{1,135}$/.test(String(value.id || '')) &&
+        value.user===(STATE.sessionUser || '하콩'));
+    }
     function unconfirmedRecurringCreate(){
-      if(STATE.unconfirmedRecurringCreate)return STATE.unconfirmedRecurringCreate;
+      if(recurringReceiptValid(STATE.unconfirmedRecurringCreate))return STATE.unconfirmedRecurringCreate;
       try{
-        const value=JSON.parse(localStorage.getItem(RECURRING_CREATE_RECEIPT_KEY)||'null');
-        if(value && value.id && value.createOnly===true)return value;
+        const scoped=JSON.parse(localStorage.getItem(recurringCreateReceiptKey())||'null');
+        if(recurringReceiptValid(scoped))return scoped;
+        // Older versions stored a global receipt. Only migrate when its
+        // original writer is explicit and matches this session.
+        const legacy=JSON.parse(localStorage.getItem(RECURRING_CREATE_RECEIPT_KEY)||'null');
+        if(recurringReceiptValid(legacy)){
+          if(!safeSet(recurringCreateReceiptKey(),JSON.stringify(legacy),{critical:true}))return legacy;
+          return legacy;
+        }
       }catch(e){}
       return null;
     }
@@ -6621,20 +6896,30 @@ function applyQuickEntryText(){
     }
 
     function submitRecurring() {
+      if(STATE.recurringSaveInFlight)return toast('이전 정기거래 저장 응답을 확인하고 있어.',true);
       const day = document.getElementById('rDay').value.trim();
       const amtStr = document.getElementById('rAmount').value.trim();
       const desc = document.getElementById('rDesc').value.trim();
       const enabled = document.getElementById('rEnabled').checked;
       const id = document.getElementById('rId').value;
       
-      if(!day || Number(day)<1 || Number(day)>31) return toast('결제일을 1~31 사이로 입력하세요.', true);
-      if(!amtStr) return toast('금액을 입력하세요.', true);
+      if(!/^\d{1,2}$/.test(day) || Number(day)<1 || Number(day)>31) return toast('결제일은 1~31 사이 정수로 입력하세요.', true);
+      // Validate BEFORE writing a durable createOnly receipt. Invalid / zero
+      // amounts must not poison the retry draft with an unsendable stable ID.
+      if(!/^(?:[1-9]\d*|[1-9]\d{0,2}(?:,\d{3})+)$/.test(amtStr) ||
+          !Number.isSafeInteger(Number(amtStr.replace(/,/g,''))) ||
+          Number(amtStr.replace(/,/g,''))<=0)
+        return toast('금액은 0보다 큰 안전한 원 단위 정수로 입력하세요.',true);
       if(!desc) return toast('내역(이름)을 입력하세요.', true);
+      if(!['지출','수입','저축','대출상환'].includes(STATE.form.rType) || !STATE.form.rCat)
+        return toast('정기거래 구분·분류를 확인해줘.',true);
       
       const endYmToggle = document.getElementById('rEndYmToggle').checked;
       const endYm = endYmToggle ? document.getElementById('rEndYm').value.trim() : '';
       
       if(endYmToggle && !endYm) return toast('종료월(만료월)을 선택하세요.', true);
+      if(endYm && !/^[1-9]\d{3}-(0[1-9]|1[0-2])$/.test(endYm))
+        return toast('종료월은 YYYY-MM 형식의 실제 월로 입력해줘.',true);
       
       const creating=!STATE.editingRecurring;
       const rec = {
@@ -6642,7 +6927,7 @@ function applyQuickEntryText(){
         name: desc,
         type: STATE.form.rType,
         cat: STATE.form.rCat,
-        amount: Number(amtStr.replace(/[^0-9]/g, '')),
+        amount: Number(amtStr.replace(/,/g, '')),
         day: Number(day),
         enabled: enabled,
         endYm: endYm
@@ -6657,20 +6942,32 @@ function applyQuickEntryText(){
           toast('앞선 정기거래 저장 여부가 불확실해. 내용 수정 대신 원래 요청을 먼저 재시도해줘.',true);
           return;
         }
-        if(!safeSet(RECURRING_CREATE_RECEIPT_KEY,JSON.stringify(rec),{critical:true})){
+        if(!safeSet(recurringCreateReceiptKey(),JSON.stringify(rec),{critical:true})){
           toast('정기거래 요청 ID를 기기에 보관하지 못했어. 중복 방지를 위해 저장을 보류했어.',true);
           return;
         }
         STATE.unconfirmedRecurringCreate=rec;
       }
       
+      const auth=typeof appAuthSnapshot==='function' ? appAuthSnapshot() : null;
+      const authCurrent=()=>!auth || appAuthCurrent(auth);
       STATE.recurringSaveInFlight=true;
       closeRecurringModal();
       toast('🔄 고정거래 저장 중...');
       api('saveRecurring', rec).then(res => {
+        if(!authCurrent())return;
+        STATE.recurringSaveInFlight=false;
         if(creating && STATE.unconfirmedRecurringCreate && STATE.unconfirmedRecurringCreate.id===rec.id){
-          safeRemove(RECURRING_CREATE_RECEIPT_KEY);
-          STATE.unconfirmedRecurringCreate=null;
+          // A successful ACK may retire only this user's exact request.
+          const stored=unconfirmedRecurringCreate();
+          if(stored && stored.id===rec.id && stored.user===rec.user){
+            safeRemove(recurringCreateReceiptKey());
+            try {
+              const legacy=JSON.parse(localStorage.getItem(RECURRING_CREATE_RECEIPT_KEY)||'null');
+              if(recurringReceiptValid(legacy) && legacy.id===rec.id)safeRemove(RECURRING_CREATE_RECEIPT_KEY);
+            }catch(e){}
+            STATE.unconfirmedRecurringCreate=null;
+          }
         }
         STATE.recurrings = (res && (res.rows || res.recurrings)) || [];
         if (res && res.status) STATE.recurringStatus = res.status;
@@ -6678,8 +6975,10 @@ function applyQuickEntryText(){
         renderHome();
         toast('✅ 저장 완료');
       }).catch(e => {
+        if(!authCurrent())return;
+        STATE.recurringSaveInFlight=false;
         toast('⚠️ 저장 결과를 확인하지 못했어. 새로 추가하지 말고 같은 정기거래를 다시 열어 재시도해줘.', true);
-      }).finally(()=>{STATE.recurringSaveInFlight=false;attemptSafeWorkerUpgrade();});
+      }).finally(()=>{if(authCurrent()){STATE.recurringSaveInFlight=false;attemptSafeWorkerUpgrade();}});
     }
 
     function editRecurring(id) {
