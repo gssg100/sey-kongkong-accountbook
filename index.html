@@ -3,7 +3,7 @@
 <head>
 <base target="_top">
 <meta charset="utf-8">
-<meta name="app-version" content="2.3.18">
+<meta name="app-version" content="2.3.19">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, interactive-widget=resizes-content">
 <meta name="description" content="지수와 하콩이의 빠르고 편한 공동 가계부">
 <meta name="theme-color" content="#f5f5f7">
@@ -137,8 +137,9 @@ main{padding:18px 16px 0}
 .balance::after{content:"";position:absolute;right:-40px;top:-40px;width:180px;height:180px;
   background:radial-gradient(circle,rgba(0,113,227,0.35),transparent 70%);border-radius:50%}
 .balance .lab{font-size:13px;color:#a1a1a6;display:flex;align-items:center;gap:8px;font-weight:600}
-.balance .big{font-size:42px;font-weight:900;letter-spacing:-.03em;margin-top:8px;line-height:1.05}
+.balance .big{font-size:clamp(28px,8vw,42px);font-weight:900;letter-spacing:-.03em;margin-top:8px;line-height:1.1;overflow-wrap:anywhere;font-variant-numeric:tabular-nums}
 .balance .big.minus{color:#ff453a}
+.balance-note{font-size:11px;line-height:1.5;color:#c7c7cc;margin-top:10px}
 .balance .rate{display:inline-flex;align-items:center;gap:5px;margin-top:14px;background:rgba(255,255,255,0.12);
   color:#fff;font-size:12px;font-weight:700;padding:5px 12px;border-radius:20px}
 .daily-allowance{margin-top:14px;padding:12px 16px;border-radius:14px;background:rgba(255,255,255,.1);
@@ -204,6 +205,16 @@ main{padding:18px 16px 0}
    conservative scheduled-reserve estimates. */
 .living-allowance{margin:12px 0 16px;padding:16px;background:var(--card);border:1px solid var(--line-soft);border-radius:18px;box-shadow:var(--shadow)}
 .living-allowance h3{font-size:14px;font-weight:900;color:var(--ink);margin:0 0 10px}
+.living-allowance h3 small{font-size:11px;font-weight:700;color:var(--muted)}
+.living-result{display:flex;flex-wrap:wrap;align-items:baseline;gap:4px 10px;color:var(--muted);font-size:12px}
+.living-result strong{font-size:24px;line-height:1.3;color:var(--forest);font-weight:900;font-variant-numeric:tabular-nums;overflow-wrap:anywhere;min-width:0}
+.living-result.negative,.living-result.negative strong{color:var(--expense)}
+.living-details{margin-top:10px;border-top:1px solid var(--line)}
+.living-details>summary{min-height:44px;display:flex;align-items:center;justify-content:space-between;gap:10px;color:var(--forest);font-size:12px;font-weight:800;cursor:pointer;list-style:none}
+.living-details>summary::-webkit-details-marker{display:none}
+.living-details>summary::after{content:'+';font-size:18px;font-weight:500}
+.living-details[open]>summary::after{content:'−'}
+.living-warnings{padding-left:18px;margin:8px 0 0;color:var(--expense);font-size:11px;line-height:1.6;overflow-wrap:anywhere}
 .living-flow{display:grid;gap:8px;margin:0}
 .living-flow div{display:flex;justify-content:space-between;align-items:flex-start;gap:12px;font-size:12.5px}
 .living-flow dt{font-weight:700;color:var(--muted);line-height:1.5}
@@ -212,10 +223,12 @@ main{padding:18px 16px 0}
 .living-flow .living-highlight dt{color:var(--ink);font-weight:900}
 .living-flow .living-highlight dd{font-size:19px;color:var(--forest)}
 .living-flow .living-highlight.negative dd{color:var(--expense)}
-.living-cadence{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:10px}
-.living-cadence div{background:var(--bg);padding:11px 12px;border-radius:12px}
+.living-cadence{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px;margin-top:10px}
+.living-cadence div{background:var(--bg);padding:11px 12px;border-radius:12px;min-width:0;overflow-wrap:anywhere}
 .living-cadence span{display:block;font-size:11px;color:var(--muted);font-weight:700}
 .living-cadence strong{display:block;margin-top:3px;font-size:15px;font-weight:900;font-variant-numeric:tabular-nums;color:var(--ink)}
+.living-cadence.single{grid-template-columns:minmax(0,1fr)}
+.living-cadence.single>div{display:flex;align-items:baseline;justify-content:space-between;flex-wrap:wrap;gap:4px 10px}
 .living-caution{font-size:11px;color:var(--muted);line-height:1.6;margin:10px 0 0}
 .living-caution.warn{color:var(--expense)}
 .dday-chip .dday-meta{display:flex;flex-direction:column;gap:3px;min-width:0}
@@ -351,12 +364,17 @@ body.dark-mode .tabbar{background:rgba(28,28,30,0.85);border-top-color:rgba(255,
 .smart-entry-actions{display:flex;justify-content:flex-end;margin-top:8px}
 .smart-entry-actions button{min-height:40px;padding:8px 14px;border-radius:11px;background:var(--forest);color:#fff;font-weight:800;font-size:12px}
 .smart-entry-actions button:disabled{opacity:.45;cursor:not-allowed}
-.home-smart-trigger{display:flex;justify-content:space-between;align-items:center;gap:8px;width:100%;min-height:45px;margin:10px 0 12px;padding:10px 15px;border-radius:14px;border:1px solid var(--line);background:var(--card);color:var(--forest);font-size:13px;font-weight:900;text-align:left}
-.home-smart-trigger span{font-size:11px;font-weight:600;color:var(--muted)}
+.home-smart-trigger{display:flex;justify-content:space-between;align-items:center;gap:12px;width:100%;min-height:56px;margin:12px 0;padding:12px 16px;border-radius:16px;background:var(--forest);color:#fff;font-size:14px;text-align:left}
+.home-smart-copy{display:flex;flex-direction:column;gap:3px;min-width:0}
+.home-smart-copy strong{font-weight:850}
+.home-smart-copy small{font-size:11px;font-weight:500;opacity:.9}
+.home-smart-arrow{font-size:24px;line-height:1;flex-shrink:0}
+body.dark-mode .home-smart-trigger{color:#102b1c}
 .repeat-tx-btn{min-height:36px;padding:6px 8px;border-radius:9px;background:var(--line-soft);color:var(--forest);font-size:11px;font-weight:800;white-space:nowrap}
 .repeat-tx-btn:focus-visible,.home-smart-trigger:focus-visible,.smart-entry-actions button:focus-visible{outline:3px solid var(--forest);outline-offset:2px}
 .repeat-entry-notice:not([hidden]){margin:8px 0 14px;padding:10px 12px;border:1px solid var(--line);border-radius:12px;background:var(--line-soft);font-size:12px;font-weight:750;line-height:1.5;color:var(--ink)}
-@media(max-width:420px){.home-smart-trigger span{font-size:10px}.repeat-tx-btn{padding:6px}.repeat-tx-btn span{display:none}}
+@media(max-width:420px){.balance{padding:22px}.balance .rate{margin-top:10px}.repeat-tx-btn{padding:6px}.repeat-tx-btn span{display:none}}
+@media(max-width:360px){.header-right{gap:4px}.monthnav{gap:4px}.monthnav .mlabel{min-width:78px;font-size:15px}}
 .amount-wrap{position:relative}
 .amount-wrap .won{position:absolute;left:16px;top:50%;transform:translateY(-50%);font-weight:900;
   font-size:24px;color:var(--muted);pointer-events:none}
@@ -1066,9 +1084,9 @@ body.dark-mode .transfer-status.error{color:var(--gold)}
 <script>
 /* ============ 앱 글로벌 상태 (Store) ============ */
 /* @release:start — pwa-site/scripts/build-static.mjs 가 release.json 을 보고 자동으로 채운다. 손으로 고치지 말 것. */
-const APP_VERSION = '2.3.18';
-const APP_BUILT_AT = '2026-10-26T16:01:57+09:00';
-const APP_RELEASE_NOTES = [{"version":"2.3.18","date":"2026-10-26T16:01:57+09:00","notes":["설정 조회에서 자동 카테고리 추가·속성 변경을 제거해 읽기 동작의 원본 변경 방지","백업 실패 시 원본 내부 탭 복사를 중단하고 독립 사본의 시트 구성 확인·미확정 결과 안내","백업 파일 생성과 로그 실패를 분리하고 중복 클릭·로그아웃 후 낡은 응답 및 월마감 백업 상태 표시 보호"]},{"version":"2.3.17","date":"2026-10-26T10:49:54+09:00","notes":["전체 기간 검색의 합계를 전체 결과 기준으로 표시하고, 40건 단위 이어보기로 1,000건 초과 거래도 조회","대출상환·미분류·과거 분류 필터와 마감월 조회 보호, 충돌 분류 직접 선택 및 예산 사용률 문구 개선","월마감 재개·일괄분류의 수정 범위와 원본 검증 강화, 설정의 수입 분류 보존"]},{"version":"2.3.16","date":"2026-10-21T09:20:48+09:00","notes":["구형·손상 정기설정에서 같은 정기ID가 여러 행에 있으면 자동거래·실행월 갱신을 보류해 원장 누락과 허위 완료 표시 방지","중복 정기ID에 대한 수정·비활성화·재시도는 무변경 오류 처리하고 정상 ID의 실행 및 보수적 월말 전망 유지"]},{"version":"2.3.15","date":"2026-10-19T12:56:06+09:00","notes":["같은 이름·금액의 서로 다른 정기거래가 각각 정확히 기록되도록 고정 ID 귀속 수정","여러 탭의 오프라인 거래 대기열 보존 및 로그아웃 후 오래된 캐시·인증 응답 보호","예산 특수 카테고리 소실·NaN, 수식형 입력, 정기 저장 중간 장애 리비전 복구 보완","정기거래 등록 확인증·거래 삭제 월 이동·지연된 응답으로 입력값이 지워지는 문제 수정"]},{"version":"2.3.14","date":"2026-10-19T10:03:44+09:00","notes":["과거 정기거래 이름이 서로 비슷할 때 다른 거래를 이미 실행한 것으로 잘못 인식하는 오류 수정","자동 정기입력 중복 복구와 월말 정기거래 예약 계산의 구형 메모 태그를 완전 일치로 검증","구형 메모에 정기거래 태그가 여러 개 있어 출처가 불분명하면 자동입력·완료처리를 보류하고 확인 안내","기존 원장·정기거래 메모 형식은 변경하지 않고 관련 장애 재현 테스트 추가"]},{"version":"2.3.13","date":"2026-10-18T12:04:35+09:00","notes":["정기거래 중복 기록·저장 응답 유실 재시도·확정 대기 거래의 화면 이중 집계 위험을 보완","기존 정기거래 메모·고정구분 보존, 금액·날짜·거래종류·카테고리 검증과 날짜 HTML 출력 안전성 강화","월 이동·저장 응답 경합·생활비 예측 정합성을 수정하고 장애 재현 회귀 테스트 추가"]},{"version":"2.3.12","date":"2026-10-18T09:58:45+09:00","notes":["공동자금 단일 장부: 개인/공동·입력자·실제 결제자·부담비율과 추가 옵션 접기를 제거하고 날짜·선택 계좌만 바로 입력","홈과 내역의 사람별 통계·필터·송금 정산 제안을 제거하고 소비 달력·예산·월정산은 전체 거래 기준으로 유지","기존 거래 수정 시 숨겨진 메모·고정비·소비성격 보존, 정기거래 중복 예약 방지, 감사 이력 및 오프라인 저장 호환 보강"]},{"version":"2.3.11","date":"2026-10-11T16:44:03+09:00","notes":["작은 개선과 오류 수정"]}];
+const APP_VERSION = '2.3.19';
+const APP_BUILT_AT = '2026-10-26T16:18:45+09:00';
+const APP_RELEASE_NOTES = [{"version":"2.3.19","date":"2026-10-26T16:18:45+09:00","notes":["홈 빠른 입력을 잔액 바로 아래로 올리고 모바일 버튼·금액·좁은 화면 배치 개선","생활비 계산식과 긴 설명을 접어 기본 화면을 간소화하고 부족·미확정 경고는 유지","동일 잔액과 남은 7일 이내 주간 금액의 반복을 줄이고 계산 내역 펼침 상태 보존"]},{"version":"2.3.18","date":"2026-10-26T16:01:57+09:00","notes":["설정 조회에서 자동 카테고리 추가·속성 변경을 제거해 읽기 동작의 원본 변경 방지","백업 실패 시 원본 내부 탭 복사를 중단하고 독립 사본의 시트 구성 확인·미확정 결과 안내","백업 파일 생성과 로그 실패를 분리하고 중복 클릭·로그아웃 후 낡은 응답 및 월마감 백업 상태 표시 보호"]},{"version":"2.3.17","date":"2026-10-26T10:49:54+09:00","notes":["전체 기간 검색의 합계를 전체 결과 기준으로 표시하고, 40건 단위 이어보기로 1,000건 초과 거래도 조회","대출상환·미분류·과거 분류 필터와 마감월 조회 보호, 충돌 분류 직접 선택 및 예산 사용률 문구 개선","월마감 재개·일괄분류의 수정 범위와 원본 검증 강화, 설정의 수입 분류 보존"]},{"version":"2.3.16","date":"2026-10-21T09:20:48+09:00","notes":["구형·손상 정기설정에서 같은 정기ID가 여러 행에 있으면 자동거래·실행월 갱신을 보류해 원장 누락과 허위 완료 표시 방지","중복 정기ID에 대한 수정·비활성화·재시도는 무변경 오류 처리하고 정상 ID의 실행 및 보수적 월말 전망 유지"]},{"version":"2.3.15","date":"2026-10-19T12:56:06+09:00","notes":["같은 이름·금액의 서로 다른 정기거래가 각각 정확히 기록되도록 고정 ID 귀속 수정","여러 탭의 오프라인 거래 대기열 보존 및 로그아웃 후 오래된 캐시·인증 응답 보호","예산 특수 카테고리 소실·NaN, 수식형 입력, 정기 저장 중간 장애 리비전 복구 보완","정기거래 등록 확인증·거래 삭제 월 이동·지연된 응답으로 입력값이 지워지는 문제 수정"]},{"version":"2.3.14","date":"2026-10-19T10:03:44+09:00","notes":["과거 정기거래 이름이 서로 비슷할 때 다른 거래를 이미 실행한 것으로 잘못 인식하는 오류 수정","자동 정기입력 중복 복구와 월말 정기거래 예약 계산의 구형 메모 태그를 완전 일치로 검증","구형 메모에 정기거래 태그가 여러 개 있어 출처가 불분명하면 자동입력·완료처리를 보류하고 확인 안내","기존 원장·정기거래 메모 형식은 변경하지 않고 관련 장애 재현 테스트 추가"]},{"version":"2.3.13","date":"2026-10-18T12:04:35+09:00","notes":["정기거래 중복 기록·저장 응답 유실 재시도·확정 대기 거래의 화면 이중 집계 위험을 보완","기존 정기거래 메모·고정구분 보존, 금액·날짜·거래종류·카테고리 검증과 날짜 HTML 출력 안전성 강화","월 이동·저장 응답 경합·생활비 예측 정합성을 수정하고 장애 재현 회귀 테스트 추가"]},{"version":"2.3.12","date":"2026-10-18T09:58:45+09:00","notes":["공동자금 단일 장부: 개인/공동·입력자·실제 결제자·부담비율과 추가 옵션 접기를 제거하고 날짜·선택 계좌만 바로 입력","홈과 내역의 사람별 통계·필터·송금 정산 제안을 제거하고 소비 달력·예산·월정산은 전체 거래 기준으로 유지","기존 거래 수정 시 숨겨진 메모·고정비·소비성격 보존, 정기거래 중복 예약 방지, 감사 이력 및 오프라인 저장 호환 보강"]}];
 /* @release:end */
 const DEFAULT_GAS_URL = 'https://script.google.com/macros/s/AKfycbwjFv7OSDc6T4vD0nUQA5E-W1QazAEU5dowQroEXard5DCMtP0FiMRlwtIjuEfDzo8phA/exec';
 const APP_CACHE_VERSION = 5;
@@ -2824,6 +2842,9 @@ function renderHome(){
   const el=document.getElementById('v-home');
   if(!el) return;
   const keepInsightsOpen = !!(el.querySelector('#homeInsights') && el.querySelector('#homeInsights').open);
+  const previousLivingDetails = el.querySelector('#livingAllowanceDetails');
+  const keepLivingDetailsOpen = !!(previousLivingDetails && previousLivingDetails.open &&
+    previousLivingDetails.dataset && previousLivingDetails.dataset.ym === STATE.ym);
   if(!STATE.summary) {
     el.innerHTML = `
       <div role="${STATE.monthLoadState === 'error' ? 'alert' : 'status'}" class="empty">
@@ -2929,20 +2950,35 @@ function renderHome(){
     ? `${reservedHtml}${pendingHtml}${settledHtml}${excludedHtml}${upcomingExtra ? `<span class="dday-more">이외 ${upcomingExtra}건도 확인해줘.</span>` : ''}`
     : `<div class="dday-chip"><span>${(STATE.recurrings || []).length ? '표시할 남은 일정이 없어요. 기록 여부를 확인해줘.' : '등록된 정기거래가 없어요. 계획에 빠진 고정비가 있는지 확인해줘.'}</span></div>`;
   const ddayWarning = hasAllowance && (allowance.uncertain || pendingItems.length || (allowance.warnings || []).length)
-    ? `<p class="dday-warning">⚠️ ${esc(allowance.note || '일부 정기거래 상태를 확실히 확인할 수 없어. 장부 내역과 대조해줘.')}</p>` : '';
+    ? '<p class="dday-warning">⚠️ 확인할 일정이 있어요. 정기거래와 장부의 기록을 대조해 주세요.</p>' : '';
+  const allowanceAdjusted = hasAllowance && (Number(allowance.reserved) > 0 || Number(allowance.unconfirmedIncome) > 0);
+  const allowanceNotices = hasAllowance ? [
+    Number(allowance.availableNow) < 0 ? (allowanceAdjusted ? '예정 금액을 반영하면 여유가 부족해요.' : '기록 잔액이 부족해요.') : '',
+    !(STATE.recurrings || []).length ? '정기거래 미등록 · 빠진 고정비를 확인해 주세요.' :
+      allowance.uncertain ? '일부 기록·일정 확인 필요' : '',
+    pendingItems.length || Number(allowance.unconfirmedIncome) > 0 ? '전송 대기 거래가 있어요.' : ''
+  ].filter(Boolean) : [];
   const livingCardHtml = hasAllowance ? `<section class="living-allowance" aria-labelledby="livingAllowanceTitle">
     <h3 id="livingAllowanceTitle">💰 예정 반영 생활비 여유 <small>(추정)</small></h3>
-    <dl class="living-flow">
-      <div><dt>기록 기준 남은 돈</dt><dd>${fmt(Number(s.left) || 0)}</dd></div>
-      <div><dt>미기록 정기 지출·저축·상환 예약</dt><dd>− ${fmt(Number(allowance.reserved) || 0)}</dd></div>
-      ${Number(allowance.unconfirmedIncome) > 0 ? `<div><dt>서버 미확정 수입 제외</dt><dd>− ${fmt(Number(allowance.unconfirmedIncome))}</dd></div>` : ''}
-      <div class="living-highlight ${Number(allowance.availableNow) < 0 ? 'negative' : ''}"><dt>예정 금액을 제외한 여유</dt><dd>${fmt(Number(allowance.availableNow) || 0)}</dd></div>
-    </dl>
-    <div class="living-cadence">
+    <div class="living-result ${Number(allowance.availableNow) < 0 ? 'negative' : ''}">${allowanceAdjusted ?
+      `<strong>${fmt(Number(allowance.availableNow) || 0)}</strong><span>예약 금액을 제외한 여유</span>` :
+      '<span>예약 차감 없이 위 기록 잔액과 같아요.</span>'}</div>
+    <div class="living-cadence ${Number(allowance.daysRemaining) <= 7 ? 'single' : ''}">
       <div><span>남은 ${Number(allowance.daysRemaining) || 0}일 기준 · 하루 사용 가능</span><strong>${fmt(Math.max(0, Number(allowance.perDay) || 0))}</strong></div>
-      <div><span>앞으로 최대 7일 사용 가능</span><strong>${fmt(Math.max(0, Number(allowance.perWeek) || 0))}</strong></div>
+      ${Number(allowance.daysRemaining) > 7 ? `<div><span>앞으로 최대 7일 사용 가능</span><strong>${fmt(Math.max(0, Number(allowance.perWeek) || 0))}</strong></div>` : ''}
     </div>
-    <p class="living-caution ${allowance.uncertain || Number(allowance.availableNow) < 0 || !(STATE.recurrings || []).length ? 'warn' : ''}">${Number(allowance.availableNow) < 0 ? '⚠️ 예정 지출을 예약하면 여유가 부족해요. ' : ''}${esc(allowance.note || '등록된 정기거래와 장부 기록을 바탕으로 계산한 추정값이에요.')}${!(STATE.recurrings || []).length ? ' ⚠️ 정기거래 등록 정보가 없어 예상 지출을 충분히 반영하지 못했을 수 있어요.' : ''}${pendingItems.length ? ' 전송 대기 중인 항목은 장부 잔액에 반영된 것으로 보고 예약에서 다시 빼지 않았어요.' : ''}${Number(allowance.scheduledIncome) > 0 ? ` 예정 정기수입 ${fmt(allowance.scheduledIncome)}은 실제 입금 전이라 더하지 않았어요.` : ' 향후 수입은 실제 입금되기 전에는 반영하지 않아요.'}</p>
+    ${allowanceNotices.length ? `<p class="living-caution warn" role="status">⚠️ ${esc(allowanceNotices.join(' · '))}</p>` : ''}
+    <details class="living-details" id="livingAllowanceDetails" data-ym="${esc(selectedYm)}" ${keepLivingDetailsOpen?'open':''}>
+      <summary>계산 내역 · 주의사항</summary>
+      <dl class="living-flow">
+        <div><dt>기록 기준 남은 돈</dt><dd>${fmt(Number(s.left) || 0)}</dd></div>
+        <div><dt>미기록 정기 지출·저축·상환 예약</dt><dd>− ${fmt(Number(allowance.reserved) || 0)}</dd></div>
+        ${Number(allowance.unconfirmedIncome) > 0 ? `<div><dt>서버 미확정 수입 제외</dt><dd>− ${fmt(Number(allowance.unconfirmedIncome))}</dd></div>` : ''}
+        <div class="living-highlight ${Number(allowance.availableNow) < 0 ? 'negative' : ''}"><dt>예정 금액을 제외한 여유</dt><dd>${fmt(Number(allowance.availableNow) || 0)}</dd></div>
+      </dl>
+      <p class="living-caution">${esc(allowance.note || '등록된 정기거래와 장부 기록을 바탕으로 계산한 추정값이에요.')}${!(STATE.recurrings || []).length ? ' 정기거래 등록 정보가 없어 예상 지출을 충분히 반영하지 못했을 수 있어요.' : ''}${pendingItems.length ? ' 전송 대기 중인 항목은 장부 잔액에 반영된 것으로 보고 예약에서 다시 빼지 않았어요.' : ''}${Number(allowance.scheduledIncome) > 0 ? ` 예정 정기수입 ${fmt(allowance.scheduledIncome)}은 실제 입금 전이라 더하지 않았어요.` : ' 향후 수입은 실제 입금되기 전에는 반영하지 않아요.'}</p>
+      ${(allowance.warnings || []).length ? `<ul class="living-warnings">${allowance.warnings.map(w=>`<li>${esc(w)}</li>`).join('')}</ul>` : ''}
+    </details>
   </section>` : '';
 
   // 한 공동 장부의 전체 수입을 카테고리별로 집계한다.
@@ -3030,15 +3066,17 @@ function renderHome(){
     <div class="balance">
       <div class="lab">${isCurrentMonth ? '이번 달 남은 돈' : isPastMonth ? monthLabel + ' 결산 잔액' : monthLabel + ' 계획 잔액'}</div>
       <div class="big ${minus?'minus':''}">${fmt(s.left)}</div>
-      <div class="rate">장부 기록 기준 · 은행 계좌 잔액과 다를 수 있어요 · 저축률 ${s.savingRate}%${minus?' · 현금흐름 마이너스':''}</div>
+      <p class="balance-note">장부 기록 기준 · 은행 계좌 잔액과 다를 수 있어요</p>
+      <div class="rate">저축률 ${s.savingRate}%${minus?' · 현금흐름 마이너스':''}</div>
     </div>
-    ${livingCardHtml}
-    <button type="button" class="home-smart-trigger" onclick="openQuickEntryModalSmart()">✍️ 한 줄로 빠른 입력 <span>점심 11000 · 문자 붙여넣기</span></button>
+    <button type="button" class="home-smart-trigger" onclick="openQuickEntryModalSmart()"><span class="home-smart-copy"><strong>✍️ 한 줄로 빠른 입력</strong><small>점심 11000 · 문자 붙여넣기</small></span><span class="home-smart-arrow" aria-hidden="true">＋</span></button>
     <div class="summary-grid">
       <div class="mini"><div class="l">수입</div><div class="v in">${fmt(s.income)}</div></div>
       <div class="mini"><div class="l">지출</div><div class="v out">${fmt(s.expense)}</div></div>
       <div class="mini"><div class="l">저축·투자</div><div class="v sv">${fmt(s.save || 0)}</div></div>
     </div>
+
+    ${livingCardHtml}
 
     <div class="home-section-head">
       <div class="sec-title">최근 거래</div>
