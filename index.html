@@ -3,7 +3,7 @@
 <head>
 <base target="_top">
 <meta charset="utf-8">
-<meta name="app-version" content="2.3.16">
+<meta name="app-version" content="2.3.17">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, interactive-widget=resizes-content">
 <meta name="description" content="지수와 하콩이의 빠르고 편한 공동 가계부">
 <meta name="theme-color" content="#f5f5f7">
@@ -484,7 +484,6 @@ body.dark-mode #toast{background:rgba(58,58,60,0.92)}
   .sheet .sbody{padding-left:18px;padding-right:18px}
   .tx .ico{width:38px;height:38px;border-radius:12px;font-size:18px}
   .tx .amt{font-size:14px}
-  .list-global-filters{grid-template-columns:1fr 1fr}.list-global-filters label:first-child{grid-column:span 2}
 }
 
 /*  Category Color Coding for Transaction Icons */
@@ -578,9 +577,10 @@ body.dark-mode #toast{background:rgba(58,58,60,0.92)}
 .list-scope-toggle{display:inline-flex;gap:4px;padding:4px;margin:2px 0 4px;border-radius:12px;background:var(--line-soft)}
 .list-scope-toggle button{min-height:36px;padding:0 12px;border-radius:9px;color:var(--muted);font-size:12.5px;font-weight:850}
 .list-scope-toggle button.on{background:var(--card);color:var(--forest);box-shadow:0 2px 8px rgba(0,0,0,.06)}
-.list-global-filters{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;margin:8px 0 10px}
-.list-global-filters label{display:flex;flex-direction:column;gap:5px;font-size:11px;font-weight:800;color:var(--muted)}
-.list-global-filters input,.list-global-filters select{min-width:0;height:40px;padding:0 10px;border:1px solid var(--line);border-radius:11px;background:var(--card);color:var(--ink);font-size:12.5px;font-weight:700}
+.list-global-filters{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px;margin:8px 0 10px}
+.list-global-filters label{display:flex;min-width:0;flex-direction:column;gap:5px;font-size:11px;font-weight:800;color:var(--muted)}
+.list-global-filters input,.list-global-filters select{width:100%;min-width:0;height:40px;padding:0 10px;border:1px solid var(--line);border-radius:11px;background:var(--card);color:var(--ink);font-size:12.5px;font-weight:700}
+@media(max-width:420px){.list-global-filters{grid-template-columns:repeat(2,minmax(0,1fr))}.list-global-filters label:first-child{grid-column:span 2}}
 .list-remote-error{display:flex;align-items:center;justify-content:space-between;gap:10px;margin:8px 0;padding:10px 12px;border-radius:12px;background:color-mix(in srgb,var(--expense) 8%,var(--card));color:var(--expense);font-size:12px;font-weight:750}
 .list-remote-error button{flex-shrink:0;padding:7px 10px;border-radius:9px;background:var(--expense);color:#fff;font-size:11.5px;font-weight:850}
 .list-readonly-note{margin:8px 0 10px;padding:9px 11px;border-radius:11px;background:var(--line-soft);color:var(--muted);font-size:11.5px;font-weight:750;line-height:1.45}
@@ -1063,9 +1063,9 @@ body.dark-mode .transfer-status.error{color:var(--gold)}
 <script>
 /* ============ 앱 글로벌 상태 (Store) ============ */
 /* @release:start — pwa-site/scripts/build-static.mjs 가 release.json 을 보고 자동으로 채운다. 손으로 고치지 말 것. */
-const APP_VERSION = '2.3.16';
-const APP_BUILT_AT = '2026-10-21T09:20:48+09:00';
-const APP_RELEASE_NOTES = [{"version":"2.3.16","date":"2026-10-21T09:20:48+09:00","notes":["구형·손상 정기설정에서 같은 정기ID가 여러 행에 있으면 자동거래·실행월 갱신을 보류해 원장 누락과 허위 완료 표시 방지","중복 정기ID에 대한 수정·비활성화·재시도는 무변경 오류 처리하고 정상 ID의 실행 및 보수적 월말 전망 유지"]},{"version":"2.3.15","date":"2026-10-19T12:56:06+09:00","notes":["같은 이름·금액의 서로 다른 정기거래가 각각 정확히 기록되도록 고정 ID 귀속 수정","여러 탭의 오프라인 거래 대기열 보존 및 로그아웃 후 오래된 캐시·인증 응답 보호","예산 특수 카테고리 소실·NaN, 수식형 입력, 정기 저장 중간 장애 리비전 복구 보완","정기거래 등록 확인증·거래 삭제 월 이동·지연된 응답으로 입력값이 지워지는 문제 수정"]},{"version":"2.3.14","date":"2026-10-19T10:03:44+09:00","notes":["과거 정기거래 이름이 서로 비슷할 때 다른 거래를 이미 실행한 것으로 잘못 인식하는 오류 수정","자동 정기입력 중복 복구와 월말 정기거래 예약 계산의 구형 메모 태그를 완전 일치로 검증","구형 메모에 정기거래 태그가 여러 개 있어 출처가 불분명하면 자동입력·완료처리를 보류하고 확인 안내","기존 원장·정기거래 메모 형식은 변경하지 않고 관련 장애 재현 테스트 추가"]},{"version":"2.3.13","date":"2026-10-18T12:04:35+09:00","notes":["정기거래 중복 기록·저장 응답 유실 재시도·확정 대기 거래의 화면 이중 집계 위험을 보완","기존 정기거래 메모·고정구분 보존, 금액·날짜·거래종류·카테고리 검증과 날짜 HTML 출력 안전성 강화","월 이동·저장 응답 경합·생활비 예측 정합성을 수정하고 장애 재현 회귀 테스트 추가"]},{"version":"2.3.12","date":"2026-10-18T09:58:45+09:00","notes":["공동자금 단일 장부: 개인/공동·입력자·실제 결제자·부담비율과 추가 옵션 접기를 제거하고 날짜·선택 계좌만 바로 입력","홈과 내역의 사람별 통계·필터·송금 정산 제안을 제거하고 소비 달력·예산·월정산은 전체 거래 기준으로 유지","기존 거래 수정 시 숨겨진 메모·고정비·소비성격 보존, 정기거래 중복 예약 방지, 감사 이력 및 오프라인 저장 호환 보강"]},{"version":"2.3.11","date":"2026-10-11T16:44:03+09:00","notes":["작은 개선과 오류 수정"]},{"version":"2.3.10","date":"2026-10-11T16:41:28+09:00","notes":["5차 안정화: 저장 응답 유실 및 새로고침 후 내부이체 요청 ID 복구·중복 기록 방지, 다른 월 이동 중 오래된 응답의 입력 초안 침범 차단","서비스워커·저장 보호: 내부이체 작성 중 앱 자동 새로고침 제한, 비앱 페이지/JSON 응답이 오프라인 앱 셸을 덮어쓰지 않도록 캐시 범위 제한","정합성 보강: 이체 금액 쉼표 형식 엄격 검사, 서로 다른 원장의 저축·이체 중복 후보 알림, 잘못된 거래 유형·중복 이체 ID·불완전 합계 및 수치 초과 경고","이체 서버 안전: 빈 기존 시트 헤더 초기화, 삭제된 거래 재요청 멱등 처리, 손상 날짜 데이터 완전성 표시와 삭제 표시만 한 칸 갱신, 독립 적대적 회귀 검사 보강"]},{"version":"2.3.9","date":"2026-10-11T15:10:36+09:00","notes":["5차 내부이체: 기존 지출·수입 원장과 분리된 계좌 간 이체 전용 기록, 출금계좌·입금계좌·금액·날짜·메모 입력 및 이력 조회","결제수단별 월 흐름: 거래 출처/계좌와 내부이체 입출금 흐름을 별도로 보고, 확인되지 않은 실제 잔액이나 카드 청구금액으로 오인하지 않게 안내","금융 안정성: 이체는 소비·수입·부부 공동부담 계산에 섞지 않고, 반복 요청 ID 멱등 처리·월마감 쓰기 차단·삭제기록 보존","안전한 도입: 기존 거래·자산 시트 값은 변경하지 않고 신규 이체 전용 장부만 사용, 오프라인 상태에서는 이체를 조용히 큐에 넣지 않음"]}];
+const APP_VERSION = '2.3.17';
+const APP_BUILT_AT = '2026-10-26T10:49:54+09:00';
+const APP_RELEASE_NOTES = [{"version":"2.3.17","date":"2026-10-26T10:49:54+09:00","notes":["전체 기간 검색의 합계를 전체 결과 기준으로 표시하고, 40건 단위 이어보기로 1,000건 초과 거래도 조회","대출상환·미분류·과거 분류 필터와 마감월 조회 보호, 충돌 분류 직접 선택 및 예산 사용률 문구 개선","월마감 재개·일괄분류의 수정 범위와 원본 검증 강화, 설정의 수입 분류 보존"]},{"version":"2.3.16","date":"2026-10-21T09:20:48+09:00","notes":["구형·손상 정기설정에서 같은 정기ID가 여러 행에 있으면 자동거래·실행월 갱신을 보류해 원장 누락과 허위 완료 표시 방지","중복 정기ID에 대한 수정·비활성화·재시도는 무변경 오류 처리하고 정상 ID의 실행 및 보수적 월말 전망 유지"]},{"version":"2.3.15","date":"2026-10-19T12:56:06+09:00","notes":["같은 이름·금액의 서로 다른 정기거래가 각각 정확히 기록되도록 고정 ID 귀속 수정","여러 탭의 오프라인 거래 대기열 보존 및 로그아웃 후 오래된 캐시·인증 응답 보호","예산 특수 카테고리 소실·NaN, 수식형 입력, 정기 저장 중간 장애 리비전 복구 보완","정기거래 등록 확인증·거래 삭제 월 이동·지연된 응답으로 입력값이 지워지는 문제 수정"]},{"version":"2.3.14","date":"2026-10-19T10:03:44+09:00","notes":["과거 정기거래 이름이 서로 비슷할 때 다른 거래를 이미 실행한 것으로 잘못 인식하는 오류 수정","자동 정기입력 중복 복구와 월말 정기거래 예약 계산의 구형 메모 태그를 완전 일치로 검증","구형 메모에 정기거래 태그가 여러 개 있어 출처가 불분명하면 자동입력·완료처리를 보류하고 확인 안내","기존 원장·정기거래 메모 형식은 변경하지 않고 관련 장애 재현 테스트 추가"]},{"version":"2.3.13","date":"2026-10-18T12:04:35+09:00","notes":["정기거래 중복 기록·저장 응답 유실 재시도·확정 대기 거래의 화면 이중 집계 위험을 보완","기존 정기거래 메모·고정구분 보존, 금액·날짜·거래종류·카테고리 검증과 날짜 HTML 출력 안전성 강화","월 이동·저장 응답 경합·생활비 예측 정합성을 수정하고 장애 재현 회귀 테스트 추가"]},{"version":"2.3.12","date":"2026-10-18T09:58:45+09:00","notes":["공동자금 단일 장부: 개인/공동·입력자·실제 결제자·부담비율과 추가 옵션 접기를 제거하고 날짜·선택 계좌만 바로 입력","홈과 내역의 사람별 통계·필터·송금 정산 제안을 제거하고 소비 달력·예산·월정산은 전체 거래 기준으로 유지","기존 거래 수정 시 숨겨진 메모·고정비·소비성격 보존, 정기거래 중복 예약 방지, 감사 이력 및 오프라인 저장 호환 보강"]},{"version":"2.3.11","date":"2026-10-11T16:44:03+09:00","notes":["작은 개선과 오류 수정"]},{"version":"2.3.10","date":"2026-10-11T16:41:28+09:00","notes":["5차 안정화: 저장 응답 유실 및 새로고침 후 내부이체 요청 ID 복구·중복 기록 방지, 다른 월 이동 중 오래된 응답의 입력 초안 침범 차단","서비스워커·저장 보호: 내부이체 작성 중 앱 자동 새로고침 제한, 비앱 페이지/JSON 응답이 오프라인 앱 셸을 덮어쓰지 않도록 캐시 범위 제한","정합성 보강: 이체 금액 쉼표 형식 엄격 검사, 서로 다른 원장의 저축·이체 중복 후보 알림, 잘못된 거래 유형·중복 이체 ID·불완전 합계 및 수치 초과 경고","이체 서버 안전: 빈 기존 시트 헤더 초기화, 삭제된 거래 재요청 멱등 처리, 손상 날짜 데이터 완전성 표시와 삭제 표시만 한 칸 갱신, 독립 적대적 회귀 검사 보강"]}];
 /* @release:end */
 const DEFAULT_GAS_URL = 'https://script.google.com/macros/s/AKfycbwjFv7OSDc6T4vD0nUQA5E-W1QazAEU5dowQroEXard5DCMtP0FiMRlwtIjuEfDzo8phA/exec';
 const APP_CACHE_VERSION = 5;
@@ -1095,8 +1095,10 @@ const STATE = {
   aiReady: false, aiHistory: [], closeHistory: [], insight: null, descDict: {},
   editing: null, form: { type: null, cat: null, fixed: '변동', user: '', catManual: false },
   list: {
-    mode: 'month', scope: 'month', query: '', type: '', category: '', meaning: '', minAmount: '', maxAmount: '',
-    rows: [], count: 0, pageSize: 40, remoteRows: [], remoteCount: 0, remoteLoading: false, remoteError: '', remoteRequestSeq: 0
+    mode: 'month', scope: 'month', query: '', type: '', category: '', unclassified: false, meaning: '', minAmount: '', maxAmount: '',
+    rows: [], count: 0, pageSize: 40, remoteRows: [], remoteCount: 0, remoteSummary: null, remoteFacets: null,
+    remoteSearchKey: '', remoteNextCursor: null, remoteHasMore: false, remotePagingSupported: false,
+    remoteLoading: false, remoteError: '', remoteRequestSeq: 0
   },
   settlement: null, settlementDraft: null, settlementDraftSync: { state:'idle', updatedAt:0 },
   internalTransfers: {
@@ -1110,6 +1112,33 @@ const STATE = {
   notifications: [],
   requestSeq: 0
 };
+
+/* 전체 기간 조회 조건: 렌더러와 요청이 같은 키를 사용한다. */
+function listSearchKey(){
+  const options=listServerSearchOptions();
+  delete options.limit;
+  delete options.cursor;
+  return JSON.stringify(options);
+}
+function listServerSearchOptions(){
+  const list=STATE.list || {};
+  const opt={
+    mode:'search', allMonths:true, limit:40, pageMode:'cursor-v1',
+    query:String(list.query || '').trim(),
+    // The ledger is shared; historical searches never filter by writer.
+    writer:'',
+    type:list.type || '', category:list.category || '', unclassified:list.unclassified===true, meaning:list.meaning || ''
+  };
+  if(String(list.minAmount || '').trim() !== '') {
+    const min=Number(String(list.minAmount).replace(/,/g,''));
+    if(isFinite(min)) opt.minAmount=min;
+  }
+  if(String(list.maxAmount || '').trim() !== '') {
+    const max=Number(String(list.maxAmount).replace(/,/g,''));
+    if(isFinite(max)) opt.maxAmount=max;
+  }
+  return opt;
+}
 
 /* ============ localStorage 안전 래퍼 ============
  * 저장 실패(용량 초과, 사파리 시크릿 모드 등)가 앱 흐름을 끊지 않게 한다.
@@ -2977,7 +3006,7 @@ function renderHome(){
     return `<div class="budget-gauge-row">
       <div class="budget-gauge-head">
         <span>${emo(b.category || b.cat)} ${esc(b.category || b.cat)} (${fmt(spent)} / ${fmt(target)})</span>
-        <span class="pct-badge ${cls}">${pct >= 100 ? '⚠️ '+pct+'% 초과' : pct+'%'}</span>
+        <span class="pct-badge ${cls}">${pct > 100 ? '⚠️ '+pct+'% 사용 · '+(pct-100)+'% 초과' : pct===100 ? '100% 사용 · 예산 도달' : pct+'% 사용'}</span>
       </div>
       <div class="budget-gauge-track">
         <div class="budget-gauge-fill ${cls}" style="width:${Math.min(100, pct)}%"></div>
@@ -3444,7 +3473,8 @@ function txRow(t){
   const sign = t.type==='수입' ? '+' : '-';
   const cls = t.type==='수입' ? 'in' : 'out';
   const icoColor = catColorClass(t.cat);
-  const readOnlyHistory = STATE.list && STATE.list.scope === 'all';
+  const readOnlyHistory = (STATE.list && STATE.list.scope === 'all') ||
+    !!(STATE.settlement && STATE.settlement.isClosed && String(t.date || '').slice(0,7) === STATE.ym);
   // Server rows are numeric; pending rows and transaction IDs use safe token
   // characters. Never interpolate a raw provider/user value into inline JS.
   const safeRow = String(t.row || '').replace(/[^a-zA-Z0-9_-]/g, '');
@@ -3478,7 +3508,7 @@ function txRow(t){
     <div class="ico ${icoColor}">${emo(t.cat)}</div>
     <div class="mid"><div class="d">${esc(t.desc||t.cat||'(내역없음)')}</div>
       <div class="s">
-        <span class="tag">${esc(t.cat)}</span>${t.source ? `<span class="tag source-tag">${esc(t.source)}</span>` : ''}
+        <span class="tag">${esc(t.cat || '미분류')}</span>${t.source ? `<span class="tag source-tag">${esc(t.source)}</span>` : ''}
       </div>
     </div>
     ${bulkActive ? '' : actionHtml}
@@ -3511,6 +3541,7 @@ function txGroupedRows(list, sumType){
 function filterByType(type){
   STATE.list.type = type;
   STATE.list.category = '';
+  STATE.list.unclassified = false;
   STATE.list.pageSize = 40;
   if (typeof refreshTransactionList === 'function') refreshTransactionList();
   else renderList();
@@ -3518,15 +3549,22 @@ function filterByType(type){
 
 function filterByCat(cat){
   STATE.list.category = cat;
+  STATE.list.unclassified = false;
   STATE.list.pageSize = 40;
   if (typeof refreshTransactionList === 'function') refreshTransactionList();
   else renderList();
 }
 
+function filterUnclassified(){
+  STATE.list.category='';STATE.list.unclassified=true;STATE.list.pageSize=40;
+  if(typeof refreshTransactionList==='function')return refreshTransactionList();
+  renderList();
+}
+
 function loadMoreTransactions(){
+  if (STATE.list.scope === 'all' && typeof requestWholeHistoryTransactions === 'function') return requestWholeHistoryTransactions({append:true});
   STATE.list.pageSize = Number(STATE.list.pageSize || 40) + 40;
-  if (STATE.list.scope === 'all' && typeof requestWholeHistoryTransactions === 'function') requestWholeHistoryTransactions();
-  else renderList();
+  renderList();
 }
 
 // Display-only switches: neither handler touches search, server state or the
@@ -3684,24 +3722,32 @@ function renderList(){
     });
   }
   // 구분별 합계는 구분·분류 필터를 걸기 전 목록 기준이다. 그래야 "지출"을 눌러도 수입 합계가 같이 보인다.
-  const typeTotals = {};
-  txs.forEach(t => {
+  const remoteReady = !wholeHistory || (STATE.list.remoteSearchKey === listSearchKey());
+  const remoteSummary = wholeHistory && remoteReady ? STATE.list.remoteSummary : null;
+  const remoteFacets = wholeHistory && remoteReady ? STATE.list.remoteFacets : null;
+  if(wholeHistory && !remoteReady)txs=[];
+  const typeTotals = wholeHistory ? (remoteFacets && remoteFacets.byType || {}) : {};
+  if(!wholeHistory)txs.forEach(t => {
     const k = t.type || '미분류';
     if (!typeTotals[k]) typeTotals[k] = { amount: 0, count: 0 };
     typeTotals[k].amount += Number(t.amount || 0);
     typeTotals[k].count++;
   });
-  const allCount = wholeHistory ? Number(STATE.list.remoteCount || 0) : txs.length;
+  const allCount = wholeHistory ? (remoteFacets ? remoteFacets.count : null) : txs.length;
   const selectedType = STATE.list.type || '';
+  const monthUnclassified=txs.filter(t=>(!selectedType || t.type===selectedType) && !String(t.cat || '').trim());
+  const unclassifiedCount=wholeHistory ? (remoteFacets ? remoteFacets.categories.filter(item=>
+    (!selectedType || item.type===selectedType) && !item.category).reduce((sum,item)=>sum+item.count,0) : null) : monthUnclassified.length;
   if (selectedType) {
     txs = txs.filter(t => t.type === selectedType);
   }
   const typeCount = txs.length;
-  const typeAmount = txs.reduce((a, t) => a + Number(t.amount || 0), 0);
+  const typeAmount = wholeHistory ? Number((typeTotals[selectedType] || {}).amount || 0) : txs.reduce((a, t) => a + Number(t.amount || 0), 0);
   if (STATE.list.category) {
     txs = txs.filter(t => t.cat === STATE.list.category);
   }
-  const totalCount = wholeHistory ? Number(STATE.list.remoteCount || 0) : txs.length;
+  if(STATE.list.unclassified)txs=txs.filter(t=>!String(t.cat || '').trim());
+  const totalCount = wholeHistory ? (remoteReady ? Number(STATE.list.remoteCount || 0) : 0) : txs.length;
   const pageSize = Number(STATE.list.pageSize || 40);
   const visibleRows = wholeHistory ? txs : txs.slice(0, pageSize);
 
@@ -3717,57 +3763,57 @@ function renderList(){
     <div class="list-type-summary" role="tablist" aria-label="구분별 합계">
       ${typeTabs.map(x => {
         const on = selectedType === x.t;
-        const tot = x.t ? (typeTotals[x.t] || { amount: 0, count: 0 }) : { amount: null, count: allCount };
+        const tot = x.t ? (typeTotals[x.t] || { amount: wholeHistory && !remoteFacets ? null : 0, count: 0 }) : { amount: null, count: allCount };
         return `<button type="button" role="tab" aria-selected="${on}" class="lts-item ${x.cls} ${on ? 'on' : ''}" data-type="${esc(x.t)}" onclick="filterByType(this.dataset.type)">
           <span class="lts-label">${esc(x.label)}</span>
-          <strong class="lts-amt">${tot.amount == null ? tot.count + '건' : fmt(tot.amount)}</strong>
+          <strong class="lts-amt">${tot.amount == null ? (x.t || tot.count == null ? '—' : tot.count + '건') : fmt(tot.amount)}</strong>
           ${tot.amount == null ? '' : `<small>${tot.count}건</small>`}
         </button>`;
       }).join('')}
     </div>
   `;
-  const catTotalHtml = (selectedType && STATE.list.category) ? `
-    <div class="list-cat-total">${emo(STATE.list.category)} ${esc(STATE.list.category)} 합계 <strong>${fmt(txs.reduce((a, t) => a + Number(t.amount || 0), 0))}</strong>
-      <span>${totalCount}건${typeAmount > 0 ? ' · ' + selectedType + '의 ' + Math.round(txs.reduce((a, t) => a + Number(t.amount || 0), 0) / typeAmount * 100) + '%' : ''}</span></div>` : '';
+  const categoryAmount = wholeHistory ? (remoteSummary ? Number((remoteSummary.byType[selectedType] || {}).amount || 0) : null) : txs.reduce((a,t)=>a+Number(t.amount || 0),0);
+  const selectedCategoryLabel=STATE.list.unclassified ? '미분류' : STATE.list.category;
+  const catTotalHtml = (selectedType && selectedCategoryLabel) ? `
+    <div class="list-cat-total">${emo(selectedCategoryLabel)} ${esc(selectedCategoryLabel)} 합계 <strong>${categoryAmount == null ? '확인 중' : fmt(categoryAmount)}</strong>
+      <span>${totalCount}건${categoryAmount != null && typeAmount > 0 ? ' · ' + selectedType + '의 ' + Math.round(categoryAmount / typeAmount * 100) + '%' : ''}</span></div>` : '';
 
   const defaultCatsByType = {
     '지출': ['식비', '교통/차량', '주거/통신', '쇼핑/문화', '경조/이벤트', '건강/의료', '용돈', '기타'],
     '수입': ['월급', '부수입', '상여', '금융수입', '기타수입'],
-    '저축': ['적금/예금', '청약', '투자', '비상금']
+    '저축': ['적금/예금', '청약', '투자', '비상금'],
+    '대출상환': ['원금상환','이자납입','학자금','기타대출']
   };
   const cfg = (STATE.config && STATE.config.byType) || {};
   let targetCats = [];
-  if (selectedType === '수입') {
-    targetCats = (cfg['수입'] && cfg['수입'].length) ? cfg['수입'] : defaultCatsByType['수입'];
-  } else if (selectedType === '저축') {
-    targetCats = (cfg['저축'] && cfg['저축'].length) ? cfg['저축'] : defaultCatsByType['저축'];
-  } else if (selectedType === '지출') {
-    targetCats = (cfg['지출'] && cfg['지출'].length) ? cfg['지출'] : defaultCatsByType['지출'];
+  if (selectedType) {
+    targetCats = (cfg[selectedType] && cfg[selectedType].length) ? cfg[selectedType] : (defaultCatsByType[selectedType] || []);
   } else {
-    const exp = (cfg['지출'] && cfg['지출'].length) ? cfg['지출'] : defaultCatsByType['지출'];
-    const inc = (cfg['수입'] && cfg['수입'].length) ? cfg['수입'] : defaultCatsByType['수입'];
-    targetCats = exp.concat(inc.slice(0, 3));
+    targetCats = ['지출','수입','저축','대출상환'].flatMap(type=>cfg[type] && cfg[type].length ? cfg[type] : defaultCatsByType[type]);
   }
+  const historicalCats=wholeHistory ? (remoteFacets ? remoteFacets.categories.filter(item=>!selectedType || item.type===selectedType).map(item=>item.category) : []) :
+    (STATE.transactions || []).filter(tx=>!selectedType || tx.type===selectedType).map(tx=>tx.cat);
+  targetCats=[...new Set(targetCats.concat(historicalCats).map(cat=>String(cat || '').trim()).filter(Boolean))];
   const cats = ['전체'].concat(targetCats);
   const filterChipsHtml = cats.map(c => {
-    const isSelected = (!STATE.list.category && c === '전체') || (STATE.list.category === c);
+    const isSelected = !STATE.list.unclassified && ((!STATE.list.category && c === '전체') || (STATE.list.category === c));
     const catVal = c === '전체' ? '' : c;
     return `<button type="button" class="cat-scroll-chip ${isSelected?'on':''}" data-cat="${esc(catVal)}" onclick="filterByCat(this.dataset.cat)">${c==='전체'?'전체':emo(c)+' '+esc(c)}</button>`;
-  }).join('');
+  }).join('') + (unclassifiedCount || STATE.list.unclassified ? `<button type="button" class="cat-scroll-chip ${STATE.list.unclassified?'on':''}" onclick="filterUnclassified()">미분류 ${unclassifiedCount == null ? '확인 중' : unclassifiedCount+'건'}</button>` : '');
 
   const rows = STATE.list.remoteLoading && wholeHistory && !visibleRows.length
     ? `<div class="empty"><span class="e">⏳</span>전체 기간 거래를 찾는 중…</div>`
     : (visibleRows.length ? txGroupedRows(visibleRows, selectedType) : `<div class="empty"><span class="e">📭</span>조건에 맞는 거래가 없어</div>`);
-  const loadMore = visibleRows.length < totalCount && !(wholeHistory && STATE.list.remoteLoading)
+  const loadMore = (wholeHistory ? remoteReady && STATE.list.remoteHasMore : visibleRows.length < totalCount) && !(wholeHistory && STATE.list.remoteLoading)
     ? `<button type="button" class="list-more-btn" onclick="loadMoreTransactions()">다음 40건 보기 <span>${visibleRows.length}/${totalCount}</span></button>`
     : '';
 
   const listHeadHtml = `
     <div class="list-head" style="display:flex;align-items:center;justify-content:space-between;margin:16px 4px 12px">
       <div class="sec-title" style="margin:0; display:flex; align-items:center; gap:8px;">${wholeHistory ? '전체 기간 거래' : '거래 내역'}
-        ${wholeHistory ? '' : `<button class="user-switch-chip ${STATE.bulkMode?'on':''}" style="font-size:11px; padding:4px 8px; margin:0;" onclick="toggleBulkMode()">☑️ 일괄 편집</button>`}
+        ${wholeHistory ? '' : `<button class="user-switch-chip ${STATE.bulkMode?'on':''}" style="font-size:11px; padding:4px 8px; margin:0;" onclick="toggleBulkMode()" ${STATE.settlement && STATE.settlement.isClosed?'disabled':''}>☑️ 일괄 편집</button>`}
       </div>
-      <div class="list-count" style="font-size:13px;font-weight:800;color:var(--muted);background:var(--line-soft);padding:3px 10px;border-radius:999px">${totalCount}건</div>
+      <div class="list-count" style="font-size:13px;font-weight:800;color:var(--muted);background:var(--line-soft);padding:3px 10px;border-radius:999px">${totalCount}건${wholeHistory ? ' · '+visibleRows.length+'건 표시 중' : ''}</div>
     </div>
   `;
 
@@ -3793,7 +3839,7 @@ function renderList(){
     ${wholeHistory && STATE.list.remoteError ? `<div class="list-remote-error" role="alert">${esc(STATE.list.remoteError)} <button type="button" onclick="requestWholeHistoryTransactions()">다시 시도</button></div>` : ''}
   `;
 
-  const bulkBarHtml = !wholeHistory && STATE.bulkMode ? `
+  const bulkBarHtml = !wholeHistory && STATE.bulkMode && !(STATE.settlement && STATE.settlement.isClosed) ? `
     <div style="position:fixed; bottom:80px; left:20px; right:20px; background:var(--ink); color:#fff; border-radius:16px; padding:16px; display:flex; justify-content:space-between; align-items:center; z-index:9000; box-shadow:0 8px 30px rgba(0,0,0,0.3);">
       <div style="font-weight:700;">${STATE.bulkSelection ? STATE.bulkSelection.size : 0}건 선택됨</div>
       <button style="background:var(--forest); color:#fff; border:none; padding:8px 16px; border-radius:8px; font-weight:700;" onclick="openBulkCatModal()">카테고리 변경</button>
@@ -3804,7 +3850,10 @@ function renderList(){
     ${searchBarHtml}
     ${wholeHistory ? '' : spendingCalendarSwitchHtml()}
     ${wholeHistory ? '<div class="list-readonly-note">전체 기간 결과는 조회 전용이에요 · 수정/삭제는 해당 월로 이동해서 해주세요.</div>' : ''}
+    ${!wholeHistory && STATE.settlement && STATE.settlement.isClosed ? '<p class="list-readonly-note">🔒 마감된 달이에요. 미분류 내역을 확인할 수 있고, 수정은 월 정산에서 다시 연 뒤 가능해요.</p>' : ''}
     ${typeChipsHtml}
+    ${wholeHistory ? `<p class="list-readonly-note" role="status">${remoteFacets ? '구분별 합계는 구분·분류 선택 전 검색 결과 전체 기준이에요. 날짜별 소계는 표시 중인 거래 기준이에요.' : STATE.list.remoteLoading ? '전체 합계를 확인하고 있어요…' : '전체 합계를 확인할 수 없어요. 서버 업데이트 후 새로고침해줘.'}</p>` : ''}
+    ${wholeHistory && !STATE.list.remoteLoading && !STATE.list.remotePagingSupported && visibleRows.length<totalCount ? '<p class="list-remote-error" role="status">이어서 조회하려면 앱과 서버 업데이트가 필요해요. 새로고침 후 다시 확인해줘.</p>' : ''}
     <div class="cat-scroll-bar" style="margin-top:4px">${filterChipsHtml}</div>
     ${catTotalHtml}
     ${listHeadHtml}
@@ -6314,6 +6363,9 @@ function submitQuickTx(closeAfter){
   const date = (dateInp && dateInp.value) || todayStr();
   const type = STATE.form.type || '지출';
   const cat = STATE.form.cat || '식비';
+  if(!STATE.editing && !STATE.form.catManual && quickEntryCategoryAdvice((descInp && descInp.value.trim()) || cat,type).conflict){
+    toast('여러 분류로 기록된 내역이야. 분류를 직접 골라줘.',true);return;
+  }
   const data = {
     date: date,
     type: type,
@@ -6711,19 +6763,23 @@ function availableQuickEntryCategories(type){
   return Array.isArray(configured) && configured.length ? configured : (defaults[type] || []);
 }
 
-function suggestQuickEntryCategory(desc,type){
+function quickEntryCategoryAdvice(desc,type){
   const kind=type || '지출';
   const allowed=availableQuickEntryCategories(kind);
   const normalized=String(desc || '').normalize('NFKC').toLowerCase().replace(/[\s.,·\-_/()[\]]+/g,'').trim();
-  if(normalized.length < 2) return null;
+  const none={category:null,candidates:[],conflict:false};
+  if(normalized.length < 2) return none;
   const matches=[];
   const dict=STATE.descDict || {};
   Object.keys(dict).forEach(key=>{
     const data=dict[key] || {};
-    if (data.type && data.type !== kind || allowed.indexOf(data.cat) < 0) return;
     const value=String(key).normalize('NFKC').toLowerCase().replace(/[\s.,·\-_/()[\]]+/g,'');
-    if(value===normalized) matches.push({cat:data.cat,score:100});
-    else if(value.length >= 4 && normalized.length >= 4 && (normalized.includes(value) || value.includes(normalized))) matches.push({cat:data.cat,score:50});
+    const score=value===normalized ? 100 : value.length >= 4 && normalized.length >= 4 && (normalized.includes(value) || value.includes(normalized)) ? 50 : 0;
+    if(!score)return;
+    const entries=Array.isArray(data.candidates) ? data.candidates : [data];
+    entries.forEach(item=>{
+      if(item && (!item.type || item.type===kind) && allowed.includes(item.cat))matches.push({cat:item.cat,score,count:Number(item.count)||1});
+    });
   });
   const seenHistory=new Set();
   (STATE.transactions || []).concat(STATE.recent || []).forEach(tx=>{
@@ -6736,25 +6792,28 @@ function suggestQuickEntryCategory(desc,type){
     else if(value.length >= 4 && normalized.length >= 4 && (normalized.includes(value) || value.includes(normalized))) matches.push({cat:tx.cat,score:30});
   });
   if(matches.length){
-    const best=Math.max(...matches.map(m=>m.score));
-    const winners=matches.filter(m=>m.score===best);
+    const exact=matches.filter(m=>m.score>=90);
+    const winners=exact.length ? exact : matches;
     const cats=[...new Set(winners.map(m=>m.cat))];
-    // History rows need >=2 independent examples, not a single past guess.
-    // An exact server-derived descDict mapping is already a learned match.
-    if(cats.length===1 && (best===100 || winners.length>=2)) return cats[0];
-    return null;
+    if(cats.length>1)return {category:null,candidates:cats,conflict:true};
+    const learned=winners.some(m=>m.score===100);
+    const samples=winners.reduce((sum,m)=>sum+(m.count || 1),0);
+    return {category:cats.length===1 && (learned || samples>=2) ? cats[0] : null,candidates:cats,conflict:false};
   }
-  const keywords={
-    '식비':/점심|저녁|아침|식사|커피|카페|스타벅스|식당|편의점|배달|치킨|버거|마트|분식|도시락/,
-    '교통/차량':/택시|버스|지하철|주유|주차|고속도로|기차|철도/,
-    '주거/통신':/월세|관리비|전기요금|가스요금|통신비|인터넷요금/,
-    '건강/의료':/병원|약국|치과|의원|진료/,
-    '쇼핑/문화':/영화|서점|문구|쇼핑|백화점|온라인몰/,
-    '월급':/월급|급여|봉급/,
-    '투자':/증권|주식|펀드|투자/
-  };
-  const candidates=Object.keys(keywords).filter(cat=>allowed.includes(cat) && keywords[cat].test(String(desc)));
-  return candidates.length===1 ? candidates[0] : null;
+  const keywords=[
+    {cats:['식비'],pattern:/점심|저녁|아침|식사|커피|카페|스타벅스|식당|편의점|배달|치킨|버거|마트|분식|도시락/},
+    {cats:['교통/차량'],pattern:/택시|버스|지하철|주유|주차|고속도로|기차|철도/},
+    {cats:['주거/통신'],pattern:/월세|관리비|전기요금|가스요금|통신비|인터넷요금/},
+    {cats:['건강/의료','의료/건강'],pattern:/병원|약국|치과|의원|진료/},
+    {cats:['쇼핑/문화'],pattern:/영화|서점|문구|쇼핑|백화점|온라인몰/},
+    {cats:['월급','수입'],pattern:/월급|급여|봉급/},
+    {cats:['투자','저축/투자'],pattern:/증권|주식|펀드|투자/}
+  ];
+  const candidates=[...new Set(keywords.filter(item=>item.pattern.test(String(desc))).flatMap(item=>item.cats.filter(cat=>allowed.includes(cat))))];
+  return {category:candidates.length===1 ? candidates[0] : null,candidates,conflict:candidates.length>1};
+}
+function suggestQuickEntryCategory(desc,type){
+  return quickEntryCategoryAdvice(desc,type).category;
 }
 
 function clearQuickEntryPreview(){
@@ -6774,9 +6833,10 @@ function updateQuickEntryPreview(){
   const button=document.getElementById('smartEntryApply');
   if(button) button.disabled=!result.ok;
   if(preview){
-    const category=result.ok ? suggestQuickEntryCategory(result.desc,result.type) : null;
+    const advice=result.ok ? quickEntryCategoryAdvice(result.desc,result.type) : null;
+    const category=advice && advice.category;
     preview.textContent=result.ok
-      ? `제안: ${result.desc} · ${fmt(result.amount)}${result.date ? ' · '+result.date : ' · 날짜 확인 필요'}${category ? ' · '+category : ''} — 적용 후 수정·저장해줘.`
+      ? `제안: ${result.desc} · ${fmt(result.amount)}${result.date ? ' · '+result.date : ' · 날짜 확인 필요'}${advice.conflict ? ' · 분류 확인 필요: '+advice.candidates.join(' / ') : category ? ' · '+category : ''} — 적용 후 수정·저장해줘.`
       : result.reason;
     preview.className='smart-entry-preview'+(result.ok?'':' warn');
   }
@@ -6803,7 +6863,10 @@ function applyQuickEntryText(){
   // immediately once extracted fields have been applied to editable inputs.
   clearQuickEntryPreview();
   const preview=document.getElementById('smartEntryPreview');
-  if(preview) preview.textContent='입력칸에만 반영했어. 금액·날짜·분류를 확인하고 저장을 눌러줘.';
+  if(preview){
+    const advice=quickEntryCategoryAdvice(result.desc,STATE.form.type || '지출');
+    preview.textContent=advice.conflict && !STATE.form.catManual ? '분류를 직접 골라줘: '+advice.candidates.join(' / ') : '입력칸에만 반영했어. 금액·날짜·분류를 확인하고 저장을 눌러줘.';
+  }
   if(desc) desc.focus();
   return true;
 }
@@ -7027,6 +7090,7 @@ function applyQuickEntryText(){
     STATE.bulkTargetCat = '';
 
     function toggleBulkMode() {
+      if(STATE.settlement && STATE.settlement.isClosed)return toast('마감된 달은 조회만 가능해. 월 정산에서 먼저 다시 열어줘.',true);
       STATE.bulkMode = !STATE.bulkMode;
       if (!STATE.bulkMode && STATE.bulkSelection) STATE.bulkSelection.clear();
       renderList();
@@ -7160,6 +7224,7 @@ function applyQuickEntryText(){
     }
 
     function openBulkCatModal() {
+      if(STATE.settlement && STATE.settlement.isClosed)return toast('마감된 달은 조회만 가능해.',true);
       if (!STATE.bulkSelection || STATE.bulkSelection.size === 0) return toast('선택된 항목이 없습니다.');
       openDialogSheet('bulkCatSheet','#bulkCatChips button');
       
@@ -7198,13 +7263,31 @@ function applyQuickEntryText(){
     }
 
     function submitBulkCat() {
+      if(STATE.settlement && STATE.settlement.isClosed)return toast('마감된 달은 조회만 가능해.',true);
       const ids = Array.from(STATE.bulkSelection);
       const newCat = STATE.bulkTargetCat;
       if(!newCat) return toast('카테고리를 선택하세요.', true);
-      
+      const transactions = STATE.transactions || [];
+      const expected = ids.map(id => {
+        const tx = transactions.find(t => String(t.txId || t.row) === id && !t.syncState);
+        if (!tx || !Number.isSafeInteger(Number(tx.row)) || Number(tx.row) < 2) return null;
+        return {
+          row:Number(tx.row), txId:String(tx.txId || ''), date:String(tx.date || ''),
+          type:String(tx.type || ''), cat:String(tx.cat || ''),
+          desc:String(tx.desc || ''), amount:Number(tx.amount)
+        };
+      });
+      if (expected.some(item => !item || !Number.isFinite(item.amount))) {
+        return toast('거래 정보가 바뀌었어. 목록을 새로고침한 뒤 다시 선택해줘.', true);
+      }
+      const types = [...new Set(expected.map(item => item.type))];
+      const config = (STATE.config && STATE.config.byType) || {};
+      if (types.some(type => !(config[type] || []).includes(newCat))) {
+        return toast('선택한 거래 유형 모두에 허용된 카테고리를 선택해줘.', true);
+      }
       closeBulkCatModal();
       toast('🔄 변경 및 학습 중...');
-      api('bulkUpdateCategory', { ids: ids, newCat: newCat, ym: STATE.ym, user: STATE.sessionUser || '' }).then(res => {
+      api('bulkUpdateCategory', { ids: ids, expected:expected, newCat: newCat, ym: STATE.ym, user: STATE.sessionUser || '' }).then(res => {
         STATE.bulkMode = false;
         if (STATE.bulkSelection) STATE.bulkSelection.clear();
         if (res) {
@@ -7417,43 +7500,72 @@ function applyQuickEntryText(){
 /* ============ 🔍 거래 내역 실시간 검색 컨트롤러 ============ */
 let listSearchTimer = null;
 function listUsesWholeHistory(){ return STATE.list && STATE.list.scope === 'all'; }
-function listServerSearchOptions(){
-  const list=STATE.list || {};
-  const opt={
-    mode:'search', allMonths:true, limit:Number(list.pageSize || 40),
-    query:String(list.query || '').trim(),
-    // The ledger is shared; historical searches never filter by writer.
-    writer:'',
-    type:list.type || '', category:list.category || '', meaning:list.meaning || ''
-  };
-  if(String(list.minAmount || '').trim() !== '') {
-    const min=Number(String(list.minAmount).replace(/,/g,''));
-    if(isFinite(min)) opt.minAmount=min;
-  }
-  if(String(list.maxAmount || '').trim() !== '') {
-    const max=Number(String(list.maxAmount).replace(/,/g,''));
-    if(isFinite(max)) opt.maxAmount=max;
-  }
-  return opt;
+function validSearchTotals(value){
+  if(!value || value.scope !== 'all' || !Number.isSafeInteger(value.count) || value.count<0 ||
+      !value.byType || !Array.isArray(value.categories))return null;
+  if(!['income','expense','save','repay','net'].every(key=>Number.isFinite(value[key])))return null;
+  if(!Object.keys(value.byType).every(key=>{
+    const item=value.byType[key];
+    return item && Number.isFinite(item.amount) && Number.isSafeInteger(item.count) && item.count>=0;
+  }))return null;
+  if(!value.categories.every(item=>item && typeof item.type==='string' && typeof item.category==='string' &&
+      Number.isFinite(item.amount) && Number.isSafeInteger(item.count) && item.count>=0))return null;
+  if(Object.values(value.byType).reduce((sum,item)=>sum+item.count,0)!==value.count ||
+      value.categories.reduce((sum,item)=>sum+item.count,0)!==value.count)return null;
+  return value;
 }
 function requestWholeHistoryTransactions(options){
   if(!listUsesWholeHistory() || !STATE.authToken) return Promise.resolve(null);
   const opt=options || {};
+  const key=listSearchKey();
+  const auth=STATE.authToken;
+  const append=opt.append===true;
+  if(append && (STATE.list.remoteLoading || !STATE.list.remoteHasMore || STATE.list.remoteSearchKey !== key))return Promise.resolve(null);
+  const request=listServerSearchOptions();
+  if(append)request.cursor=STATE.list.remoteNextCursor;
   const seq=Number(STATE.list.remoteRequestSeq || 0)+1;
   STATE.list.remoteRequestSeq=seq;
   STATE.list.remoteLoading=true;
   STATE.list.remoteError='';
+  if(STATE.list.remoteSearchKey !== key){
+    STATE.list.remoteRows=[];STATE.list.remoteCount=0;
+    STATE.list.remoteSummary=null;STATE.list.remoteFacets=null;
+    STATE.list.remoteNextCursor=null;STATE.list.remoteHasMore=false;
+    STATE.list.remotePagingSupported=false;
+    STATE.list.remoteSearchKey=key;
+  }
   if(!opt.skipRender) renderList();
-  return api('getTransactions',listServerSearchOptions()).then(res=>{
-    if(!listUsesWholeHistory() || seq !== STATE.list.remoteRequestSeq) return res;
-    STATE.list.remoteRows=Array.isArray(res && res.rows) ? res.rows : [];
+  return api('getTransactions',request).then(res=>{
+    if(!listUsesWholeHistory() || seq !== STATE.list.remoteRequestSeq || auth !== STATE.authToken || key !== listSearchKey()) return res;
+    if(!res || !Array.isArray(res.rows) || !Number.isSafeInteger(res.count) || res.count<res.rows.length ||
+        res.rows.some(row=>!row || !Number.isSafeInteger(row.row) || row.row<2))throw new Error('검색 결과를 확인하지 못했어. 다시 조회해줘.');
+    const paging=res.pagination;
+    const supported=!!(paging && paging.mode==='cursor-v1');
+    if(append && (!supported || paging.revision !== request.cursor.revision || res.rows.some(row=>row.row>=request.cursor.beforeRow)))throw new Error('장부가 변경됐어. 새로고침 후 다시 조회해줘.');
+    if(supported && paging.hasMore && (!res.rows.length || !paging.nextCursor ||
+        !Number.isSafeInteger(paging.nextCursor.beforeRow) ||
+        paging.nextCursor.beforeRow !== res.rows[res.rows.length-1].row ||
+        (append && paging.nextCursor.beforeRow>=request.cursor.beforeRow)))throw new Error('다음 검색 결과를 확인하지 못했어. 새로고침해줘.');
+    const combined=append ? STATE.list.remoteRows.concat(res.rows) : res.rows;
+    const seen=new Set();
+    STATE.list.remoteRows=combined.filter(row=>{
+      const id=String(row.row);
+      if(seen.has(id))return false;seen.add(id);return true;
+    });
     STATE.list.remoteCount=Math.max(STATE.list.remoteRows.length,Math.max(0,Number((res && res.count) || 0)));
+    const summary=validSearchTotals(res.summary);
+    const facets=validSearchTotals(res.facets);
+    STATE.list.remoteSummary=summary && summary.count===res.count ? summary : null;
+    STATE.list.remoteFacets=facets && facets.count>=res.count ? facets : null;
+    STATE.list.remoteNextCursor=supported ? paging.nextCursor : null;
+    STATE.list.remoteHasMore=supported && paging.hasMore===true;
+    STATE.list.remotePagingSupported=supported;
     STATE.list.remoteLoading=false;
     STATE.list.remoteError='';
     renderList();
     return res;
   }).catch(err=>{
-    if(seq !== STATE.list.remoteRequestSeq) return null;
+    if(!listUsesWholeHistory() || seq !== STATE.list.remoteRequestSeq || auth !== STATE.authToken || key !== listSearchKey()) return null;
     STATE.list.remoteLoading=false;
     STATE.list.remoteError=(err && err.message) || '전체 기간 거래를 불러오지 못했어.';
     renderList();
@@ -7973,7 +8085,9 @@ function bindApp(){
       if(dict && dict.type && !STATE.form.typeManual && availableQuickEntryCategories(dict.type).includes(dict.cat)){
         STATE.form.type=dict.type;
       }
-      const cat=suggestQuickEntryCategory(val,STATE.form.type || '지출');
+      const advice=quickEntryCategoryAdvice(val,STATE.form.type || '지출');
+      const cat=advice.category;
+      if(advice.conflict && hint)hint.textContent='⚠️ 분류를 직접 골라줘: '+advice.candidates.join(' / ');
       if(cat){
         STATE.form.cat=cat;
         renderFormChips();
